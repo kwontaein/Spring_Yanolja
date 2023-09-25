@@ -1,0 +1,120 @@
+@charset "UTF-8";
+.ltContainer{
+	width: 728px;
+	padding: 16px 20px;
+	display: flex;
+	justify-content: center;
+}
+.map{
+	border-radius: 5px;
+	width: 728px; 
+	height: 362px;
+}
+#mapList{
+	display: flex;
+	justify-content: space-between;
+}
+.roadinfo{
+	padding: 10px 0;
+	display: flex;
+	align-items: center;padding: 10px;
+}
+.copyroad{
+	display: flex;
+	align-items: center;
+	
+}
+.copyroad>button{
+	border: none;
+	color: blue;
+	background-color: white;
+}
+.copyroad2{
+	display: flex;
+	align-items: center;
+	padding: 10px;
+}
+.copyroad2>button{
+	height: 30px;
+	border: deeppink 1px solid;
+	color: deeppink;
+	background-color: white;
+}
+.parking{
+	width: 728px; 
+	padding: 12px 0;
+	border-top: 1px lightgray solid;
+}
+.wayinfo{
+	width: 728px; 
+	padding: 12px 0;
+	border-top: 1px lightgray solid;
+}
+
+/* 모달을 위한 CSS */
+
+    /* 모달 스타일 */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 101;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        overflow: hidden;
+        background-color: #f2f2f2;
+        transition: height 0.6s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+
+    /* 모달 내용 스타일 */
+    .modal-content {
+        background-color: #fff;
+        width: 768px;
+        height: 768px;
+        margin: 0 auto;
+		margin-top: 56px;
+        position: relative;
+        border-radius: 5px;
+    }
+
+    /* 닫기 버튼 스타일 */
+    .close {
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+    }
+
+    /* 지도 스타일 */
+    .map2 {
+        padding: 20px;
+        border-radius: 5px;
+        width: 728px;
+        height: 728px;
+    }
+
+    /* 주소 리스트 스타일 */
+    #mapList2 {
+        display: flex;
+        justify-content: space-between;
+    }
+    .mapcontainer{
+		height: 768px;
+	}
+    .locbtns{
+		position: absolute;
+		top:60px;
+		z-index: 102;
+	}
+    .nowloc{
+		background-color: rgba(0, 0, 0, 0);
+		border: none;
+	}
+	.hotelloc{
+		background-color: rgba(0, 0, 0, 0);
+		border: none;
+	}
+	

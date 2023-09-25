@@ -1,0 +1,174 @@
+@charset "UTF-8";
+body::-webkit-scrollbar {
+  display: none;
+}
+body{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	background-color: #f2f2f2;
+	margin: 0 auto;
+}
+.calendardiv{
+	margin-top: 150px;
+    z-index: 30;
+}
+
+.calendarContainer{
+	display: flex;
+	justify-content: center;
+    height: 100%;
+    position: relative;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+}
+
+.calendarWrapper{
+    width: 768px;
+	display: flex;
+	justify-content: center;
+	background-color: white;
+}
+.calendarWrapper>table{
+	width: 360px;
+}
+h2{
+	text-align: center;
+}
+.selected {
+	background-color: lightblue;
+} /* 오늘 이전의 날짜 스타일 */
+.past-day {
+	color: gray;
+	cursor: not-allowed;
+}
+/* 첫 주의 td 요소들에 margin-left 속성을 추가하여 간격을 조절합니다. */
+tr:first-child td {
+	margin-left: 10px;
+}
+
+/* 월을 표시하기 위한 스타일 */
+.month-label {
+	font-weight: bold;
+	text-align: center;
+}
+
+.future-month{
+	color: gray;
+}
+
+table{
+	width: 360px;
+	height: 350px;
+	border: none;
+	border-spacing: 0;
+}
+th{
+	border: none;
+	height: 50px;
+}
+.empty-cell{
+	border: 1px white solid;
+	text-align: center;
+	width: 50px;
+	height: 50px;
+}
+.able-day{
+	cursor: pointer;
+}
+.calendar-day{
+	border: 1px white solid;
+	text-align: center;
+	width: 50px;
+	height: 50px;
+}
+.yearandmonthtd{
+	border: none;
+	border-top: 1px gray solid;
+}
+
+.yearandmonth{
+	padding: 15px;
+	text-align: left;
+	display: flex;
+	align-items: center;
+}
+.sunday{
+	color: red;
+}
+.saturday{
+	color: blue;
+}
+.monthValue{
+	font-size: 30px;
+}
+.yearandmonthvalue>div{
+	font-size: 15px;
+}
+.selected-end{
+	color: deeppink;
+	border: 1px deeppink solid;
+	border-left: none;
+	border-radius: 0px 25px 25px 0px;
+}
+.selected-start{
+	color: deeppink;
+	border: 1px deeppink solid;
+	border-right: none;
+	border-radius: 25px 0px 0px 25px;
+}
+.selected-between{
+	color: deeppink;
+	border-bottom: 1px deeppink solid;
+	border-top: 1px deeppink solid;
+}
+.selected-start-only{
+	border: 1px deeppink solid;
+	border-radius: 25px;
+}
+.no-room{
+	text-decoration: line-through;
+}
+.datebtn{
+	position: fixed;
+	bottom: 0;
+	width: 768px;
+	height: 70px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: white;
+	border-top: 1px lightgrey solid;
+}
+
+.dateRangeButton{
+	color: white;
+	width: 728px;
+	height: 43px;
+	background-color: deeppink;
+	border: none;
+	border-radius: 10px;
+}
+
+#toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    padding: 15px 20px;
+    transform: translate(-50%, 10px);
+    border-radius: 30px;
+    overflow: hidden;
+    font-size: .8rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s, visibility .5s, transform .5s;
+    background: rgba(0, 0, 0, .35);
+    color: #fff;
+    z-index: 10000;
+}
+
+#toast.reveal {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0)
+}

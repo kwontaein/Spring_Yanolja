@@ -1,0 +1,29 @@
+@charset "UTF-8";
+.sale_swiper {
+  width: 728px;
+  height: 350px;
+}
+
+.swiper-controls{
+	width: 728px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+}
+
+.sale_slide>a>img{
+	width: 208px;
+	height: 280px;
+	border-radius: 10px;
+}
+
+.sale_container{
+	padding: 20px;
+	background-color: white;
+}
+
+.sale_title{
+	padding: 20px 0;
+	float: left;
+}

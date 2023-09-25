@@ -1,0 +1,18 @@
+@charset "UTF-8";
+button{
+	background-color: white;
+	border-radius: 10px;
+	border: 0.5px gray solid;
+}
+button:focus{
+	border: 0.5px deeppink solid;
+	color: deeppink;
+}
+.button_login{
+	width: 726px;
+	height: 30px;
+	border: 1px solid lightgray;
+	background-color: lightgray;
+	color: white;
+	margin: 0 20px 0 20px;
+}

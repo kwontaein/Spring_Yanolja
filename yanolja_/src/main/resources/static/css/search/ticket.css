@@ -1,0 +1,28 @@
+@charset "UTF-8";
+.tsearchContainer{
+	height: 100%;
+}
+.tsearch{
+	display: flex;
+	border: 1px lightgray solid;
+	height: 48px;
+	align-items: center;
+}
+.search_btn{
+	background-color: white;
+	border: none;
+}
+.tsearchtop{
+	padding: 20px;
+}
+.tsearchinput{
+	width: 638px;
+	height: 30px;
+	border: none;
+	outline: none;
+	padding: 10px 40px 10px 0px;
+}
+.tsearchmid{
+	padding: 20px;
+	
+}

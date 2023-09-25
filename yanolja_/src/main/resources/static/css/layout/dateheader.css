@@ -1,0 +1,59 @@
+@charset "UTF-8";
+#datehead {
+	z-index: 11;
+	position : fixed;
+	top : 0;
+	left: 0;
+	background-color: white;
+	box-shadow:inset;
+	font-weight: bold;
+	width: 99.9%;
+	height: 150px;
+	display: inline-block;
+	text-align: center;
+	border-bottom: 1px lightgrey solid;
+}
+a{
+	text-decoration-line: none;
+  	color: black;
+}
+.dateheader{
+	z-index: 10;
+	align-items: center;
+	width: 768px;
+	height: 100px;
+	margin: 0 auto;
+	display: grid;
+	grid-template: 'a b c'/1fr 4fr 1fr;
+	align-content: space-around;
+}
+#datehead>a {
+	font-size: small;
+	text-decoration: none;
+}
+.calendartitle{
+	text-align: center;
+}
+.dateheader2{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.day{
+	display: flex;
+	width: 360px;
+}
+.day>div{	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+	height: 50px;
+	padding: 1px;
+	margin:1px;
+}
+.sunday{
+	color: red;
+}
+.saturday{
+	color: blue;
+}

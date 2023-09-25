@@ -1,0 +1,244 @@
+@charset "UTF-8";
+
+body::-webkit-scrollbar {
+  display: none;
+}
+body {
+	background-color: #f2f2f2;
+    display: flex;
+  	justify-content: center;
+  	align-items: center;
+}
+h2{
+	margin:0;
+}
+a{
+	text-decoration-line: none;
+  	color: black;
+}
+.mypage_container{
+	width: 768px;
+	padding-top: 56px;
+	background-color: white;
+	padding-bottom: 56px;
+}
+
+.mypage1{
+	margin:20px 0;
+		padding-left: 2rem;
+	padding-right: 2rem;
+}
+
+.myoption{
+	margin-top: 30px;
+	overflow: hidden;
+    border: 0.1rem solid #e6e6e6;
+    border-radius: 0.8rem;
+    box-shadow: 0 0.1rem 0.3rem 0 rgba(0,0,0,.1);
+}
+
+.myinfo{
+	background: #f2f2f2;
+	text-align: left;
+	display: grid;
+	margin: 0;
+	grid-template:
+     "a b"
+     "c d"
+     "e e"/1fr 1fr;
+     grid-gap: 0.1rem;
+     padding: 0;
+}
+.tologin{
+	border: 0.1rem solid #e6e6e6;
+    border-radius: 0.8rem;
+    box-shadow: 0 0.1rem 0.3rem 0 rgba(0,0,0,.1);
+    display: grid;
+    grid-template: 'a b' /4fr 1fr;
+}
+.tologin>.tologin2{
+	margin : 0  10px ;
+	padding:0 10px;
+}
+.tologin>.tologin2>h2{
+	margin : 0 0 10px 0;
+	color: blue;
+}
+
+.tologin>.myManage{
+	padding:0 10px;
+	display: flex;
+	height: 80px;
+	align-items: center;
+}
+.myprofile{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+}
+.Mybenefit{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.myevent{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.myevent>span{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 75px;
+	height: 30px;
+	color:  rgb(0, 0, 255);
+	border: rgb(0, 0, 255) solid 0.5px;
+	border-radius: 5px;
+}
+.myinfo li{
+	background: #fff;
+    height: 48px;
+    list-style: none;
+    align-items: center;
+}
+.myinfo a{
+    height: 100%;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    padding: 0 16px;
+    display: flex;
+	align-items: center;
+}
+.e{
+    grid-area: e;
+}
+
+.booklist{
+	width: 100%;
+	text-align: left;
+	align-items: center;
+	display: flex;
+	flex-wrap : wrap;
+}
+.booklist div{
+	margin : 10px 0;
+	width: 100%;
+    height: 48px;
+	border: 0.1rem solid #e6e6e6;
+    border-radius: 0.8rem;
+    box-shadow: 0 0.1rem 0.3rem 0 rgba(0,0,0,.1);
+}
+.booklist a{
+	 height: 100%;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    padding: 0 16px;
+    display: flex;
+	align-items: center;
+}
+.Recordlink_div{
+	display: flex;
+	align-items: center;
+}
+.RecordLink_right__2qs6s{
+	display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    position: relative;
+}
+.RecordLink_icon__3CqzC{
+	    width: 2.4rem;
+    height: 2.4rem;
+    display: block;
+    margin-right: 0.4rem;
+}
+.RecordLink_forwardIcon__2NvgZ{
+	width: 1.2rem;
+    height: 1.2rem;
+    display: inline-block;
+    background: url(//yaimg.yanolja.com/joy/sunny/static/images/my/icon-arrow-small-black.svg) 50% no-repeat;
+}
+.MyPageEventMenu_icon__32Ct_{
+	margin: 0 auto;
+}
+.event{
+	background: #f2f2f2;
+	display: grid;
+	margin: 0;
+	grid-template:
+     "a b c"/1fr 1fr 1fr;
+    grid-gap: 0.1rem;
+    padding: 0;
+}
+
+.event div{
+	padding-top: 1.3rem;
+	text-align: center;
+	background: #fff;
+    height: 6rem;
+    align-items: center;
+}
+.event span{
+	display: block;
+}
+.mypage_space{
+	display: block;
+	background-color: #f2f2f2;
+	height: 10px;	
+}
+
+
+.callcenter{
+	background: #f2f2f2;
+	text-align: left;
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+    grid-gap: 0.1rem;
+    padding: 0;
+}
+.callcenter li{
+	width: 768px;
+	background: #fff;
+    height: 48px;
+    list-style: none;
+    align-items: center;
+}
+.callcenter a{
+    height: 100%;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    padding: 0 16px;
+    display: flex;
+	align-items: center;
+}
+
+.myinfo2{
+	background: #f2f2f2;
+	text-align: left;
+	display: grid;
+	margin: 0;
+	grid-template:
+     "a b"
+     "c d"/1fr 1fr;
+     grid-gap: 0.1rem;
+     padding: 0;
+}
+
+.myinfo2 li{
+	background: #fff;
+    height: 48px;
+    list-style: none;
+    align-items: center;
+}
+.myinfo2 a{
+    height: 100%;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    padding: 0 16px;
+    display: flex;
+	align-items: center;
+}

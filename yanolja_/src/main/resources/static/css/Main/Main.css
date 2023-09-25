@@ -1,0 +1,28 @@
+@charset "UTF-8";
+html::-webkit-scrollbar {
+  display: none;
+}
+body {
+	background-color: #f2f2f2;
+    display: flex;
+  	justify-content: center;
+  	align-items: center;
+  	margin:0;
+}
+
+#poollist{
+	width: 384px;
+	text-align: center;
+	list-style: none;
+	margin:0 auto;
+	padding: 10px 0 10px 0;
+}
+
+#Maindiv{
+	margin-top: 56px;
+	margin-bottom: 60px;
+	text-align: center;
+}
+.linkto{
+	margin: 0 auto;
+}

@@ -1,0 +1,93 @@
+@charset "UTF-8";
+/* 폰트 적용 */
+
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body{
+	background-color: f2f2f2;
+}
+h2{
+	margin:0;
+}
+a {
+	color: inherit;
+	text-decoration: none;
+}
+.viewAll{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 30px;
+	color: blue;
+}
+.slide_title{
+	display: flex;
+	justify-content: space-between;
+}
+/* 커스텀 */
+.slidetitle{
+	text-align: left;
+	padding: 30px;
+	background-color: white;
+}
+
+/* 슬라이더 1 시작 */
+.slider-1 {
+	width: 768px;
+	height: auto;
+	position: relative;
+	background-color: white;
+}
+.swiper-bottom {
+	overflow: hidden;
+	width: 768px;
+}
+
+.custom_slide_wrap {
+	width: 768px;
+	padding-left:20px;
+	padding-bottom: 20px;
+}
+
+.swiper-pagination-custom {
+	display: flex;
+	text-align: center;
+}
+
+.custom_bullet {
+	width: 100px;
+	height: 20px;
+	padding: 5px 0;
+	border: 1px solid #e0e0e0;
+	border-radius: 20px;
+	background-color: #fff;
+	transition: all .3s;
+	margin-right: 20px;
+}
+
+.custom_bullet:last-child {
+	margin-right: 0;
+}
+
+.custom_bullet span {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.custom_bullet:hover span {
+	color: deeppink;
+}
+
+.swiper-pagination-custom-bullet-active {
+	background-color: deeppink;
+	box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.25);
+	border: 1px solid deeppink;
+}
+
+.swiper-pagination-custom-bullet-active span {
+	color: #fff;
+}
+
+.swiper-pagination-custom-bullet-active:hover span {
+	color: #fff;
+}

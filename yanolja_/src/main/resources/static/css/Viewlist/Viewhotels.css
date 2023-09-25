@@ -1,0 +1,83 @@
+@charset "UTF-8";
+
+#listbody{
+	width: 768px;
+	margin: 0 auto;
+	}
+
+
+#ulbody{
+	text-align: center;	
+	display: grid;
+	margin: 0;
+	grid-template:
+     "a b"
+     "c d"
+     "e e"/1fr 1fr;
+     grid-gap: 0.1rem;
+     padding: 0;
+}
+#hotellist{
+	width: 384px;
+	text-align: center;
+	list-style: none;
+	margin:0;
+	padding: 0;
+	display: flex;
+	flex-wrap : wrap;
+	background-color: white;
+}
+#hotellist>a{
+	display: flex;
+	width: 384px;
+	text-decoration-line: none;
+  	color: black;
+	padding: 20px 15px;
+}
+
+
+.hotelimg{
+	margin: 10px;	
+}
+
+.hotelimg>li>div{
+	border-radius: 5px;
+	background-image:url(https://yaimg.yanolja.com/v5/2022/08/18/15/640/62fe54bbcc8385.54587766.jpg);
+	 background-size: 150px;
+	 width:140px; 
+	 height:168px;
+}
+
+.hotelimg>li>div>span{
+	float: left;
+	width: 25px;
+	text-align: center;
+	background-color: black;
+	color: white;
+}
+.htcontent{
+	margin: 10px;	
+	width: 100%;
+}
+.info{
+	width: 100%;
+	height: 70%;
+	text-align: left;	
+}
+#hotellist>a>div>div>li>h3{
+	margin: 0;
+}
+
+.price{
+	height: 50%;
+	text-align: right;
+	width: 100%;
+}
+.price>li{
+	align-items: end;
+	bottom: 0;
+}
+#hotels{
+	margin-top: 30px;
+	background-color: lightgray; /* 슬라이드의 배경색을 원하는 색상으로 변경하세요 */
+}

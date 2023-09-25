@@ -1,0 +1,21 @@
+@charset "UTF-8";
+.live_container {
+	background-color: white;
+	width: 728px;
+	padding: 30px 20px;
+	height: 300px;
+}
+
+.live_title {
+	display: flex;
+	justify-content: space-between;
+}
+.live_title>a{
+	color: blue;
+}
+.live_content{
+	height: 280px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

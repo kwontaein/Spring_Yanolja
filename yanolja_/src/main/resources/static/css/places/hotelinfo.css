@@ -1,0 +1,30 @@
+@charset "UTF-8";
+body::-webkit-scrollbar {
+  display: none;
+}
+body{
+	display: flex;
+	justify-content: center;
+	background-color: #f2f2f2;
+	margin:0;
+}
+.infoContainer{
+	width: 768px;
+	margin-top: 10px;
+	background-color: white;
+}
+.infoWrapper{
+	width: 728px;
+}
+.infochoice{
+	display: flex;
+	border-bottom: 1px lightgray solid;
+	width: 728px;
+	padding: 16px 20px;
+}
+.infochangebtn{
+	padding: 0 10px;
+}
+.changedinfo{
+	padding-bottom:16px;
+}

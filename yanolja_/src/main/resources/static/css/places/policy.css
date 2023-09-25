@@ -1,0 +1,45 @@
+@charset "UTF-8";
+.policyContainer{
+	background-color: #f2f2f2;
+}
+.policyWrapper{
+	padding: 0 20px;
+	font-size: 14px;
+	background-color: white;
+}
+.title{
+	height: 48px;
+	display: flex;
+	justify-content: left;
+	align-items: center;
+	font-size: 16px;
+}
+.useguide{
+	padding-bottom: 10px;
+}
+.introduce{
+	border-top: 1px lightgray solid;
+	padding: 10px 0;
+}
+.infotitle{
+	margin-top: 5px;
+}
+.intro>div{
+	margin-top:5px;
+}
+.infocontent>div{
+	margin-top:5px
+}
+.policy{
+	margin-top:10px;
+	background-color: white;
+	padding: 0 20px;
+	width: 728px;
+	display: inline-block;
+}
+.policydiv{
+	padding: 10px 0;
+}
+.policycontent{
+	margin-top:5px
+}

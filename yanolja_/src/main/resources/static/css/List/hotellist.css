@@ -1,0 +1,77 @@
+@charset "UTF-8";
+#listbody{
+	margin: 0 20px;
+	width: 728px;
+	margin: 0 auto;
+	}
+#ulbody{
+	text-align: center;	
+	display: grid;
+	margin: 0;
+	grid-template:
+     "a b"
+     "c d"
+     "e e"/1fr 1fr;
+     grid-gap: 0.1rem;
+     padding: 0;
+}
+#hotellist{
+	width: 364px;
+	text-align: center;
+	list-style: none;
+	margin:0;
+	padding: 0;
+	display: flex;
+	flex-wrap : wrap;
+	background-color: white;
+}
+#hotellist>a{
+	display: flex;
+	width: 364px;
+	text-decoration-line: none;
+  	color: black;
+}
+
+
+.hotelimg{
+	margin: 10px;		
+}
+.hotelimg>li>div{
+	border-radius: 5px;
+	background-image:url(https://yaimg.yanolja.com/v5/2022/08/18/15/640/62fe54bbcc8385.54587766.jpg);
+	 background-size: 100px;
+	 width:100px; 
+	 height:100px;
+}
+.hotelimg>li>div>span{
+	float: left;
+	width: 25px;
+	text-align: center;
+	background-color: black;
+	color: white;
+}
+
+.htcontent{
+	margin: 10px;	
+	width: 100%;
+}
+
+.info{
+	width: 100%;
+	text-align: left;	
+}
+#hotellist>a>div>div>li>h3{
+	margin: 0;
+}
+
+.price{
+	height: 50%;
+	text-align: right;
+	width: 100%;
+}
+.price>li{
+	bottom: 0;
+	height: 100%;
+	
+}
+

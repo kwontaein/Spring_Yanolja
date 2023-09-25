@@ -1,0 +1,47 @@
+@charset "UTF-8";
+#footer {
+	z-index: 10;
+	position : fixed;
+	bottom : 0;
+	background-color: white;
+	box-shadow:inset;
+	font-weight: bold;
+	width: 99.9%;
+	height: 60px;
+	text-align: center;
+	border-top: 1px lightgrey solid;
+}
+
+.footer{
+	align-items: center;
+	width: 768px;
+	height: 56px;
+	margin: 0 auto;
+	justify-content: space-between;
+	display: flex;
+	align-content: space-around;
+}
+
+#footer>a{
+	width: 20%;
+	font-size: small;
+	text-decoration: none;
+	}
+	
+#gohome{
+	background-image: url(//yaimg.yanolja.com/joy/sunny/static/images/gnb/icon-home-fill.svg);
+	width: 56px;
+    height: 56px;
+   	margin: 0 auto;
+}
+.regifoot{ 
+	width:768px; 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: darkgray;
+	color: white;
+	height: 50px;
+	border-radius: 10px;
+}
+

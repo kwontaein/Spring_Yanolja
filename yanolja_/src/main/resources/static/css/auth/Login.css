@@ -1,0 +1,87 @@
+@charset "UTF-8";
+body::-webkit-scrollbar {
+  display: none;
+}
+body {
+	background-color: #f2f2f2;
+    display: flex;
+  	justify-content: center;
+  	align-items: center;
+  	margin:0;
+}
+label{
+	padding-left:20px ;
+}
+.login_container{
+	width: 768px;height: 100vh;
+	padding-top: 56px;
+	background-color: white;
+	box-sizing: border-box;
+	justify-content: center;
+}
+.input_container{
+	padding-top:20px ;
+}
+.alert-danger{
+	text-align: center;
+	color: red;
+}
+
+.form-control{
+	width: 726px;
+	height: 30px;
+	border: 1px solid lightgray;
+  	border-radius: 10px;
+  	outline: none;
+	margin: 0 20px 0 20px;
+	padding: 0;
+}
+.tologin_container{
+	width: 768px;
+	height: 79vh;
+	display: flex;
+	background-color: white;
+	box-sizing: border-box;
+	justify-content: center;
+    align-items: center;
+}
+.center_container{
+	width: 768px;
+	height: auto;
+    text-align: center;
+}
+.kakaobtn{
+	border: none;
+    outline: none; /* 포커스 테두리도 없애려면 추가 */
+    background-color: white;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+}
+.kakaoimg{
+	 width: 60px;
+    height: 60px;
+}
+
+#tologin{	
+	width: 700px;
+	height: 50px;
+	border: 1px black solid;  
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	text-align: center;
+	width: 700px;
+	margin: 0 34px;
+}
+a{
+	text-decoration-line: none;
+	color: black;
+}
+
+.space_bet{
+	margin: 20px 0;
+}
+.space_bet2{
+	text-align: center;
+}

@@ -1,0 +1,10 @@
+@charset "UTF-8";
+html{
+	color: #1a1a1a;
+    font-size: 80%;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    }
+body::-webkit-scrollbar {
+  display: none;
+}

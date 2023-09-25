@@ -1,0 +1,13 @@
+@charset "UTF-8";
+.hoteleventlist{
+	width: 728px;
+	padding:0 20px;
+	display: flex;
+	justify-content: space-between;
+}
+.event_a{
+	width: 100%;
+}
+.event_img{
+	border-radius: 5px;
+}

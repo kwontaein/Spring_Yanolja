@@ -1,0 +1,95 @@
+@charset "UTF-8";
+body::-webkit-scrollbar {
+  display: none;
+}
+body{
+	display: flex;
+	justify-content: center;
+	background-color: #f2f2f2;
+	margin:0;
+}
+.ViewplaceContainer{
+	margin-top:56px;
+	width: 768px;
+}
+.ViewPlace{
+	background-color: white;
+}
+.hotelimg{
+	width: 768px;
+	height: 507px;
+	background-image: url("https://yaimg.yanolja.com/v5/2022/10/31/12/640/635fc0f6abccc1.66460254.jpg");
+	background-repeat : no-repeat;
+	background-size : cover;
+}
+.hoteltitle{
+	width: 768px;
+	height: 120px;
+	padding: 12px 0;
+}
+.hoteltitle>div{
+	height: 25px;
+}
+.hotel_n{
+	padding: 0 20px;
+	display: flex;
+	justify-content: space-between;
+}
+.hotel_name{
+	font-size: 22px;
+}
+.interact{
+	display: flex;
+	width: 56px;
+	justify-content: space-between;
+}
+.hotel_g{
+	padding: 4px 20px;
+}
+.hotel_l{
+	padding: 8px 20px 4px 20px;
+	
+}
+.hotel_l>div{
+	
+color: blue;
+}
+.hotel_r{
+	padding: 4px 20px;
+}
+.hotel_r>div{
+	display: flex;
+	align-items: center;
+}
+.coupon{
+	width: 728px;
+	margin: 0 20px;
+	border-top: 1px lightgray solid;
+	border-bottom: 1px lightgray solid;
+}
+.couponinfo{
+	height: 54px;
+	padding: 8px 0;	
+}
+
+.facil{
+	width: 728px;
+	margin: 0 20px;
+	display: flex;
+	justify-content: space-between;
+	
+}
+.infoSeller{
+	margin : 10px 0;
+	background-color: white;
+	padding: 0 20px;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	}
+	.star2{
+		font-size: 20px;
+		height: 30px;
+		color: orange;
+	}

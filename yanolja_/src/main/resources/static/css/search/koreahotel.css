@@ -1,0 +1,68 @@
+@charset "UTF-8";
+.ksearchContainer{
+	height: 100%;
+}
+.ksearch{
+	display: flex;
+	border: 1px lightgray solid;
+	height: 48px;
+	align-items: center;
+}
+.search_btn{
+	background-color: white;
+	border: none;
+}
+.ksearchtop{
+	padding: 20px;
+}
+.ksearchinput{
+	width: 638px;
+	height: 30px;
+	border: none;
+	outline: none;
+	padding: 10px 40px 10px 0px;
+}
+
+.kchoice{
+	display: flex;
+	height: 48px;
+	border: 1px lightgray solid;
+	border-top: none;
+}
+.datechoice{
+	background-color: white;
+	border: none;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 7px 8px;
+	border-right: 1px lightgray solid;
+}
+
+.manCnt{
+	background-color: white;
+	border: none;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 7px 8px;
+}
+
+.ksearchmid{
+	padding: 20px;
+	
+}
+
+.calendar_modal{
+	display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    overflow-y: auto;
+    background-color: #f2f2f2;
+    transition: height 0.6s cubic-bezier(0.86, 0, 0.07, 1);
+}
