@@ -6,7 +6,7 @@
 <title>Insert title here</title>
 <style>
 .BenefitBanner_banner__1aiwU {
-	width: 768px;
+	width: 728px;
 	color: inherit;
 	text-decoration: none;
 	height: 5rem;
@@ -30,6 +30,10 @@ a {
 </style>
 </head>
 <body>
-	<a href="https://yanolja.com/exhibition/7732" class="BenefitBanner_banner__1aiwU" style="background-image: url(https://yaimg.yanolja.com/v5/2023/09/08/18/64fb62e5b49cf3.15139416.png)"></a>
+	<div>
+		<div>
+			<a href="https://yanolja.com/exhibition/7732" class="BenefitBanner_banner__1aiwU" style="background-image: url(https://yaimg.yanolja.com/v5/2023/09/08/18/64fb62e5b49cf3.15139416.png)"></a>
+		</div>
+	</div>
 </body>
 </html>

@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" href="${path}/css/auth/mypage.css" />
 <link rel="stylesheet" href="${path}/css/Main/html.css" />
 <meta charset="UTF-8">
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 </head>
 <body>
 	<c:set var="isMypage" value="true" />
@@ -23,11 +23,6 @@
 								<p>가입하고 놀자, 계산적으로</p>
 								<h2>로그인 및 회원가입하기 ></h2>
 							</a>
-							<a href="/tologin" class="Mybenefit">
-								<div class="myevent">
-									<span>MY 혜택</span>
-								</div>
-							</a>
 						</c:when>
 						<c:otherwise>
 							<a href="/myManage" class="myManage">
@@ -39,19 +34,34 @@
 									<span>내정보 관리 </span>
 								</div>
 							</a>
-							<a href="/Mybenefit" class="Mybenefit">
-								<div class="myevent">
-									<span>MY 혜택</span>
-								</div>
-							</a>
-							<!-- 세션에 사용자 정보가 있다면 원하는 환영 메시지를 여기에 추가하세요. -->
 						</c:otherwise>
 					</c:choose>
+					<a href="/Mybenefit" class="Mybenefit">
+						<div class="myevent">
+							<span>MY 혜택</span>
+						</div>
+					</a>
 				</div>
 
 				<div class="myoption">
 					<ul class="myinfo">
-						<li class="a"><a>
+						<c:choose>
+							<c:when test="${empty username}">
+								<c:set var="urlPrefix1" value="/tologin" />
+								<c:set var="urlPrefix2" value="/tologin" />
+								<c:set var="urlPrefix3" value="/tologin" />
+								<c:set var="urlPrefix4" value="/tologin" />
+								<c:set var="urlPrefix4" value="/tologin" />
+							</c:when>
+							<c:otherwise>
+								<c:set var="urlPrefix1" value="/Point" />
+								<c:set var="urlPrefix2" value="/Coin" />
+								<c:set var="urlPrefix3" value="/coupon" />
+								<c:set var="urlPrefix4" value="/myreview" />
+								<c:set var="urlPrefix5" value="/like" />
+							</c:otherwise>
+						</c:choose>
+						<li class="a"><a href="${urlPrefix1}">
 								<div class="Recordlink_div">
 									<img class="RecordLink_icon__3CqzC" src="//yaimg.yanolja.com/joy/sunny/static/images/my/icon-point-line-1.svg" alt="">
 									<span>야놀자 포인트</span>
@@ -60,7 +70,7 @@
 									<span class="RecordLink_forwardIcon__2NvgZ"></span>
 								</div>
 							</a></li>
-						<li class="b"><a>
+						<li class="b"><a href="${urlPrefix2}">
 								<div class="Recordlink_div">
 									<img class="RecordLink_icon__3CqzC" src="//yaimg.yanolja.com/joy/sunny/static/images/my/icon-ycoin-line-1.svg" alt="">
 									<span>야놀자 코인</span>
@@ -69,7 +79,7 @@
 									<span class="RecordLink_forwardIcon__2NvgZ"></span>
 								</div>
 							</a></li>
-						<li class="c"><a>
+						<li class="c"><a href="${urlPrefix3}">
 								<div class="Recordlink_div">
 									<img class="RecordLink_icon__3CqzC" src="//yaimg.yanolja.com/joy/sunny/static/images/my/icon-coupon-2-line-1.svg" alt="">
 									<span>쿠폰함</span>
@@ -78,7 +88,7 @@
 									<span class="RecordLink_forwardIcon__2NvgZ"></span>
 								</div>
 							</a></li>
-						<li class="d"><a>
+						<li class="d"><a href="${urlPrefix4}">
 								<div class="Recordlink_div">
 									<img class="RecordLink_icon__3CqzC" src="//yaimg.yanolja.com/joy/sunny/static/images/my/icon-review-line-1.svg" alt="">
 									<span>나의 후기</span>
@@ -87,7 +97,7 @@
 									<span class="RecordLink_forwardIcon__2NvgZ"></span>
 								</div>
 							</a></li>
-						<li class="e"><a>
+						<li class="e"><a href="${urlPrefix5}">
 								<div class="Recordlink_div">
 									<img class="RecordLink_icon__3CqzC" src="//yaimg.yanolja.com/joy/sunny/static/images/my/icon-favorite-border-line-1.svg" alt="">
 									<span>찜</span>
@@ -99,8 +109,9 @@
 					</ul>
 				</div>
 			</div>
-
-			<%@ include file="../ads/ad1.jsp"%>
+			<div class="ads">
+				<%@ include file="../ads/ad1.jsp"%>
+			</div>
 			<div class="mypage1">
 				<h2>비회원 예약 내역</h2>
 				<div class="booklist">
@@ -118,8 +129,9 @@
 					</div>
 				</div>
 			</div>
-
-			<%@ include file="../ads/ad2.jsp"%>
+			<div class="ads">
+				<%@ include file="../ads/ad2.jsp"%>
+				</div>
 			<div class="mypage2">
 				<div class="event">
 					<div>
@@ -174,7 +186,7 @@
 			<div class="mypage_space"></div>
 			<div class="mypage4">
 				<ul class="myinfo2">
-					<li class="a"><a>
+					<li class="a"><a href="/UserOption/FAQ">
 							<div class="Recordlink_div">
 								<span>자주 묻는 질문 FAQ</span>
 							</div>
@@ -182,7 +194,7 @@
 								<span class="RecordLink_forwardIcon__2NvgZ"></span>
 							</div>
 						</a></li>
-					<li class="b"><a>
+					<li class="b"><a href="/UserOption/Noti">
 							<div class="Recordlink_div">
 								<span>공지사항</span>
 							</div>
@@ -190,36 +202,24 @@
 								<span class="RecordLink_forwardIcon__2NvgZ"></span>
 							</div>
 						</a></li>
-					<c:choose>
-						<c:when test="${empty username}">
-							<li class="c"><a>
-									<div class="Recordlink_div">
-										<span>야놀자 정보</span>
-									</div>
-									<div class="RecordLink_right__2qs6s">
-										<span class="RecordLink_forwardIcon__2NvgZ"></span>
-									</div>
-								</a></li>
-						</c:when>
-						<c:otherwise>
-							<li class="c"><a>
-									<div class="Recordlink_div">
-										<span>야놀자 정보</span>
-									</div>
-									<div class="RecordLink_right__2qs6s">
-										<span class="RecordLink_forwardIcon__2NvgZ"></span>
-									</div>
-								</a></li>
-							<li class="d"><a href="/Setting">
-									<div class="Recordlink_div">
-										<span>설정</span>
-									</div>
-									<div class="RecordLink_right__2qs6s">
-										<span class="RecordLink_forwardIcon__2NvgZ"></span>
-									</div>
-								</a></li>
-						</c:otherwise>
-					</c:choose>
+					<li class="c"><a href="/UserOption/Yanoljainfo">
+							<div class="Recordlink_div">
+								<span>야놀자 정보</span>
+							</div>
+							<div class="RecordLink_right__2qs6s">
+								<span class="RecordLink_forwardIcon__2NvgZ"></span>
+							</div>
+						</a></li>
+					<c:if test="${!empty username}">
+						<li class="d"><a href="/UserOption/Setting">
+								<div class="Recordlink_div">
+									<span>설정</span>
+								</div>
+								<div class="RecordLink_right__2qs6s">
+									<span class="RecordLink_forwardIcon__2NvgZ"></span>
+								</div>
+							</a></li>
+					</c:if>
 				</ul>
 			</div>
 		</div>

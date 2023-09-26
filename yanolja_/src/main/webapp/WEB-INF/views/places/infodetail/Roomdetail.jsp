@@ -323,7 +323,7 @@
 				</div>
 				<div class="btns">
 					<button class="cart">장바구니 담기</button>
-					<button class="nowreserve">바로 예약</button>
+					<button class="nowreserve" onclick="window.open('http://localhost:8080/Reserve?roomid=${room.roomid}')">바로 예약</button>
 				</div>
 			</div>
 		</div>

@@ -49,8 +49,6 @@ public class KakaoService {
 
 	// 카카오 로그인 URL 생성 메서드
 	public String getKakaoLogin() {
-		System.out.println(" LoginUri : " + KAKAO_AUTH_URI + "/oauth/authorize" + "?client_id=" + KAKAO_CLIENT_ID
-				+ "&redirect_uri=" + KAKAO_REDIRECT_URL + "&response_type=code");
 		// 카카오 인증 URL을 생성하여 반환합니다.
 		return KAKAO_AUTH_URI + "/oauth/authorize" + "?client_id=" + KAKAO_CLIENT_ID + "&redirect_uri="
 				+ KAKAO_REDIRECT_URL + "&response_type=code";

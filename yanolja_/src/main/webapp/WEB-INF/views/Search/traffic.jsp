@@ -3,11 +3,26 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style type="text/css">
+.tsearchWrapper {
+	padding: 20px;
+}
+
+.transport {
+	height: 30px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border: 1px lightgray solid;
+	padding: 10px;
+	margin : 10px 0 10px 0;
+}
+</style>
 </head>
 <body>
-	<div class="searchContainer">
-		<div class="searchWrapper">
-			<div class="searchtop">
+	<div class="tsearchContainer">
+		<div class="tsearchWrapper">
+			<div class="tsearchtop">
 				<div class="transport">
 					<span>고속버스</span>
 					<span>출발/도착 &gt;</span>

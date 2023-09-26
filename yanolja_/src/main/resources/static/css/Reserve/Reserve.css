@@ -1,0 +1,286 @@
+@charset "UTF-8";
+body{
+	background-color: #f2f2f2;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 0;
+	margin: 0;
+	}
+.ReserveContainer{
+	width: 100%;
+	}
+.Reserveheader{
+	background-color: white;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 48px;
+}
+.headerdiv{
+	width: 768px;
+	display: flex;
+	justify-content: space-between;
+}
+.ReserveWrapper{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+.ReserveContent{
+	width: 768px;
+}
+.infoContatiner{
+	background-color: white;
+	padding: 10px 20px;
+	margin-bottom: 8px;
+}
+.loginbenefit{
+	background-color: white;
+	padding: 20px;
+	padding-top: 0;
+	margin-bottom: 8px;
+}
+.gologin{
+	padding: 10px 0;
+}
+.gologin>a{
+	color: blue;
+	text-decoration: none;
+	font-weight: bold;
+}
+.loginbenefitinfo{
+	font-size: 12px;
+}
+.hotelinfo{	
+	background-color: white;
+	padding: 0 20px;
+	margin-bottom: 8px;
+}
+.hotelkind{
+	padding-top: 10px;	
+	font-size: 15px;
+	font-weight: bold;
+}
+.freecancel{
+	background-color: #f2f2f2;
+	padding: 10px;
+	font-size: 14px;
+ 	display: flex;
+ 	justify-content: space-between;
+}
+.hotelcontent{
+	padding: 20px 0;
+}
+.hotelname{
+	font-weight: bold;
+	font-size: 18px;
+}
+.period{
+	margin-top: 24px;
+	display: flex;
+}
+.checkin{
+	width: 100%;
+}
+.checkout{
+	width: 100%;
+}
+.cktitle{
+	font-size: 14px;
+	color: gray;
+}
+.ckdate{
+	font-weight: bold;
+}
+.price{
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+.pdate{
+	font-size: 14px;
+}
+.freepriod{
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	font-size: 12px;
+	color: darkgreen;
+}
+.comeway{
+	margin-top: 24px;
+	border: 1px #f2f2f2 solid;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.infotitle{
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	height: 48px;
+}
+.title_info{
+	background-color: #f2f2f2;
+	padding: 10px 12px;
+	font-size: 12px;
+}
+.relax{
+	color: #919191;
+	font-size: 12px;
+	
+}
+.bill{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding:  8px 0;
+}
+.billborder{
+	border-bottom-style:dashed;
+	border-color: #f2f2f2;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+.glcontain{
+	padding-bottom: 20px;
+}
+.goinglogin{
+	background-color: white;
+	color: blue;
+	border: blue 1px solid;
+	border-radius: 10px;
+	width: 100%;
+	padding: 10px 16px;
+	margin-top: 12px;
+}
+.discon{
+	padding-bottom: 10px;
+}
+.dis1{
+	background-color: #f2f2f2;
+	border-radius: 10px;
+	padding: 10px;
+	margin-bottom: 8px;
+}
+.dis2{
+	background-color: #f2f2f2;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-radius: 10px;
+	padding: 10px;
+}
+.adkko{
+	padding-top: 10px;
+}
+.adkko>img{
+	width: 728px;
+}
+.credit{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px 8px;
+	list-style: none;
+	padding: 0;
+}
+.kcredit{
+	    grid-column: 1/span 2;
+}
+.credit>li{
+	border: 1px solid #f2f2f2;
+	height: 24px;
+	padding: 11px 8px;
+	text-align: center;
+}
+.credit>li:hover{
+	background-color: #f2f2f2;
+}
+.credit>li:active{
+	background-color: #f2f2f2;
+	border: blue 1px solid;
+	
+}
+.creditbenefit{
+	background-color: #f2f2f2;
+	padding:12px 20px 16px 20px;
+}
+.kakaopay{
+	width: 55px;
+	height: 24px;
+}
+.dicount_content1{
+	font-size: 13px;
+	padding: 10px 0;
+	border-bottom-style: dashed;
+	border-color: #919191;
+}
+.dicount_content2{
+	font-size: 13px;
+	padding: 10px 0;
+}
+.seeallbenefit{
+	width: 100%;
+	margin-top:8px;
+	height: 34px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-bottom: 20px;
+}
+.seeallbenefit>button{
+	background-color: white;
+	border: none;
+	color: blue;
+}
+.warning{
+	padding: 10px;
+	list-style: none;
+	background-color:  #fef8f2;
+	margin-bottom: 0;
+}
+.warning>li{
+	font-size: 13px;
+}
+.wli1{
+	margin-top:12px;
+}
+.wtitle{
+	color: orangered;
+	font-weight: bold;
+}
+.agreetitle{
+	font-size: 18px;
+	font-weight: bold;
+	padding: 29px 0 16px 0;
+}
+.agree{
+	padding: 8px 0;
+}
+.explain{
+	margin-top: 16px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	font-size: 13px;
+}
+.explain2{
+	margin-top: 16px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	font-size: 13px;
+	padding-bottom: 52px;
+}
+.payment{
+	border: none;
+	background-color: #cccccc;
+	color: white;
+	width: 100%;
+	padding: 13px 16px;
+	margin-top: 12px;
+}

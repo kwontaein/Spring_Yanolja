@@ -23,7 +23,7 @@ $(document).ready(function() {
 			$(modalSelector).css('display', 'none');
 		}, 600);
 		$('#head').css('display', 'inline-block');
-		$('body').css('overflow', 'hidden');
+		$('body').css('overflow', 'auto');
 	}
 
 	const savedStartDate = sessionStorage.getItem('selectedStartDate');
@@ -139,7 +139,7 @@ $(document).ready(function() {
 			}
 		});
 	}
-
+	
 	$('.calendar_modal').on('click', '#headerClose', function() {
 		hideModal('.calendar_modal');
 	});

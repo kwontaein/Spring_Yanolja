@@ -144,9 +144,6 @@ public class MainController {
 
 			sessionDate1 = nowDate.toString();
 			sessionDate2 = tomorrowDate.toString();
-
-			System.out.println(sessionDate1);
-			System.out.println(sessionDate2);
 		}
 		return "Main/Main"; // Main/Main 템플릿을 렌더링
 	}
@@ -222,8 +219,6 @@ public class MainController {
 
 			sessionDate1 = nowDate.toString();
 			sessionDate2 = tomorrowDate.toString();
-			System.out.println(sessionDate1);
-			System.out.println(sessionDate2);
 		}
 
 		// 현재 날짜를 가져옵니다
@@ -349,7 +344,13 @@ public class MainController {
 			return "Search/koreahotel";
 		}
 	}
-
+	
+	@GetMapping("/Reserve")
+	public String reserve(@RequestParam int roomid, Model model) {
+		RoomResponse roomdetail = mainService.findRoomDetail(roomid);
+		model.addAttribute("room", roomdetail);
+		return "Reserve/Reserve";
+	}
 	// 게시글 작성 페이지
 	/*
 	 * @GetMapping("/Main/write") public String openPostWrite(@RequestParam(value =

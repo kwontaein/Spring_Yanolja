@@ -16,9 +16,9 @@
 				<div class="headerWrapper">
 					<div>
 						<div class="headertop">
-							<div class="left">&lt;</div>
+							<div class="left"><a href="javascript:window.history.back();">&lt;</a></div>
 							<div class="middle">검색</div>
-							<div class="right">홈</div>
+							<div class="right"><a href="/">홈</a></div>
 						</div>
 						<div class="headerbottom">
 							<div class="active" id="domestic">국내숙소</div>

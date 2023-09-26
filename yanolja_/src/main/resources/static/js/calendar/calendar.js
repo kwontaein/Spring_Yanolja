@@ -94,6 +94,7 @@ $(document).ready(function(data) {
 				selectedStartDate = clickedDate;
 				selectedEndDate = null;
 				$(this).addClass('selected-start'); // 시작 날짜 스타일
+				$(this).addClass('selected-start-only'); // 시작 날짜 스타일
 
 				updateDateRangeButtonText(selectedStartDate, selectedEndDate);
 

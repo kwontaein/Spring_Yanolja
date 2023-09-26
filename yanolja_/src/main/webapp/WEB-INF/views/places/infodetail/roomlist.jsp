@@ -74,6 +74,9 @@
 										// 이 부분에 해야 forEach문의 각각 부분에 출력 가능
 										var totalDate = sessionStorage
 												.getItem('totalDate');
+										if(totalDate == null){
+											totalDate = 1;
+										}
 										var roomPrice = '${room.price}'; // room.price는 서버 측에서 가져오는 값
 										var totalPrice = roomPrice * totalDate;
 										document

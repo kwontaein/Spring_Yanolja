@@ -30,14 +30,6 @@ public class KakaoController {
 	@GetMapping("/callback")
 	public ResponseEntity<String> callback(HttpServletRequest request, HttpSession session) throws Exception {
 
-		/*
-		 * System.out.println("NickName : "+ kakaoInfo.getNickname());
-		 * System.out.println("id : "+ kakaoInfo.getId());
-		 * System.out.println("email : "+ kakaoInfo.getEmail()); // 성공적인 응답을 생성하고,
-		 * MsgEntity 객체에 담아 반환합니다. return ResponseEntity.ok().body(new
-		 * MsgEntity("Success", kakaoInfo));
-		 */
-
 		try {
 			// KakaoService를 사용하여 'code' 파라미터로부터 KakaoVo 정보를 가져옵니다.
 			KakaoVo kakaoInfo = kakaoService.getKakaoInfo(request.getParameter("code"));

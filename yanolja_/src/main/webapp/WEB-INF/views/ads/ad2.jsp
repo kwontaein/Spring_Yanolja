@@ -6,10 +6,9 @@
 <title>Insert title here</title>
 <style>
 .BenefitBanner_banner__z39r1 {
-	width: 768px;
+	width: 728px;
 	color: inherit;
 	text-decoration: none;
-	height: 5rem;
 	background: 50% no-repeat;
 	background-size: 76.8rem 6rem;
 	display: block;

@@ -17,7 +17,7 @@
 					<a>
 						<div>마이페이지</div>
 					</a>
-					<a href="/login">
+					<a href="/Search">
 						<div>검색창</div>
 					</a>
 					<a>
@@ -30,7 +30,7 @@
 					<a href="/mypage">
 						<div>&lt;</div>
 					</a>
-					<a href="/login">
+					<a href="/Search">
 						<div>검색창</div>
 					</a>
 					<a>
@@ -50,7 +50,7 @@
 					<a>
 						<div>메뉴바</div>
 					</a>
-					<a href="/login">
+					<a href="/Search">
 						<div>검색창</div>
 					</a>
 					<a>

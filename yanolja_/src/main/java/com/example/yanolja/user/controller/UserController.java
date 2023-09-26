@@ -139,11 +139,11 @@ public class UserController {
 		return "User/register3";
 	}
 
-	@GetMapping("/Setting")
+	@GetMapping("/UserOption/Setting")
 	public String setting(Model model) {
 		model.addAttribute("KAKAO_CLIENT_ID", KAKAO_CLIENT_ID);
 		model.addAttribute("KAKAO_LOGOUT_REDIRECT_URL", KAKAO_LOGOUT_REDIRECT_URL);
-		return "User/Setting";
+		return "User/UserOption/Setting";
 	}
 
 	@GetMapping("/logout")

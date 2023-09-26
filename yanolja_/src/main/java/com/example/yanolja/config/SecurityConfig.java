@@ -36,7 +36,7 @@ public class SecurityConfig {
 	private String logout_url = "https://kauth.kakao.com/oauth/logout?client_id=${kakao.client.id}&logout_redirect_utl=${kakao.logout_redirect_url}";
 
 	// 웹 애플리케이션의 보안 정책과 접근 권한을 결정하는 역할
-	
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -63,7 +63,6 @@ public class SecurityConfig {
 				// 세션 유지 관련
 				.sessionManagement((sessionManagement) -> sessionManagement.maximumSessions(1)
 						.maxSessionsPreventsLogin(true).expiredUrl("/"));
-
 		return http.build();
 
 	}
