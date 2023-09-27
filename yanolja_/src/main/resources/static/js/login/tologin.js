@@ -1,13 +1,9 @@
-/**
- * 
- */
+
 function openKakaoLoginPopup() {
 	// 팝업 창을 열기 위한 JavaScript 코드
 	const popupWindow = window.open('about:blank', 'KakaoLoginPopup', 'width=600,height=800');
 
 	// Kakao 로그인 페이지 URL
-	const kakaoLoginUrl = '${kakaoUrl}'; // 실제 URL로 변경해야 합니다.
-
 	// 팝업 창에서 Kakao 로그인 페이지를 로드
 	popupWindow.location.href = kakaoLoginUrl;
 

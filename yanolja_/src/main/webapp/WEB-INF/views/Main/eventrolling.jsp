@@ -40,8 +40,8 @@
 			</div>
 		</div>
 		<!-- If we need navigation buttons -->
-		<div class="swiper-button-prev"></div>
-		<div class="swiper-button-next"></div>
+		<div class="swiper-button-prev swiper-button-prev-1"></div>
+		<div class="swiper-button-next swiper-button-next-1"></div>
 	</div>
 	<div class="swiper-controls">
 		<button id="toggleAutoplay">Stop Autoplay</button>

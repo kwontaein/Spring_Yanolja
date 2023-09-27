@@ -36,5 +36,8 @@
 		<%@ include file="../ads/ad1.jsp"%>
 	</div>
 	<script src="${path}/js/login/tologin.js?var=23-09-11"></script>
+	<script>
+		const kakaoLoginUrl = '${kakaoUrl}'; 
+	</script>
 </body>
 </html>

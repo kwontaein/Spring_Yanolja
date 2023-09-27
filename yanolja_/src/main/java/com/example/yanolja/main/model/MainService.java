@@ -132,6 +132,10 @@ public class MainService {
 		return mainMapper.findRoomDetail(hotelid);
 	}
 
+	public String findUPhone(String uname) {
+		return mainMapper.findUPhone(uname);
+	}
+
 	public List<ReserveResponse> reserve_possible(int hotelid) {
 		return mainMapper.reserve_possible(hotelid);
 	};
@@ -179,7 +183,7 @@ public class MainService {
 	public int reviewroomcnt(Integer roomid) {
 		return mainMapper.reviewroomcnt(roomid);
 	}
-	
+
 	public List<ReviewResponse> review(final int hotelid) {
 		return mainMapper.review(hotelid);
 	}
@@ -209,6 +213,7 @@ public class MainService {
 	public List<MainResponse> findLocateBy(final int regionid) {
 		return mainMapper.findlocateby(regionid);
 	}
+
 	public FacilityResponse facility(int roomid) {
 		return mainMapper.facility(roomid);
 	}

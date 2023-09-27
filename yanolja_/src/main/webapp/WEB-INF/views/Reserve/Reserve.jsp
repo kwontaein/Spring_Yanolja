@@ -17,7 +17,9 @@
 	<div class="ReserveContainer">
 		<header class="Reserveheader">
 			<div class="headerdiv">
-				<span>&lt;</span>
+				<span>
+					<a href='javascript:window.close();' style="color: black; text-decoration: none;">&lt;</a>
+				</span>
 				<span>예약</span>
 				<span></span>
 			</div>
@@ -39,7 +41,22 @@
 						<div class="hotelkind">숙소</div>
 						<div class="freecancel">
 							<span>예약 완료 후 무료 취소 안내</span>
-							<span>▽</span>
+							<span id="seemore">▽</span>
+						</div>
+						<div class="more-content" style="display: none;">
+							<div>
+								<ul class="cntul">
+									<li>예약일시 기준 체크인 시각 이전일 경우 무료취소가 가능합니다.</li>
+									<li>숙소 정책에 따라 일부 상품은 무료취소가 불가능합니다.</li>
+								</ul>
+							</div>
+							<div class="more-detail">
+								<span>호텔/펜션/게하</span>
+								<div>
+									<b>10분 이내 무료 취소</b>
+									<p>(단, 숙소 정책에 따라 취소수수료 부가 예외 규정이 적용되지 않을 수 있습니다.)</p>
+								</div>
+							</div>
 						</div>
 						<div class="hotelcontent">
 							<div class="hotelandroom">
@@ -74,22 +91,27 @@
 					</div>
 					<div class="infoContatiner">
 						<div class="infotitle">예약자 정보*</div>
-						<div class="infoName">
+						<div class="name">
 							<div>
 								<label for="nameinput">성명</label>
 							</div>
 							<div>
-								<input id="nameinput" type="text">
+								<input name="name" id="nameinput" type="text" placeholder="성명을 입력해 주세요">
 							</div>
 						</div>
-						<div class="infoNum">
+						<div class="Num">
 							<div>휴대폰 번호</div>
 							<c:choose>
 								<c:when test="${empty username}">
-									<button>인증하기</button>
+									<button class="phonecheck">인증하기</button>
 								</c:when>
 								<c:otherwise>
-									<div>휴대폰 번호</div>
+									<div class="hasnamephone">
+										<input type="text" id="phoneinput" name="phone" value="${phone}" readonly />
+										<div>
+											<button>번호 변경</button>
+										</div>
+									</div>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -98,18 +120,18 @@
 						<div class="infotitle">이용자 정보*</div>
 						<div class="title_info">상품 이용 시 필요한 필수 정보입니다</div>
 						<div class="sameperson">
-							<input type="checkbox">예약자 정보와 동일합니다
+							<input id="samePersonCheckbox" type="checkbox" onclick="handleCheckboxChange()">&nbsp;예약자 정보와 동일합니다
 						</div>
 						<div class="name">
 							<div>성명</div>
 							<div>
-								<input id="nameinput2" type="text">
+								<input name="name" id="nameinput2" type="text" placeholder="성명을 입력해 주세요">
 							</div>
 						</div>
 						<div class="Num">
 							<div>휴대폰번호</div>
 							<div>
-								<input id="phoneinput" type="text">
+								<input name="phone" id="phoneinput2" type="text" placeholder="휴대폰 번호를 입력해 주세요">
 							</div>
 						</div>
 						<div class="relax">입력하신 번호는 안심번호로 변경되어 숙소에 전달됩니다. 단, 안심번호로 처리가 어려운 경우에 한해 제한적으로 개인정보 제공 동의에 근거하여 실제 휴대폰번호가 전달 될 수 있습니다.</div>
@@ -148,24 +170,42 @@
 							<span> 총 결제 금액</span>
 							<span id="totalprice3"></span>
 						</div>
-						<div class="glcontain">
-							<button class="goinglogin" onclick="location.href='/tologin'">로그인 후 혜택 받기</button>
-						</div>
+						<c:if test="${empty username}">
+							<div class="glcontain">
+								<button class="goinglogin" onclick="location.href='/tologin'">로그인 후 혜택 받기</button>
+							</div>
+						</c:if>
 					</div>
 					<div class="infoContatiner">
 						<div class="infotitle">혜택 정보</div>
 						<div class="discon">
-							<div class="dis1">NOL 카드로 야놀자 첫 결제 시, 2만원 청구할인></div>
+							<div class="dis1"  style="font-size:14px;">NOL 카드로 야놀자 첫 결제 시, 2만원 청구할인></div>
 							<div class="dis2">
 								<div>
-									<div>
+									<div  style="font-size:14px;">
 										로그인시 최대
-										<span id="discount"></span>
+										<span id="discount" style="font-size:14px;"></span>
 										<b>C</b> 적립예정
 									</div>
-									<div>이용 완료 후 후기 작성하면 자동 적립</div>
+									<div style="font-size:12px;">이용 완료 후 후기 작성하면 자동 적립</div>
 								</div>
-								<div>▽</div>
+								<div id="dismore">▽</div>
+							</div>
+							<div class="seemoredis" style="display:none;">
+								<div class="points" style=" display:flex; align-items:center; justify-content:space-between;">
+									<div style="font-size:14px;">야놀자 코인</div>
+									<div style="font-size:14px;">
+										최대
+										<span id="discount2"></span>
+										<b>C</b> 적립 예정
+									</div>
+								</div>
+								<div class="reason"  style="font-size:12px; display:flex; padding :20px 0;">
+									<div style="flex : 0 0 auto; width:52px;">후기</div>
+									<div style="flex : 1 1 auto;">후기 기본 0.5%</div>
+									<div style="flex : 0 0 auto;">
+										<span id="discount3"></span><b>C</b></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -225,27 +265,30 @@
 						</ul>
 						<div>
 							<div class="agreetitle">
-								<input type="checkbox">필수 약관 전체 동의
+								<input type="checkbox" name="agreedall" value='selectall' onclick='selectAll(this)'>필수 약관 전체 동의
 							</div>
 							<div class="agree">
-								<input type="checkbox">[필수] 1
+								<input type="checkbox" name="agreed" value="require1" onchange="checkAgreements()">[필수] 1
 							</div>
 							<div class="agree">
-								<input type="checkbox">[필수] 2
+								<input type="checkbox" name="agreed" value="require2" onchange="checkAgreements()">[필수] 2
 							</div>
 							<div class="agree">
-								<input type="checkbox">[필수] 3
+								<input type="checkbox" name="agreed" value="require3" onchange="checkAgreements()">[필수] 3
 							</div>
 							<div class="agree">
-								<input type="checkbox">[선택] 4
+								<input type="checkbox" name="agreed" value="norequire4">[선택] 4
 							</div>
 							<div class="agree">
-								<input type="checkbox">[선택] 5
+								<input type="checkbox" name="agreed" value="norequire5">[선택] 5
 							</div>
 						</div>
 						<div class="explain">규칙 동의 후 결제</div>
 						<div>
-							<button class="payment"><span id="paymentprice"></span>결제하기</button>
+							<button class="payment">
+								<span id="paymentprice"></span>
+								결제하기
+							</button>
 						</div>
 						<div class="explain2">(주)야놀자는 통신판매중개업자로서, 통신판매의 당사자가 아니라는 사실을 고지하며 상품의 결제, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.</div>
 					</div>

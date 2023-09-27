@@ -1,14 +1,11 @@
 const swiper = new Swiper('.swiper', {
 	// Optional parameters
 	slidesPerView: 2.2,
-
 	direction: 'horizontal',
-	loop: true,
-
 	// Navigation arrows
 	navigation: {
-		nextEl: '.swiper-button-next',
-		prevEl: '.swiper-button-prev',
+		nextEl: '.swiper-button-next-1',
+		prevEl: '.swiper-button-prev-1',
 	},
 	autoplay: {
 		delay: 3000,

@@ -12,7 +12,7 @@
 		<div class="header">
 			<!-- 다른 경우에 대한 처리 -->
 			<div>
-				<a>&lt;</a>
+				<a href="javascript:window.history.back();">&lt;</a>
 			</div>
 
 			<div>

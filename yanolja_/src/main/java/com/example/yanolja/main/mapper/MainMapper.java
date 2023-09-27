@@ -81,6 +81,8 @@ public interface MainMapper {
 	 */
 	RoomResponse findRoomDetail(int hotelid);
 
+	String findUPhone(String uname);
+
 	List<ReserveResponse> reserve_possible(int hotelid);
 
 	/**
@@ -178,7 +180,7 @@ public interface MainMapper {
 	List<MainResponse> findlocateby(int regionid);
 
 	FacilityResponse facility(int roomid);
-	
+
 	/**
 	 * 게시글 수 카운팅
 	 * 

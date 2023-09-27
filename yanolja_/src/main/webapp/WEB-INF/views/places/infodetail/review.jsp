@@ -12,13 +12,10 @@
 		<div class="ratingWrapper">
 			<div class="ratingHead">
 				<div class="ratingtitle">
-					<c:if test="${not empty review_detail}">
-						<span>후기 (${review_detail.review_cnt})</span>
-					</c:if>
 					<c:if test="${not empty review}">
 						<span>후기 (${cnt})</span>
+						<span>후기정책</span>
 					</c:if>
-					<span>후기정책</span>
 				</div>
 				<c:if test="${not empty review_detail}">
 					<div class="rating_content">
@@ -77,7 +74,10 @@
 					<div class="reviewlist">
 						<div class="reviewoption">
 							<div class="option1">최근작성순 ▼</div>
-							<div class="option2"><span>포토후기만 보기</span><input type="checkbox"></div>
+							<div class="option2">
+								<span>포토후기만 보기</span>
+								<input type="checkbox">
+							</div>
 						</div>
 						<c:forEach items="${review}" var="review">
 							<div class="listcontent">

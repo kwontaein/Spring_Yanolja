@@ -111,7 +111,8 @@ public class MainController {
 		model.addAttribute("tomorrowDate", tomorrowDate);
 		return "calendar/calendar";
 	}
-
+	
+	//날짜 세션 설정 
 	private String updateSessionAttribute(HttpSession session, String attributeName, String sessionValue,
 			String requestValue, LocalDate Date) {
 
@@ -332,23 +333,30 @@ public class MainController {
 
 	@GetMapping("/Searchdetail")
 	public String koreahotel(@RequestParam String category) {
-		if(category.equals("국내숙소")) {
+		if (category.equals("국내숙소")) {
 			return "Search/koreahotel";
-		}else if(category.equals("레저/티켓")) {
+		} else if (category.equals("레저/티켓")) {
 			return "Search/ticket";
-		}else if(category.equals("교통/항공")) {
+		} else if (category.equals("교통/항공")) {
 			return "Search/traffic";
-		}else if(category.equals("해외숙소")) {
+		} else if (category.equals("해외숙소")) {
 			return "Search/outland";
-		}else {
+		} else {
 			return "Search/koreahotel";
 		}
 	}
-	
+
 	@GetMapping("/Reserve")
-	public String reserve(@RequestParam int roomid, Model model) {
+	public String reserve(@RequestParam int roomid, Model model, HttpSession session) {
 		RoomResponse roomdetail = mainService.findRoomDetail(roomid);
+
+		Object uname = session.getAttribute("username");
+		if (uname != null) {
+			String phone = mainService.findUPhone(uname.toString());
+			model.addAttribute("phone", phone);
+		}
 		model.addAttribute("room", roomdetail);
+
 		return "Reserve/Reserve";
 	}
 	// 게시글 작성 페이지

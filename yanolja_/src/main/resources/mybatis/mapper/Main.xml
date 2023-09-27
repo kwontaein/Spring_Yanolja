@@ -109,8 +109,7 @@
 	<delete id="deleteById" parameterType="long">
 		UPDATE hotel
 		SET
-		delete_yn =
-		1
+		delete_yn = 1
 		WHERE
 		id = #{id}
 	</delete>
@@ -133,9 +132,7 @@
 		FROM hotel where (SELECT location.regionid
 		FROM location WHERE
 		location.hotelid = hotel.hotelid) = #{regionid} and
-		kindhotel
-		=
-		#{kindhotel}
+		kindhotel = #{kindhotel}
 	</select>
 
 	<!-- 호텔 조회 -->
@@ -158,9 +155,8 @@
 		bedcnt,rentalType,Checkin,Checkout
 		FROM
 		room
-		where hotelid
-		=
-		#{hotelid}
+		where 
+		hotelid = #{hotelid}
 		ORDER BY
 		price asc
 	</select>
@@ -175,164 +171,130 @@
 		bedcnt,rentalType,Checkin,Checkout,(roomnumber- (
 		SELECT count(roomid)
 		FROM reserve
-		WHERE
-		reservedate = ${StartDate} and room.roomid =
-		reserve.roomid)) as roomcnt,defaultinfo,
-		(select reserveinfo from hotel
-		where hotel.hotelid =
-		room.hotelid) as
-		reserveinfo
+		WHERE reservedate = ${StartDate} and room.roomid = reserve.roomid)) as roomcnt,defaultinfo,
+		(select reserveinfo 
+		from hotel 
+		where hotel.hotelid = room.hotelid) as reserveinfo
 		FROM
-		room where roomid
-		= #{roomid}
+		room 
+		where 
+		roomid = #{roomid}
 	</select>
 	<!-- 방 조회 -->
 	<select id="findRoomByDate"
 		resultType="com.example.yanolja.main.post.RoomResponse">
-		SELECT
-		roomid,
-		MaxManCnt,
-		roomname,
-		price,
-		roominfo,
-		somke,
-		booknoti,
-		roomserve,
-		defaultmancnt,
-		bed,
-		bedcnt,
-		Checkin,
-		(roomnumber -
-		(SELECT
-		COUNT(roomid)
-		FROM
-		reserve
-		WHERE
-		reservedate = DATE_FORMAT(
-		#{StartDate},
-		"%Y-%m-%d")
-		AND room.roomid = reserve.roomid)) AS roomcnt
-		, rentalType
-		FROM
+		SELECT roomid,MaxManCnt,roomname,price,roominfo,somke,booknoti,roomserve,defaultmancnt, bed,bedcnt,Checkin,
+		(roomnumber -(SELECT COUNT(roomid)
+		FROM reserve
+		WHERE reservedate = DATE_FORMAT( #{StartDate}, "%Y-%m-%d") AND room.roomid = reserve.roomid)) AS roomcnt , rentalType
+		FROM 
 		room
-		WHERE
+		WHERE 
 		hotelid = #{hotelid}
-		AND roomnumber >= (SELECT
-		COUNT(roomid)
-		FROM
+		AND 
+		roomnumber >= (SELECT COUNT(roomid)
+		FROM 
 		reserve
-		WHERE
-		reservedate = DATE_FORMAT( #{StartDate},
-		"%Y-%m-%d")
-		AND
+		WHERE 
+		reservedate = DATE_FORMAT( #{StartDate},"%Y-%m-%d")
+		AND 
 		room.roomid = reserve.roomid);
 	</select>
 
 	<select id="reserve_possible"
 		resultType="com.example.yanolja.main.post.ReserveResponse">
-		SELECT DATE_FORMAT(reservedate, "%Y-%m-%d") AS date,
-		count(*) AS cnt
-		FROM reserve
-		where DATE(reservedate) >= DATE_SUB(NOW(),
-		INTERVAL 365 DAY) and hotelid =#{hotelid}
-		GROUP BY
-		DATE_FORMAT(reservedate, "%Y-%m-%d")
-		ORDER BY date DESC
+		SELECT 
+		DATE_FORMAT(reservedate, "%Y-%m-%d") AS date, count(*) AS cnt
+		FROM 
+		reserve
+		where 
+		DATE(reservedate) >= DATE_SUB(NOW(), INTERVAL 365 DAY) and hotelid =#{hotelid}
+		GROUP 
+		BY DATE_FORMAT(reservedate, "%Y-%m-%d")
+		ORDER 
+		BY date DESC
 	</select>
 
 	<select id="hotelLocation"
 		resultType="com.example.yanolja.main.post.TrafficResponse">
-		SELECT
-		roadloc,
-		roadinfo,
-		parking
-		FROM
+		SELECT 
+		roadloc,roadinfo,parking
+		FROM 
 		location
-		WHERE hotelid =
-		#{hotelid}
+		WHERE 
+		hotelid = #{hotelid}
 	</select>
 
 
 	<select id="hotelintro" resultType="String">
-		Select
+		Select 
 		hotelintro
-		from hotel
-		where hotelid = #{hotelid}
+		from 
+		hotel 
+		where 
+		hotelid = #{hotelid}
 	</select>
 
 	<select id="hotelpolicy"
 		resultType="com.example.yanolja.main.post.PolicyResponse">
-		Select
-		policyname,
-		policycontent
-		FROM
-		policy
-		where hotelid =
-		#{hotelid}
+		Select 
+		policyname,policycontent
+		FROM 
+		policy 
+		where 
+		hotelid = #{hotelid}
 	</select>
 
 	<select id="hotelinfo"
 		resultType="com.example.yanolja.main.post.InfoResponse">
-		Select
-		infoName,
-		infoDetail
-		FROM
-		hotel_info
-		where hotelid =
-		#{hotelid}
+		Select 
+		infoName, infoDetail
+		FROM 
+		hotel_info 
+		where 
+		hotelid = #{hotelid}
 	</select>
 
 	<select id="roomcnt" resultType="int">
-		select sum(roomnumber) as
-		roomcount from room
-		where
+		select 
+		sum(roomnumber) as roomcount 
+		from 
+		room
+		where 
 		hotelid = #{hotelid};
 	</select>
 
-	<sql id="reviewColums">(SELECT format((avg_value),1)
-		FROM (
-		SELECT
-		(AVG(Kindness) +
-		AVG(cleanliness) +
-		AVG(convenience) +
-		AVG(Loc_satisfy)) / 4 AS avg_value
-		FROM review
-		where
-		hotelid = #{hotelid}
-		) subquery) as rating,
-		(select name
-		from user where user.userid =
-		review.userid) as username,
-		(select
-		roomname from room where
-		room.roomid = review.roomid) as
-		roomname,
-		reviewcontent,
-		ratingdate
+	<sql id="reviewColums">
+	(SELECT format((avg_value),1)
+		FROM (SELECT
+		(AVG(Kindness) + AVG(cleanliness) + AVG(convenience) + AVG(Loc_satisfy)) / 4 AS avg_value
+		FROM review where hotelid = #{hotelid}) subquery) as rating,
+		(select name from user where user.userid = review.userid) as username,
+		(select roomname from room where room.roomid = review.roomid) as roomname,reviewcontent,ratingdate
 	</sql>
 
 	<select id="review"
 		resultType="com.example.yanolja.main.post.ReviewResponse">
 		select
 		<include refid="reviewColums" />
-		from
-		review
-		where hotelid
-		= #{hotelid}
+		from review
+		where hotelid = #{hotelid}
 	</select>
 	<select id="reviewroom"
 		resultType="com.example.yanolja.main.post.ReviewResponse">
 		select
 		<include refid="reviewColums" />
-		from
+		from 
 		review
-		where roomid
-		= #{roomid}
+		where 
+		roomid= #{roomid}
 	</select>
 
 	<select id="reviewroomcnt" resultType="int">
-		select count(*) as
-		reviewcnt from review
+		select
+		count(*) as reviewcnt 
+		from 
+		review
 		where
 		roomid = #{roomid};
 	</select>
@@ -352,9 +314,9 @@
 		COALESCE(FORMAT(AVG(cleanliness), 1), '0') AS cleanliness,
 		COALESCE(FORMAT(AVG(convenience), 1), '0') AS convenience,
 		COALESCE(FORMAT(AVG(Loc_satisfy), 1), '0') AS Loc_satisfy
-		FROM
+		FROM 
 		review
-		WHERE
+		WHERE 
 		hotelid = #{hotelid};
 	</select>
 	<!-- 지역별 리스트 조회 -->
@@ -362,18 +324,28 @@
 		resultType="com.example.yanolja.main.post.MainResponse">
 		SELECT
 		<include refid="postColumns" />
-		FROM
+		FROM 
 		hotel
-		where
-		(SELECT location.regionid FROM location WHERE
-		location.hotelid =
-		hotel.hotelid) = #{regionid}
+		where 
+		(SELECT location.regionid FROM location WHERE location.hotelid =hotel.hotelid) = #{regionid}
 	</select>
 
 	<select id="facility"
 		resultType="com.example.yanolja.main.post.FacilityResponse">
-		Select roomStructure, roomCompose, bedCompose, washTool,
-		etx, internet, TV, drink, roomfacility from facility where roomid =
-		#{roomid};
+		Select 
+		roomStructure, roomCompose, bedCompose, washTool,
+		etx, internet, TV, drink, roomfacility 
+		from 
+		facility 
+		where 
+		roomid =#{roomid};
+	</select>
+	
+	<select id ="findUPhone" resultType="String">
+		Select phone 
+		from 
+		user 
+		where
+		name=#{uname}
 	</select>
 </mapper>

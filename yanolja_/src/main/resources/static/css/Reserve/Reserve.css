@@ -7,6 +7,7 @@ body{
 	padding: 0;
 	margin: 0;
 	}
+
 .ReserveContainer{
 	width: 100%;
 	}
@@ -66,7 +67,7 @@ body{
 .freecancel{
 	background-color: #f2f2f2;
 	padding: 10px;
-	font-size: 14px;
+	font-size: 12px;
  	display: flex;
  	justify-content: space-between;
 }
@@ -163,7 +164,6 @@ body{
 }
 .dis1{
 	background-color: #f2f2f2;
-	border-radius: 10px;
 	padding: 10px;
 	margin-bottom: 8px;
 }
@@ -172,7 +172,6 @@ body{
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	border-radius: 10px;
 	padding: 10px;
 }
 .adkko{
@@ -283,4 +282,72 @@ body{
 	width: 100%;
 	padding: 13px 16px;
 	margin-top: 12px;
+}
+.name{
+	padding: 10px;
+}
+.Num{
+	padding: 10px;
+}
+.phonecheck{
+	background-color: white;
+	border: lightgray 1px solid;
+	border-radius: 5px;
+	width: 100%;
+	padding: 5px 0;
+	margin:10px 0 0 0 ;
+}
+.phonecheck:hover{
+	background-color: #f2f2f2;
+}
+.name>div>input{
+	border: none;
+	border-bottom: 1px lightgray solid;
+	width: 100%;
+	outline: none;
+	padding: 8px 0;
+	}
+.Num>div>input{
+	border: none;
+	border-bottom: 1px lightgray solid;
+	width: 100%;
+	outline: none;
+	padding: 8px 0;
+	}	
+.sameperson{
+	padding: 10px 0;	
+}
+.hasnamephone{
+	display: flex;
+	align-items: center;
+}
+.hasnamephone>div{
+	padding: 0 0 0 5px;
+}
+.hasnamephone>div>button{
+	background-color: white;
+	border: 1px lightgray solid;
+	font-size: 12px;
+	padding:5px 0;
+	width: 60px;
+}
+.more-content{
+	padding: 0 20px;
+	font-size: 12px;
+	background-color: #f2f2f2;
+}
+.cntul{
+	padding: 10px 0;
+	margin:0
+}
+.more-detail{
+	display: flex;
+	align-items: center;
+}
+.more-detail>span{
+	padding: 0 10px 0 0 ;
+}
+.seemoredis{
+	background-color: #f2f2f2;
+	padding: 0 10px;
 }
