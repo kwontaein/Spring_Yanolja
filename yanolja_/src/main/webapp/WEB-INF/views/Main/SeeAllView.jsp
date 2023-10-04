@@ -11,18 +11,14 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 </head>
 <body>
-	<%@ include file="../../layout/header.jsp"%>
+	<%@ include file="../../layout/Seeallheader.jsp"%>
 	<div class="wrap">
-		<div class="custom_slide_wrap">
-			<div class="swiper-pagination-custom mt-40 mb-30"></div>
-		</div>
 		<div class="swiper-bottom">
 			<div class="swiper-wrapper">
 				<c:forEach var="i" begin="1" end="4">
 					<div class="swiper-slide">
 						<div class="bh_item_inner">
 							<div class="bh_content">
-								<p>Slide ${i}</p>
 								<div class="contents_box">
 									<div>
 										<!-- Include된 파일을 여기에 표시 -->
@@ -37,5 +33,6 @@
 		</div>
 	</div>
 	<script src="${path}/js/slide/SeeAllView.js?var=23-09-08"></script>
+	<div class="calendar_modal"></div>
 </body>
 </html>

@@ -13,7 +13,7 @@
 				<h2>어디로 갈까요?</h2>
 			</div>
 			<div class="locationdetail">
-				<div class="select">
+				<div class="select" id="selectbtn">
 					<div>지역 선택</div>
 					<div>
 						<b>&gt;</b>
@@ -26,6 +26,5 @@
 			</div>
 		</div>
 	</div>
-	<div class="locationmodal"></div>
 </body>
 </html>

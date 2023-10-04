@@ -98,4 +98,13 @@ public class MainResponse {
 		return hotelcreate2;
 	}
 
+	@Override
+	public String toString() {
+		return "MainResponse [hotelid=" + hotelid + ", hotelname=" + hotelname + ", hotelcall=" + hotelcall
+				+ ", notification=" + notification + ", rating=" + rating + ", reviewcount=" + reviewcount
+				+ ", kindhotel=" + kindhotel + ", hotelcreate=" + hotelcreate + ", hotelcreate2=" + hotelcreate2
+				+ ", hotelmodified=" + hotelmodified + ", status=" + status + ", price=" + price + ", regionid="
+				+ regionid + ", regiondetail=" + regiondetail + ", roadloc=" + roadloc + "]";
+	}
+
 }

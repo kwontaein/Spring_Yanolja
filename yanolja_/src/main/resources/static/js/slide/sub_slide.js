@@ -10,17 +10,14 @@ var bottomSwiper = new Swiper('.swiper-container', {
 });
 
 // 초기 상태에서 슬라이드 내용 로드
-includeFile('Tophotellist', '호텔', 'includedContent1'); // 첫 번째 슬라이드
-includeFile('Tophotellist2', '호텔', 'includedContent2'); // 두 번째 슬라이드
-includeFile('Tophotellist3', '호텔', 'includedContent3'); // 세 번째 슬라이드
+includeFile('Tophotellist', 'includedContent1'); // 첫 번째 슬라이드
+includeFile('Tophotellist2', 'includedContent2'); // 두 번째 슬라이드
+includeFile('Tophotellist3', 'includedContent3'); // 세 번째 슬라이드
 
-function includeFile(filePath, kindhotel, slideId) {
+function includeFile(filePath, slideId) {
 	$.ajax({
-		url: filePath,  
+		url: filePath,
 		method: "GET",
-		data: {
-			kindhotel: kindhotel,
-		},
 		success: function(response) {
 			var slideContainer = "#" + slideId;
 			$(slideContainer).append(response); // 해당 슬라이드 컨테이너에 추가

@@ -92,6 +92,15 @@ public class MainService {
 	 * 
 	 * @return 호텔 리스트
 	 */
+	public List<MainResponse> TofindByKindDesc(String kindhotel) {
+		return mainMapper.TofindByKindDesc(kindhotel);
+	}
+	
+	/**
+	 * 호텔 리스트 조회
+	 * 
+	 * @return 호텔 리스트
+	 */
 	public List<MainResponse> findAllHotel() {
 		return mainMapper.findAll();
 	}

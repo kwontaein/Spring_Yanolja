@@ -172,6 +172,14 @@ public interface MainMapper {
 	List<MainResponse> TofindByKind(String kindhotel);
 
 	/**
+	 * 위치, 종류기반 리스트 조회
+	 * 
+	 * @return 위치, 종류기반 리스트
+	 */
+
+	List<MainResponse> TofindByKindDesc(String kindhotel);
+
+	/**
 	 * 위치기반 리스트 조회
 	 * 
 	 * @return 위치기반 리스트

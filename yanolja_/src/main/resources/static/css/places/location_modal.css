@@ -1,0 +1,52 @@
+@charset "UTF-8";
+.modalWrapper::-webkit-scrollbar {
+  display: none;
+}
+body{
+	display: flex;
+	justify-content: center;
+}
+.headerloc{
+	width: 100%;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	height: 48px;
+}
+.lochead{
+	display: flex;
+	width: 768px;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 18px;
+}
+.modalWrapper{
+	display: flex;
+	justify-content: center;
+}
+.Select_Roc{
+	display: flex;
+	justify-content: center;
+	height: 100vh;
+	width: 728px;
+	padding: 20px;
+	background-color: white;
+}
+.Roc_content{
+	width: 470px;
+	display: flex;
+}
+.Roc_list{
+	margin:0;
+	margin-right: 16px;
+	padding: 0;
+	list-style: none;
+}
+.Roc_list>li{
+	width: 24px;
+	height: 16px;
+	padding: 10px 14px;
+	font-size: 12px;
+	border: 1px solid lightgray;
+	background-color: #f2f2f2;
+}

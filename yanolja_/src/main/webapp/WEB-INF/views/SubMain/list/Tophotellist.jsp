@@ -25,7 +25,7 @@
 									<li>${hotel.rating}(${ hotel.reviewcount })</li>
 								</div>
 								<div class="price">
-									<li><br> <b>${hotel.price}</b>원</li>
+									<li><br> <b>${hotel.price}</b>원~</li>
 								</div>
 							</div>
 						</a>

@@ -83,10 +83,6 @@ public class MainController {
 				model.addAttribute("comparisonList", comparisonList);
 			}
 
-		} else if (roomid != null) {
-			// roomid가 전달된 경우
-
-			// roomcnt 랑 reserve room 비교
 		} else {
 			// hotelid와 roomid 모두 전달되지 않은 경우
 			// 처리할 코드 작성
@@ -356,8 +352,7 @@ public class MainController {
 			model.addAttribute("phone", phone);
 		}
 		model.addAttribute("room", roomdetail);
-
-		return "Reserve/Reserve";
+		return "Search/Reserve/Reserve";
 	}
 	// 게시글 작성 페이지
 	/*

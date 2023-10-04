@@ -289,8 +289,6 @@ $(document).ready(function(data) {
 					sendAjaxRequest(hotelid, 1);// 페이지 새로고침
 				if (roomid != null)
 					location.reload();
-
-				var dayDiff = daysDifference;
 			},
 			error: function(error) {
 				// 요청이 실패한 경우 처리할 내용
