@@ -11,6 +11,7 @@
 <script src="${path}/js/places/Reserve.js"></script>
 <script>
 	var roomPrice = '${room.price}';
+	var price;
 </script>
 </head>
 <body>
@@ -161,7 +162,7 @@
 										<span>로그인 후 사용 가능</span>
 									</c:when>
 									<c:otherwise>
-										<span>?ㅇ</span>
+										<span>?원</span>
 									</c:otherwise>
 								</c:choose>
 							</div>
@@ -179,32 +180,34 @@
 					<div class="infoContatiner">
 						<div class="infotitle">혜택 정보</div>
 						<div class="discon">
-							<div class="dis1"  style="font-size:14px;">NOL 카드로 야놀자 첫 결제 시, 2만원 청구할인></div>
+							<div class="dis1" style="font-size: 14px;">NOL 카드로 야놀자 첫 결제 시, 2만원 청구할인></div>
 							<div class="dis2">
 								<div>
-									<div  style="font-size:14px;">
+									<div style="font-size: 14px;">
 										로그인시 최대
-										<span id="discount" style="font-size:14px;"></span>
+										<span id="discount" style="font-size: 14px;"></span>
 										<b>C</b> 적립예정
 									</div>
-									<div style="font-size:12px;">이용 완료 후 후기 작성하면 자동 적립</div>
+									<div style="font-size: 12px;">이용 완료 후 후기 작성하면 자동 적립</div>
 								</div>
 								<div id="dismore">▽</div>
 							</div>
-							<div class="seemoredis" style="display:none;">
-								<div class="points" style=" display:flex; align-items:center; justify-content:space-between;">
-									<div style="font-size:14px;">야놀자 코인</div>
-									<div style="font-size:14px;">
+							<div class="seemoredis" style="display: none;">
+								<div class="points" style="display: flex; align-items: center; justify-content: space-between;">
+									<div style="font-size: 14px;">야놀자 코인</div>
+									<div style="font-size: 14px;">
 										최대
 										<span id="discount2"></span>
 										<b>C</b> 적립 예정
 									</div>
 								</div>
-								<div class="reason"  style="font-size:12px; display:flex; padding :20px 0;">
-									<div style="flex : 0 0 auto; width:52px;">후기</div>
-									<div style="flex : 1 1 auto;">후기 기본 0.5%</div>
-									<div style="flex : 0 0 auto;">
-										<span id="discount3"></span><b>C</b></div>
+								<div class="reason" style="font-size: 12px; display: flex; padding: 20px 0;">
+									<div style="flex: 0 0 auto; width: 52px;">후기</div>
+									<div style="flex: 1 1 auto;">후기 기본 0.5%</div>
+									<div style="flex: 0 0 auto;">
+										<span id="discount3"></span>
+										<b>C</b>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -273,22 +276,49 @@
 							<div class="agree">
 								<input type="checkbox" name="agreed" value="require2" onchange="checkAgreements()">[필수] 2
 							</div>
-							<div class="agree">
-								<input type="checkbox" name="agreed" value="require3" onchange="checkAgreements()">[필수] 3
-							</div>
-							<div class="agree">
-								<input type="checkbox" name="agreed" value="norequire4">[선택] 4
-							</div>
-							<div class="agree">
-								<input type="checkbox" name="agreed" value="norequire5">[선택] 5
-							</div>
+							<c:if test="${empty username}">
+								<div class="agree">
+									<input type="checkbox" name="agreed" value="require3" onchange="checkAgreements()">[필수] 3
+								</div>
+								<div class="agree">
+									<input type="checkbox" name="agreed" value="norequire4">[선택] 4
+								</div>
+								<div class="agree">
+									<input type="checkbox" name="agreed" value="norequire5">[선택] 5
+								</div>
+							</c:if>
 						</div>
 						<div class="explain">규칙 동의 후 결제</div>
 						<div>
-							<button class="payment">
+							<button class="payment" onclick="openPaymentPage()">
 								<span id="paymentprice"></span>
 								결제하기
 							</button>
+							<script>
+								function openPaymentPage() {
+									var usernameInput = document
+											.getElementById('nameinput');
+									var username = usernameInput.value;
+									// 전달하려는 room 데이터 가져오기
+									var roomData = {
+										hotelname : '${room.hotelname}',
+										roomname : '${room.roomname}',
+										roomid : '${room.roomid}',
+										price : price,
+										username : username,
+									// 필요한 경우 다른 room 데이터 속성을 추가하세요
+									};
+									// room 데이터를 JSON 문자열로 변환
+									var roomDataJson = JSON.stringify(roomData);
+									// URL 매개변수로 전달하기 위해 JSON 문자열을 인코딩
+									var roomDataUrlEncoded = encodeURIComponent(roomDataJson);
+									// room 데이터를 쿼리 매개변수로 포함한 URL 구성
+									var paymentPageUrl = '/KakaoPayPage?roomData='
+											+ roomDataUrlEncoded;
+									// 해당 URL로 새 창 열기
+									window.open(paymentPageUrl, '_blank');
+								}
+							</script>
 						</div>
 						<div class="explain2">(주)야놀자는 통신판매중개업자로서, 통신판매의 당사자가 아니라는 사실을 고지하며 상품의 결제, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.</div>
 					</div>

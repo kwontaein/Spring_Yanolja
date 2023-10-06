@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link href="${path}/css/places/RoomDetail.css" rel="stylesheet">
 <script src="${path}/js/places/roomDetail.js"></script>
 </head>
@@ -15,6 +16,7 @@
 	<script>
 		// JSTL을 사용하여 서버 측 데이터를 JavaScript 변수에 할당
 		var price = '<c:out value="${price}" />';
+		var roomid = "${room.roomid}";
 	</script>
 	<%@include file="../../../layout/RoomHeader.jsp"%>
 	<div class="rdetailContainer">
@@ -327,6 +329,10 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class='toast' style='display: none'>
+		장바구니에 상품이 담겼습니다
+		<a href="../cart">장바구니 보기</a>
 	</div>
 </body>
 </html>
