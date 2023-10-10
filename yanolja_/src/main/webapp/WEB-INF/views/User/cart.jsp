@@ -64,9 +64,26 @@
 														selectedIds.push($(this).data("roomid")); // 해당 아이템의 roomid 가져오기
 														deleteCartItem(selectedIds);
 													});
+													var totalprice = 0;
+													// date1과 date2를 문자열로 가져오기
+													var date1Str = '${Cartroom.date1}';
+													var date2Str = '${Cartroom.date2}';
 													
-													var date1= '${Cartroom.date1}';
-													var date2= '${Cartroom.date2}';
+													var price = '${Cartroom.price}';
+													
+													// Date 객체로 변환
+													var date1 = new Date(date1Str);
+													var date2 = new Date(date2Str);
+
+													var timeDifference = date2 - date1;
+											
+													var daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+													
+													document.getElementById('nights${loop.index}').textContent = '/'+daysDifference + '박'; // 결과를 원하는 DOM 요소에 표시
+													document.getElementById('price${loop.index}').textContent = daysDifference*price; // 결과를 원하는 DOM 요소에 표시
+													
+													totalprice += daysDifference*price;
+													document.getElementById('goods').textContent =totalprice ; // 결과를 원하는 DOM 요소에 표시
 													
 												});
 										</script>
@@ -79,7 +96,7 @@
 											<span>${Cartroom.date1}</span>
 											~
 											<span>${Cartroom.date2}</span>
-											<span id="nights"></span>
+											<span id="nights${loop.index}"></span>
 										</div>
 										<div>
 											<span>체크인 ${Cartroom.checkIn}</span>
@@ -92,11 +109,10 @@
 											<span>최대 ${Cartroom.maxManCnt}명</span>
 										</div>
 										<div class="price">
-											<br> <b>${Cartroom.price}</b>원
+											<br> <b id="price${loop.index}"></b>원
 										</div>
 									</div>
 									<div class="dellist" id="del${loop.index}" data-roomid="${Cartroom.roomid}">x</div>
-
 								</div>
 							</c:forEach>
 						</div>
