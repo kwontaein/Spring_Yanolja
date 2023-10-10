@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.yanolja.main.model.MainService;
+import com.example.yanolja.main.post.Cartinfo;
 import com.example.yanolja.main.post.FacilityResponse;
 import com.example.yanolja.main.post.InfoResponse;
 import com.example.yanolja.main.post.MainResponse;
@@ -107,8 +110,8 @@ public class MainController {
 		model.addAttribute("tomorrowDate", tomorrowDate);
 		return "calendar/calendar";
 	}
-	
-	//날짜 세션 설정 
+
+	// 날짜 세션 설정
 	private String updateSessionAttribute(HttpSession session, String attributeName, String sessionValue,
 			String requestValue, LocalDate Date) {
 
@@ -295,7 +298,7 @@ public class MainController {
 			sessionDate2 = tomorrowDate.toString();
 		}
 
-		RoomResponse roomdetail = mainService.findRoomDetail(roomid);
+		RoomResponse roomdetail = mainService.findRoomDetail(roomid, sessionDate1);
 		FacilityResponse Fc = mainService.facility(roomid);
 		LocalDate currentDate = LocalDate.now();
 		// 원하는 형식의 날짜로 포맷
@@ -322,6 +325,7 @@ public class MainController {
 		return "places/infodetail/locationtraffic";
 	}
 
+//---------------------------------------------------------------------------------------
 	@GetMapping("/Search")
 	public String search() {
 		return "Search/search";
@@ -344,7 +348,7 @@ public class MainController {
 
 	@GetMapping("/Reserve")
 	public String reserve(@RequestParam int roomid, Model model, HttpSession session) {
-		RoomResponse roomdetail = mainService.findRoomDetail(roomid);
+		RoomResponse roomdetail = mainService.findRoomDetail(roomid, sessionDate1);
 
 		Object uname = session.getAttribute("username");
 		if (uname != null) {
@@ -354,6 +358,118 @@ public class MainController {
 		model.addAttribute("room", roomdetail);
 		return "Search/Reserve/Reserve";
 	}
+
+	@GetMapping("/KakaoPayPage")
+	public String kakaopay() {
+		return "KakaoPay/KaKaoPay";
+	}
+
+	@GetMapping("/cart")
+	public String cart(HttpSession session, Model model) {
+
+		List<Cartinfo> cartRoomInfoList = (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+
+		if (cartRoomInfoList != null && cartRoomInfoList.size() != 0) {
+			List<Integer> roomIds = new ArrayList<>();
+			if (cartRoomInfoList != null) {
+				for (Cartinfo cartInfo : cartRoomInfoList) {
+					roomIds.add(cartInfo.getRoomid());
+				}
+			}
+			// 오류남
+			List<RoomResponse> Cartroom = mainService.cartlist(roomIds);
+			// 두 리스트를 합칠 결과 리스트
+			List<RoomResponse> combinedList = new ArrayList<>();
+
+			// 두 리스트를 순회하면서 합칩니다.
+			for (RoomResponse roomResponse : Cartroom) {
+				for (Cartinfo cartInfo : cartRoomInfoList) {
+					if (roomResponse.getRoomid() == cartInfo.getRoomid()) {
+						// Cartinfo와 RoomResponse를 합쳐서 새로운 객체를 생성합니다.
+						RoomResponse combinedInfo = new RoomResponse();
+						combinedInfo.setHotelname(roomResponse.getHotelname());
+						combinedInfo.setLoc(roomResponse.getLoc());
+						combinedInfo.setRoomid(roomResponse.getRoomid());
+						combinedInfo.setMaxManCnt(roomResponse.getMaxManCnt());
+						combinedInfo.setRoomname(roomResponse.getRoomname());
+						combinedInfo.setPrice(roomResponse.getPrice());
+						combinedInfo.setDefaultmancnt(roomResponse.getDefaultmancnt());
+						combinedInfo.setCheckIn(roomResponse.getCheckIn());
+						combinedInfo.setCheckout(roomResponse.getCheckout());
+						combinedInfo.setDate1(cartInfo.getDate1());
+						combinedInfo.setDate2(cartInfo.getDate2());
+						// 결과 리스트에 추가합니다.
+						combinedList.add(combinedInfo);
+						break;
+					}
+				}
+			} // Cartroom 리스트를 hotelname을 기준으로 정렬
+			combinedList.sort(Comparator.comparing(RoomResponse::getHotelname));
+			model.addAttribute("Cartroom", combinedList);
+
+		}
+
+		return "User/cart";
+	}
+
+	@PostMapping("/addToCart")
+	public String addToCart(@RequestParam("roomid") int roomid, @RequestParam("StartDate") String Date1,
+			@RequestParam("EndDate") String Date2, HttpSession session) {
+		// 세션에서 기존에 저장된 RoomInfo 리스트를 가져옴.
+		List<Cartinfo> cartRoomInfoList = (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+		// 만약 세션에 저장된 리스트가 없다면 새로운 리스트를 생성.
+		if (cartRoomInfoList == null) {
+			cartRoomInfoList = new ArrayList<>();
+		}
+
+		// 중복 체크를 수행.
+		boolean isDuplicate = false;
+		for (Cartinfo roomInfo : cartRoomInfoList) {
+			if (roomInfo.getRoomid() == (roomid)) {
+				isDuplicate = true;
+				break;
+			}
+		}
+
+		// 클라이언트로부터 전달받은 roomid가 리스트에 없는 경우에만 추가.
+		if (!isDuplicate) {
+			Cartinfo roomInfo = new Cartinfo(roomid, Date1, Date2);
+			roomInfo.setRoomid(roomid);
+			roomInfo.setDate1(Date1);
+			roomInfo.setDate2(Date2);
+			cartRoomInfoList.add(roomInfo);
+		}
+
+		// 리스트를 다시 세션에 저장.
+		session.setAttribute("cartRoomInfoList", cartRoomInfoList);
+
+		return "redirect:/places/roomView?roomid=" + roomid;
+	}
+
+	@GetMapping("/removeFromCart")
+	public String removeFromCart(@RequestParam("roomid[]") List<Integer> roomids, HttpSession session) {
+		// 세션에서 기존에 저장된 roomid 리스트를 가져옵니다.
+
+		List<Cartinfo> cartRoomids = (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+
+		// 만약 세션에 저장된 리스트가 없다면 아무 작업을 하지 않고 반환합니다.
+		if (cartRoomids == null) {
+			return "redirect:cart"; // 또는 다른 페이지나 뷰로 리다이렉트
+		}
+
+		// roomids 리스트에 있는 각 roomid를 cartRoomids 리스트에서 검색하여 삭제합니다
+		List<Cartinfo> updatedCartRoomInfos = new ArrayList<>(cartRoomids);
+		for (int roomid : roomids) {
+			System.out.println("실행");
+			updatedCartRoomInfos.removeIf(cartInfo -> cartInfo.getRoomid() == roomid);
+		}
+		// 리스트를 다시 세션에 저장합니다.
+		session.setAttribute("cartRoomInfoList", updatedCartRoomInfos);
+
+		// 원하는 처리를 수행한 후, 다른 페이지로 리다이렉트하거나 뷰를 반환할 수 있습니다.
+		return "redirect:cart";
+	}
+
 	// 게시글 작성 페이지
 	/*
 	 * @GetMapping("/Main/write") public String openPostWrite(@RequestParam(value =
