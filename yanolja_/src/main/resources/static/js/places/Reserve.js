@@ -58,7 +58,7 @@ function selectAll(checkbox) {
 
 $(document).ready(
 	function() {
-	checkAgreements();
+		checkAgreements();
 		// 체크박스 요소 가져오기
 		const samePersonCheckbox = document.getElementById('samePersonCheckbox');
 
@@ -119,16 +119,18 @@ $(document).ready(
 			const daysDifference = Math.floor(timeDifference
 				/ (1000 * 60 * 60 * 24));
 
+			price = roomPrice * daysDifference;
+			console.log(price);
 			intime.textContent = `${formattedStartDate2}`;
 			outtime.textContent = ` ${formattedEndDate2} `;
 			date.textContent = `${daysDifference}박`;
-			totalprice.textContent = `${roomPrice * daysDifference}`;
-			totalprice2.textContent = `${roomPrice * daysDifference}원`;
-			totalprice3.textContent = `${roomPrice * daysDifference}원`;
-			discount.textContent = `${(roomPrice * daysDifference) / 200}`;
-			discount2.textContent = `${(roomPrice * daysDifference) / 200}`;
-			discount3.textContent = `${(roomPrice * daysDifference) / 200}`;
-			paymentprice.textContent = `${roomPrice * daysDifference}원 `;
+			totalprice.textContent = `${price}`;
+			totalprice2.textContent = `${price}원`;
+			totalprice3.textContent = `${price}원`;
+			discount.textContent = `${(price) / 200}`;
+			discount2.textContent = `${(price) / 200}`;
+			discount3.textContent = `${(price) / 200}`;
+			paymentprice.textContent = `${price}원 `;
 		}
 
 

@@ -36,6 +36,7 @@ public class KakaoController {
 
 			// 추출한 정보를 기반으로 회원가입 또는 로그인 처리
 			if (kakaoInfo != null) {
+				System.out.println(kakaoInfo.getEmail());
 				User existingUser = kakaoService.findByEmail(kakaoInfo.getEmail());
 				System.out.println(existingUser);
 				if (existingUser == null) {
@@ -43,7 +44,7 @@ public class KakaoController {
 					User newUser = new User();
 					newUser.setEmail(kakaoInfo.getEmail());
 					// 다른 필요한 정보도 설정
-					System.out.println("카카오 계정 회원가입 실행");
+					System.out.println("카카오 계정 회원가입 실행 : " + kakaoInfo.getEmail());
 					kakaoService.insertUser(newUser);
 				} else {
 					// 이미 등록된 사용자라면 로그인 처리

@@ -1,0 +1,105 @@
+@charset "UTF-8";
+body {
+	background-color: #f2f2f2;
+	margin: 0;
+	padding: 0;
+}
+
+.cartContainer {
+	display: flex;
+	justify-content: center;
+}
+
+.header {
+	background-color: white;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.head {
+	width: 100%;
+}
+
+.top {
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	width: 728px;
+	padding: 10px 20px;
+}
+
+.mid {
+	margin: 0 auto;
+	border-bottom: 1px solid lightgray;
+	display: flex;
+	justify-content: center;
+	padding: 0 20px;
+}
+
+.midcontent {
+	display: flex;
+	width: 728px;
+	justify-content: flex-start;
+}
+
+.midcontent>div {
+	padding-right: 20px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+}
+
+.btm {
+	width: 728px;
+	height: 48px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 20px;
+}
+
+.cartWrapper {
+	width: 768px;
+}
+
+.cartlist {
+	margin-top: 12px;
+	background-color: white;
+	padding: 12px 20px 20px 20px;
+}
+
+.goods {
+	margin-top: 12px;
+	background-color: white;
+}
+
+.listdiv {
+	display: flex;
+	width: 728px;
+	position: relative;
+}
+
+.listcheckbox {
+	flex: 0 0 20px;
+	position: relative;
+}
+
+.img {
+	flex: 0 0 80px;
+	position: relative;
+}
+
+.htcontent {
+	flex: 1 1 auto;
+	position: relative;
+}
+
+.dellist {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	top: 0;
+	right: 0;
+}

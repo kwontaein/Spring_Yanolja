@@ -74,12 +74,14 @@ public interface MainMapper {
 	 */
 	List<RoomResponse> findRoomByDate(int hotelid, String StartDate);
 
+	List<RoomResponse> cartlist(List<Integer> roomIds);
+
 	/**
 	 * 방 리스트 조회
 	 * 
 	 * @return 방 리스트
 	 */
-	RoomResponse findRoomDetail(int hotelid);
+	RoomResponse findRoomDetail(int roomid, String StartDate);
 
 	String findUPhone(String uname);
 

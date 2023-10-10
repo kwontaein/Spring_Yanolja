@@ -1,87 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<style type="text/css">
-body {
-	background-color: #f2f2f2;
-	margin: 0;
-	padding: 0;
-}
-
-.cartContainer {
-	display: flex;
-	justify-content: center;
-}
-
-.header {
-	background-color: white;
-	width: 100%;
-	display: flex;
-	justify-content: center;
-}
-
-.head {
-	width: 100%;
-}
-
-.top {
-	margin: 0 auto;
-	display: flex;
-	justify-content: space-between;
-	width: 728px;
-	padding: 10px 20px;
-}
-
-.mid {
-	margin: 0 auto;
-	border-bottom: 1px solid lightgray;
-	display: flex;
-	justify-content: center;
-	padding: 0 20px;
-}
-
-.midcontent {
-	display: flex;
-	width: 728px;
-	justify-content: flex-start;
-}
-
-.midcontent>div {
-	padding-right: 20px;
-	height: 30px;
-	display: flex;
-	align-items: center;
-}
-
-.btm {
-	width: 728px;
-	height: 48px;
-	margin: 0 auto;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 0 20px;
-}
-
-.cartWrapper {
-	width: 768px;
-}
-
-.cartlist {
-	margin-top: 12px;
-	background-color: white;
-	padding: 12px 20px 20px 20px;
-}
-
-.goods {
-	margin-top: 12px;
-	background-color: white;
-}
-</style>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="${path}/css/Reserve/cart.css" />
+<script src="${path}/js/places/cart.js?var=2023-10-10"></script>
 </head>
 <body>
+
 	<header class="header">
 		<div class="head">
 			<div class="top">
@@ -89,33 +18,110 @@ body {
 				<div>장바구니</div>
 				<div>홈</div>
 			</div>
-			<div class="mid">
-				<div class="midcontent">
-					<div>전체</div>
-					<div>숙소</div>
+			<c:if test="${Cartroom != null}">
+				<div class="mid">
+					<div class="midcontent">
+						<div>전체</div>
+						<div>숙소</div>
+					</div>
 				</div>
-			</div>
-			<div class="btm">
-				<div>전체 선택</div>
-				<div>선택 삭제</div>
-			</div>
+				<div class="btm">
+					<div>
+						<input type="checkbox" id="selectAll" onclick='toggleCheckboxes(this)'>전체 선택
+					</div>
+					<div id="deleteSelected">선택 삭제</div>
+				</div>
+			</c:if>
 		</div>
 	</header>
 	<div class="cartContainer">
 		<div class="cartWrapper">
 			<div class="contents">
-				<div class="cartlist">찜 목록 리스트</div>
-				<div class="goods">상품 총 금액</div>
+				<c:choose>
+					<c:when test="${Cartroom != null}">
+						<div class="cartlist">
+							<c:set var="prevHotelName" value="" />
+							<c:forEach items="${Cartroom}" var="Cartroom" varStatus="loop">
+								<!-- 이전 항목의 hotelname과 현재 항목의 hotelname 비교 -->
+								<c:if test="${prevHotelName ne Cartroom.hotelname}">
+									<!-- 호텔 그룹 시작 -->
+									<h3>${Cartroom.hotelname}</h3>
+									<div>
+										<span>숙소</span>
+										|
+										<span>${Cartroom.loc}</span>
+									</div>
+									<c:set var="prevHotelName" value="${Cartroom.hotelname}" />
+								</c:if>
+								<hr>
+								<div class="listdiv">
+									<div class="listcheckbox">
+										<input type="checkbox" id="check${loop.index}" class="individualCheckbox" name="checkdel" data-roomid="${Cartroom.roomid}">
+											<script type="text/javascript">
+												$(document).ready(function() {
+													$("#del${loop.index}").click(function() {
+														var selectedIds = []; // 선택된 체크박스의 roomid를 저장할 배열
+														selectedIds.push($(this).data("roomid")); // 해당 아이템의 roomid 가져오기
+														deleteCartItem(selectedIds);
+													});
+													
+													var date1= '${Cartroom.date1}';
+													var date2= '${Cartroom.date2}';
+													
+												});
+										</script>
+									
+									</div>
+									<div class="img">사진 자리</div>
+									<div class="htcontent">
+										<div class="info">${Cartroom.roomname}</div>
+										<div>
+											<span>${Cartroom.date1}</span>
+											~
+											<span>${Cartroom.date2}</span>
+											<span id="nights"></span>
+										</div>
+										<div>
+											<span>체크인 ${Cartroom.checkIn}</span>
+											|
+											<span>체크아웃 ${Cartroom.checkout}</span>
+										</div>
+										<div>
+											<span> 기준 ${Cartroom.defaultmancnt}명</span>
+											/
+											<span>최대 ${Cartroom.maxManCnt}명</span>
+										</div>
+										<div class="price">
+											<br> <b>${Cartroom.price}</b>원
+										</div>
+									</div>
+									<div class="dellist" id="del${loop.index}" data-roomid="${Cartroom.roomid}">x</div>
+
+								</div>
+							</c:forEach>
+						</div>
+						<div class="goods">상품 총 금액</div>
+					</c:when>
+					<c:otherwise>
+						<div class="cartlist">
+							<h3>장바구니에 담긴 상품이 없습니다!</h3>
+							<p>원하는 상품을 담아보세요</p>
+							<a href="/">홈으로 가기</a>
+						</div>
+					</c:otherwise>
+				</c:choose>
 			</div>
-			<footer class="footer">
-				<div class="footcontent">
-					<div class="price">
-						<div>총 a건</div>
-						<div>결제 예상 금액</div>
+			<c:if test="${Cartroom != null}">
+				<footer class="footer">
+					<div class="footcontent">
+						<div class="price">
+							<div>총 a건</div>
+							<div>결제 예상 금액</div>
+						</div>
+						<div class="reserve">예약하기</div>
 					</div>
-					<div class="reserve">예약하기</div>
-				</div>
-			</footer>
+				</footer>
+			</c:if>
 		</div>
 	</div>
 </body>

@@ -19,16 +19,24 @@ public class RoomResponse {
 	private int roomcnt;
 
 	private String defaultinfo;
+
 	private String reserveinfo;
 
 	private String somke2;
 	int defaultinfoLineCnt;
 	int reserveinfoLineCnt;
 
+	private String date1;
+	private String date2;
+
+	private String loc;
+
+	// findRoomDetail
 	public RoomResponse(String hotelname, int roomid, int MaxManCnt, String roomname, int price, String roominfo,
 			int somke, String booknoti, String roomserve, int defaultmancnt, String bed, int bedcnt, String rentalType,
 			String checkIn, String checkout, int roomcnt, String defaultinfo, String reserveinfo) {
 		super();
+
 		this.hotelname = hotelname;
 		this.roomid = roomid;
 		this.maxManCnt = MaxManCnt;
@@ -47,8 +55,10 @@ public class RoomResponse {
 		this.roomcnt = roomcnt;
 	}
 
+	// findRoomBydate
 	public RoomResponse(int roomid, int MaxManCnt, String roomname, int price, String roominfo, int somke,
-			String booknoti, String roomserve, int defaultmancnt, String bed, int bedcnt, String checkIn, int roomcnt, String rentalType) {
+			String booknoti, String roomserve, int defaultmancnt, String bed, int bedcnt, String checkIn, int roomcnt,
+			String rentalType) {
 		super();
 		this.roomid = roomid;
 		this.maxManCnt = MaxManCnt;
@@ -64,6 +74,25 @@ public class RoomResponse {
 		this.checkIn = checkIn;
 		this.roomcnt = roomcnt;
 		this.rentalType = rentalType;
+	}
+
+	// 카트 정보
+	public RoomResponse(String hotelname, String loc, int roomid, int maxManCnt, String roomname, int price,
+			int defaultmancnt, String checkIn, String checkout) {
+		super();
+		this.hotelname = hotelname;
+		this.loc = loc;
+		this.roomid = roomid;
+		this.maxManCnt = maxManCnt;
+		this.roomname = roomname;
+		this.price = price;
+		this.defaultmancnt = defaultmancnt;
+		this.checkIn = checkIn;
+		this.checkout = checkout;
+	}
+
+	public RoomResponse() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public int getRoomid() {
@@ -160,4 +189,60 @@ public class RoomResponse {
 		return reserveinfo;
 	}
 
+	public String getDate1() {
+		return date1;
+	}
+
+	public String getDate2() {
+		return date2;
+	}
+
+	public String getLoc() {
+		return loc;
+	}
+
+	// ------------------------------------------------------
+	public void setHotelname(String hotelname) {
+		this.hotelname = hotelname;
+	}
+
+	public void setRoomid(int roomid) {
+		this.roomid = roomid;
+	}
+
+	public void setMaxManCnt(int maxManCnt) {
+		this.maxManCnt = maxManCnt;
+	}
+
+	public void setRoomname(String roomname) {
+		this.roomname = roomname;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public void setDefaultmancnt(int defaultmancnt) {
+		this.defaultmancnt = defaultmancnt;
+	}
+
+	public void setCheckIn(String checkIn) {
+		this.checkIn = checkIn;
+	}
+
+	public void setCheckout(String checkout) {
+		this.checkout = checkout;
+	}
+
+	public void setDate1(String date1) {
+		this.date1 = date1;
+	}
+
+	public void setDate2(String date2) {
+		this.date2 = date2;
+	}
+
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
 }

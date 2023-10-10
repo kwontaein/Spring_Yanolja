@@ -37,12 +37,14 @@
 		price,
 		(select regionid
 		from region_detail
-		where region_detail_id = (SELECT
+		where region_detail_id =
+		(SELECT
 		location.region_detail_id
 		FROM
 		location
 		WHERE
-		location.hotelid = hotel.hotelid)) as regionid,
+		location.hotelid =
+		hotel.hotelid)) as regionid,
 		(SELECT
 		location.region_detail_id
 		FROM
@@ -56,9 +58,36 @@
 		location
 		WHERE
 		location.hotelid =
-		hotel.hotelid) AS roadloc
+		hotel.hotelid) AS
+		roadloc
 	</sql>
+	<sql id="GenerateDateRange">
+		DELIMITER $$
+		CREATE FUNCTION GenerateDateRange(startDate
+		DATE, endDate DATE)
+		RETURNS TEXT
+		DETERMINISTIC
+		NO SQL
+		BEGIN
+		DECLARE
+		currentDate DATE;
+		DECLARE dateRange TEXT DEFAULT '';
+		SET currentDate =
+		startDate;
 
+		WHILE currentDate &lt;= endDate DO
+		SET dateRange =
+		CONCAT(dateRange, "'", currentDate, "',");
+		SET currentDate =
+		DATE_ADD(currentDate, INTERVAL 1 DAY);
+		END WHILE;
+
+		RETURN TRIM(TRAILING
+		',' FROM dateRange);
+		END$$
+
+		DELIMITER ;
+	</sql>
 	<!-- 저장 -->
 	<insert id="save"
 		parameterType="com.example.yanolja.main.post.MainRequest"
@@ -134,7 +163,8 @@
 		<include refid="postColumns" />
 		FROM hotel where (select regionid
 		from region_detail
-		where region_detail_id = (SELECT
+		where
+		region_detail_id = (SELECT
 		location.region_detail_id
 		FROM
 		location
@@ -179,50 +209,239 @@
 		ORDER BY
 		price asc
 	</select>
+
 	<!-- 방 조회 -->
 	<select id="findRoomDetail"
 		resultType="com.example.yanolja.main.post.RoomResponse">
 		SELECT
-		(select hotelname from hotel where hotel.hotelid =
-		room.hotelid) as hotelname, roomid, MaxManCnt, roomname,
-		price,roominfo,somke,
-		booknoti,roomserve,defaultmancnt,bed,
-		bedcnt,rentalType,Checkin,Checkout,(roomnumber- (
-		SELECT count(roomid)
-		FROM reserve
-		WHERE reservedate = ${StartDate} and room.roomid =
-		reserve.roomid)) as roomcnt,defaultinfo,
-		(select reserveinfo
-		from hotel
-		where hotel.hotelid = room.hotelid) as reserveinfo
-		FROM
-		room
-		where
-		roomid
-		= #{roomid}
+		(SELECT hotelname FROM hotel WHERE hotel.hotelid =
+		room.hotelid) AS
+		hotelname,
+		roomid,
+		MaxManCnt,
+		roomname,
+		price,
+		roominfo,
+		somke,
+		booknoti,
+		roomserve,
+		defaultmancnt,
+		bed,
+		bedcnt,
+		rentalType,
+		Checkin,
+		Checkout,
+		IFNULL(
+		(roomnumber - (
+		SELECT COUNT(Reservations.reservedate)
+		AS cnt
+		FROM (
+		SELECT DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) AS
+		reservedate
+		FROM (
+		SELECT a.N + b.N * 10 + c.N * 100 AS n
+		FROM (
+		SELECT 0
+		AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7
+		UNION ALL SELECT 8 UNION ALL
+		SELECT 9
+		) AS a
+		CROSS JOIN (
+		SELECT 0 AS N
+		UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
+		ALL
+		SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION
+		ALL SELECT 8 UNION ALL
+		SELECT 9
+		) AS b
+		CROSS JOIN (
+		SELECT 0 AS N UNION
+		ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
+		ALL SELECT 4
+		UNION ALL
+		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
+		SELECT 8 UNION ALL
+		SELECT 9
+		) AS c
+		) AS numbers
+		WHERE
+		DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) = #{StartDate}
+		) AS DateList
+		LEFT JOIN reserve AS Reservations
+		ON DateList.reservedate BETWEEN
+		Reservations.reservedate AND
+		Reservations.reserveEndDate
+		WHERE
+		Reservations.roomid = room.roomid OR Reservations.roomid IS NULL
+		GROUP
+		BY DateList.reservedate
+		)),
+		roomnumber
+		) AS roomcnt,
+		defaultinfo,
+		(SELECT
+		reserveinfo FROM hotel WHERE hotel.hotelid = room.hotelid) AS
+		reserveinfo
+		FROM room
+		WHERE roomid = #{roomid};
 	</select>
 	<!-- 방 조회 -->
 	<select id="findRoomByDate"
 		resultType="com.example.yanolja.main.post.RoomResponse">
 		SELECT
 		roomid,MaxManCnt,roomname,price,roominfo,somke,booknoti,roomserve,defaultmancnt,
-		bed,bedcnt,Checkin,
-		(roomnumber -(SELECT COUNT(roomid)
-		FROM reserve
-		WHERE reservedate = DATE_FORMAT( #{StartDate}, "%Y-%m-%d") AND
-		room.roomid = reserve.roomid)) AS roomcnt , rentalType
+		bed,bedcnt,Checkin, IFNULL(
+		(roomnumber -(
+		SELECT
+		COUNT(Reservations.reservedate) AS cnt
+		FROM (
+		SELECT
+		DATE_ADD(#{StartDate},
+		INTERVAL (n-1) DAY) AS reservedate
+		FROM (
+		SELECT
+		a.N + b.N * 10 + c.N *
+		100 AS n
+		FROM (
+		SELECT 0 AS N UNION ALL SELECT 1
+		UNION ALL SELECT 2 UNION
+		ALL SELECT 3 UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6
+		UNION ALL SELECT 7 UNION ALL SELECT 8
+		UNION
+		ALL
+		SELECT 9
+		) AS a
+		CROSS JOIN
+		(
+		SELECT 0 AS N UNION ALL SELECT 1
+		UNION ALL
+		SELECT 2 UNION ALL SELECT 3
+		UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION
+		ALL SELECT 6 UNION ALL
+		SELECT 7 UNION ALL SELECT 8
+		UNION ALL
+		SELECT 9
+		) AS
+		b
+		CROSS JOIN (
+		SELECT 0
+		AS N UNION ALL SELECT 1
+		UNION ALL SELECT 2 UNION
+		ALL SELECT 3 UNION
+		ALL
+		SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6
+		UNION ALL SELECT 7 UNION
+		ALL SELECT 8
+		UNION ALL
+		SELECT 9
+		) AS c
+		) AS
+		numbers
+		WHERE
+		DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) = #{StartDate}
+		) AS DateList
+		LEFT
+		JOIN reserve AS
+		Reservations
+		ON DateList.reservedate
+		BETWEEN
+		Reservations.reservedate
+		AND
+		Reservations.reserveEndDate
+		WHERE
+		Reservations.roomid = room.roomid
+		OR Reservations.roomid IS NULL
+		GROUP
+		BY DateList.reservedate
+		)),
+		roomnumber
+		) AS
+		roomcnt , rentalType
 		FROM
 		room
 		WHERE
 		hotelid = #{hotelid}
 		AND
-		roomnumber >= (SELECT COUNT(roomid)
-		FROM
-		reserve
+		roomnumber >=
+		(IFNULL(
+		(roomnumber -(
+		SELECT
+		COUNT(Reservations.reservedate) AS cnt
+		FROM (
+		SELECT
+		DATE_ADD(#{StartDate},
+		INTERVAL (n-1) DAY) AS reservedate
+		FROM (
+		SELECT
+		a.N + b.N * 10 + c.N *
+		100 AS n
+		FROM (
+		SELECT 0 AS N UNION ALL SELECT 1
+		UNION ALL SELECT 2 UNION
+		ALL SELECT 3 UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6
+		UNION ALL SELECT 7 UNION ALL SELECT 8
+		UNION
+		ALL
+		SELECT 9
+		) AS a
+		CROSS JOIN
+		(
+		SELECT 0 AS N UNION ALL SELECT 1
+		UNION ALL
+		SELECT 2 UNION ALL SELECT 3
+		UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION
+		ALL SELECT 6 UNION ALL
+		SELECT 7 UNION ALL SELECT 8
+		UNION ALL
+		SELECT 9
+		) AS
+		b
+		CROSS JOIN (
+		SELECT 0
+		AS N UNION ALL SELECT 1
+		UNION ALL SELECT 2 UNION
+		ALL SELECT 3 UNION
+		ALL
+		SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6
+		UNION ALL SELECT 7 UNION
+		ALL SELECT 8
+		UNION ALL
+		SELECT 9
+		) AS c
+		) AS
+		numbers
 		WHERE
-		reservedate = DATE_FORMAT( #{StartDate},"%Y-%m-%d")
+		DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) = #{StartDate}
+		) AS DateList
+		LEFT
+		JOIN reserve AS
+		Reservations
+		ON DateList.reservedate
+		BETWEEN
+		Reservations.reservedate
 		AND
-		room.roomid = reserve.roomid);
+		Reservations.reserveEndDate
+		WHERE
+		Reservations.roomid = room.roomid
+		OR Reservations.roomid IS NULL
+		GROUP
+		BY DateList.reservedate
+		)),
+		roomnumber
+		));
 	</select>
 
 	<select id="reserve_possible"
@@ -369,12 +588,14 @@
 		where
 		(select regionid
 		from region_detail
-		where region_detail_id = (SELECT
+		where region_detail_id
+		= (SELECT
 		location.region_detail_id
 		FROM
 		location
 		WHERE
-		location.hotelid = hotel.hotelid)) = #{regionid}
+		location.hotelid =
+		hotel.hotelid)) = #{regionid}
 	</select>
 
 	<select id="facility"
@@ -396,5 +617,65 @@
 		user
 		where
 		name=#{uname}
+	</select>
+
+	<select id="cartlist"
+		resultType="com.example.yanolja.main.post.RoomResponse">
+		<foreach collection="list" item="roomid"
+			open="select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS hotelname,
+(select roadloc from location where location.hotelid = room.hotelid) as loc, roomid, MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout from room where roomid in ("
+			separator="," close=")">
+			#{roomid}
+		</foreach>
+	</select>
+
+	<select id="reserve_possible2"
+		resultType="com.example.yanolja.main.post.ReserveResponse">
+		SELECT DateList.reservedate,
+		IFNULL(COUNT(Reservations.reservedate), 0) AS
+		cnt
+		FROM (
+		SELECT
+		DATE_ADD(CURDATE(), INTERVAL (n-1) DAY) AS reservedate
+		FROM (
+		SELECT a.N
+		+ b.N * 10 + c.N * 100 AS n
+		FROM (
+		SELECT 0 AS N UNION ALL SELECT 1
+		UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+		UNION ALL
+		SELECT 9
+		) AS a
+		CROSS JOIN (
+		SELECT 0 AS N UNION ALL SELECT 1
+		UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+		UNION ALL
+		SELECT 9
+		) AS b
+		CROSS JOIN (
+		SELECT 0 AS N UNION ALL SELECT 1
+		UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
+		ALL SELECT 4 UNION ALL
+		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+		UNION ALL
+		SELECT 9
+		) AS c
+		) AS numbers
+		WHERE DATE_ADD(CURDATE(), INTERVAL
+		(n-1) DAY) BETWEEN CURDATE() AND
+		DATE_ADD(CURDATE(), INTERVAL 6 MONTH)
+		) AS DateList
+		LEFT JOIN reserve AS Reservations
+		ON DateList.reservedate
+		BETWEEN Reservations.reservedate AND
+		Reservations.reserveEndDate
+		WHERE
+		Reservations.reservedate IS NOT NULL AND Reservations.hotelid =
+		#{hotelid}
+		GROUP BY DateList.reservedate;
 	</select>
 </mapper>

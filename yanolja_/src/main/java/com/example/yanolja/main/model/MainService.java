@@ -137,8 +137,8 @@ public class MainService {
 	 * 
 	 * @return 방 리스트
 	 */
-	public RoomResponse findRoomDetail(final int hotelid) {
-		return mainMapper.findRoomDetail(hotelid);
+	public RoomResponse findRoomDetail(final int roomid, String StratDate) {
+		return mainMapper.findRoomDetail(roomid, StratDate);
 	}
 
 	public String findUPhone(String uname) {
@@ -221,6 +221,10 @@ public class MainService {
 	 */
 	public List<MainResponse> findLocateBy(final int regionid) {
 		return mainMapper.findlocateby(regionid);
+	}
+	
+	public List<RoomResponse> cartlist(List<Integer> roomIds){
+		return mainMapper.cartlist(roomIds);
 	}
 
 	public FacilityResponse facility(int roomid) {

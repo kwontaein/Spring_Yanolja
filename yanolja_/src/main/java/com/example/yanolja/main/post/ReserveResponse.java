@@ -15,11 +15,11 @@ public class ReserveResponse {
 		this.reserveDate = reserveDate;
 		this.reserveCnt = reserveCnt;
 	}
-	
-	public ReserveResponse(LocalDateTime reserveDate, int reserveCnt , int compareValue) {
+
+	public ReserveResponse(LocalDateTime reserveDate, int reserveCnt, int compareValue) {
 		this.reserveDate = reserveDate;
 		this.reserveCnt = reserveCnt;
-	    this.hasRoom = reserveCnt > compareValue;
+		this.hasRoom = reserveCnt > compareValue;
 	}
 
 	public String getReserveDate2() {
@@ -36,12 +36,13 @@ public class ReserveResponse {
 	public int getReserveCnt() {
 		return reserveCnt;
 	}
+
 	public boolean isHasRoom() {
-        return hasRoom;
-    }
+		return hasRoom;
+	}
+
 	@Override
 	public String toString() {
 		return "ReserveResponse [reserveDate=" + reserveDate + ", reserveCnt=" + reserveCnt + "]";
 	}
-
 }

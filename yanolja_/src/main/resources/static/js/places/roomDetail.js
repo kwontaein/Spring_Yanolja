@@ -96,11 +96,11 @@ $(document).ready(function() {
 	$('#seereserveinfo').click(function() {
 		showModal('.reserveinfomodal');
 	});
-	
+
 	$('#seeallfacil').click(function() {
 		showModal('.facilmodal');
 	});
-	
+
 	$('#roomchoicebtn').click(function() {
 		showModal('.reservemodal');
 	});
@@ -139,8 +139,47 @@ $(document).ready(function() {
 			}
 		});
 	}
-	
+
 	$('.calendar_modal').on('click', '#headerClose', function() {
 		hideModal('.calendar_modal');
 	});
+
+	// 장바구니 담기 버튼 클릭 이벤트 리스너를 추가합니다.
+	$(".cart").click(function() {
+		// jQuery AJAX를 사용하여 서버에 요청을 보냅니다.
+		$.ajax({
+			type: "post", // 요청 메소드 (POST 요청)
+			url: "/addToCart", // 요청을 처리할 서블릿 경로
+			data: {
+				roomid: roomid,
+				StartDate: formattedStartDate,
+				EndDate: formattedEndDate
+			}, // 전달할 데이터 (roomid)
+			success: function(response) {
+				hideModal('.reservemodal');
+				console.log("클릭");
+				var toast = $('.toast');
+				toast.fadeIn(400);
+
+				// 마우스가 토스트 위로 올라가면 자동 사라지지 않습니다.
+				toast.hover(
+					function() { // 마우스 오버 이벤트
+						clearTimeout(toast.data('timeoutId')); // 기존 타임아웃을 취소합니다.
+					},
+					function() { // 마우스 아웃 이벤트
+						// 일정 시간(예: 1000ms) 후에 토스트를 사라지게 합니다.
+						var timeoutId = setTimeout(function() {
+							toast.fadeOut(1500);
+						}, 1000);
+						toast.data('timeoutId', timeoutId); // 타임아웃 ID를 저장합니다.
+					}
+				);
+			},
+			error: function(e) {
+				// 요청이 실패했을 때 수행할 작업
+				console.error(e); // 에러 메시지를 로그에 출력
+			}
+		});
+	});
+
 });
