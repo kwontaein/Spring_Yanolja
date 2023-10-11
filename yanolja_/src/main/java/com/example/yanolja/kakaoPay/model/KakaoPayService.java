@@ -90,8 +90,6 @@ public class KakaoPayService {
 		parameters.add("partner_order_id", kakaoApproveResponse.getPartner_order_id()); // 주문번호
 		parameters.add("partner_user_id", kakaoApproveResponse.getPartner_user_id());// 유저네임
 		parameters.add("pg_token", pgToken);// 성공토큰
-		System.out.println(kakaoApproveResponse.getPartner_order_id());
-		System.out.println(kakaoApproveResponse.getPartner_user_id());
 		System.out.println("KakaoApproveResponse 실행");
 		// 파라미터, 헤더
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
