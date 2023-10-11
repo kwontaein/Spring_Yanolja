@@ -2,9 +2,8 @@ package com.example.yanolja.kakaoPay.model;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -31,44 +30,24 @@ public class KakaoPayService {
 	static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
 	static final String admin_Key = "f0dc4984df09287545cbdbc9478a53ee"; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
 	private KakaoResponse kakaoReady;
-
+	private KakaoApproveResponse kakaoApproveResponse ;
 	@Autowired
 	HttpSession session;
 
 	public String kakaoPayReady(String hotelname, String roomname, String roomid, String price, String username) {
 
 		int price2 = Integer.parseInt(price);
-		System.out.println(price2);
 		int p1 = (price2 * 10) / 110;
 		int p2 = price2 - ((price2 * 10) / 110);
 		String vat = Integer.toString(p1);
 		String novat = Integer.toString(p2);
 
-		String StartDate = (String) session.getAttribute("selectedStartDate");
-		String dateString = StartDate.substring(4, 15); // "Oct 06 2023" 부분 추출
-
-		String EndDate = (String) session.getAttribute("selectedStartDate");
-		String dateString2 = EndDate.substring(4, 15); // "Oct 06 2023" 부분 추출
-
-		String formattedDate = null;
-		String formattedDate2 = null;
-
-		try {
-			SimpleDateFormat inputDateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH);
-			Date date = inputDateFormat.parse(dateString);
-			Date date2 = inputDateFormat.parse(dateString2);
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyMMdd");
-			formattedDate = outputDateFormat.format(date);
-			formattedDate2 = outputDateFormat.format(date2);
-		} catch (Exception e) {
-			e.printStackTrace();
-			// 예외 처리 필요
-		}
-
-		// 카카오페이 요청 양식
+        LocalDateTime now = LocalDateTime.now();
+        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        // 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid); // 가맹점 코드
-		parameters.add("partner_order_id", formattedDate + roomid); // 주문번호 : 체크인날짜 + 룸아이디
+		parameters.add("partner_order_id", formatedNow + roomid); // 주문번호 : 결제날짜 + 룸아이디
 		parameters.add("partner_user_id", username); // 유저네임
 		parameters.add("item_name", hotelname + ", " + roomname); // 호텔 이름 + (방번호)방이름
 		parameters.add("quantity", "1"); // 상품 수량
@@ -108,10 +87,11 @@ public class KakaoPayService {
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
 		parameters.add("tid", kakaoReady.getTid()); // 결제 고유 번호
-		parameters.add("partner_order_id", "1111"); // 주문번호
-		parameters.add("partner_user_id", "croffle");// 유저네임
+		parameters.add("partner_order_id", kakaoApproveResponse.getPartner_order_id()); // 주문번호
+		parameters.add("partner_user_id", kakaoApproveResponse.getPartner_user_id());// 유저네임
 		parameters.add("pg_token", pgToken);// 성공토큰
-
+		System.out.println(kakaoApproveResponse.getPartner_order_id());
+		System.out.println(kakaoApproveResponse.getPartner_user_id());
 		System.out.println("KakaoApproveResponse 실행");
 		// 파라미터, 헤더
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());

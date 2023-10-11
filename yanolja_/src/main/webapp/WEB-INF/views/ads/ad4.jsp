@@ -17,7 +17,6 @@
 }
 .css-ivt1js{
 	width: 728px;
-	padding : 0 20px;
 }
 a, button {
 	color: #000;

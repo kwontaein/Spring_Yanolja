@@ -36,7 +36,7 @@ $(document).ready(function() {
 		selectedEndDate.setDate(selectedEndDate.getDate() + 1);
 	}
 
-	const options = { weekday: 'short', month: '2-digit', day: '2-digit' };
+	const options = { year:'numeric', weekday: 'short', month: '2-digit', day: '2-digit' };
 	const formattedStartDate = selectedStartDate.toLocaleDateString("ko-KR", options);
 	const formattedEndDate = selectedEndDate.toLocaleDateString("ko-KR", options);
 

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="${path}/js/places/Reserve.js"></script>
 <script>
-	var roomPrice = '${room.price}';
-	var price;
+	var totalPrice = 0; // 전체 가격을 저장할 변수
 </script>
 </head>
 <body>
@@ -59,36 +58,115 @@
 								</div>
 							</div>
 						</div>
-						<div class="hotelcontent">
-							<div class="hotelandroom">
-								<div class="hotelname">${room.hotelname}</div>
-								<div class="roomname">${room.roomname}</div>
-							</div>
-							<div class="period">
-								<div class="checkin">
-									<div class="cktitle">체크인</div>
-									<div class="ckdate" id="intime"></div>
-									<div class="cktime">${room.checkIn}</div>
+						<c:choose>
+							<c:when test="${room2 != null}">
+								<c:set var="prevHotelName" value="" />
+								<c:forEach items="${room2}" var="room" varStatus="loop">
+									<div class="hotelcontent">
+										<script>
+											$(document).ready(
+												function() {
+												
+												var price = '${room.price}';
+
+												var date1Str = '${room.date1}';
+												var date2Str = '${room.date2}';
+												// Date 객체로 변환
+												var date1 = new Date(date1Str);
+												var date2 = new Date(date2Str);
+												var timeDifference = date2 - date1;
+
+												var daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+												var totalPriceForRoom = daysDifference * price;
+												totalPrice += totalPriceForRoom;
+
+												document.getElementById('date${loop.index}').textContent = daysDifference + '박'; // 결과를 원하는 DOM 요소에 표시
+												document.getElementById('totalpricea${loop.index}').textContent = daysDifference * price; // 결과를 원하는 DOM 요소에 표시
+												document.getElementById('totalprice').textContent = totalPrice; // 결과를 원하는 DOM 요소에 표시
+												
+												document.getElementById("totalprice3").textContent = totalPrice +'원';
+												
+												document.getElementById("discount").textContent = totalPrice / 200;
+												document.getElementById("discount2").textContent = totalPrice / 200;
+												document.getElementById("discount3").textContent = totalPrice / 200;
+												
+												document.getElementById("paymentprice").textContent = totalPrice + '원';
+											});
+
+												
+										</script>
+										<div class="hotelandroom">
+											<c:if test="${prevHotelName ne room.hotelname}">
+												<div class="hotelname">${room.hotelname}</div>
+											</c:if>
+											<c:set var="prevHotelName" value="${room.hotelname}" />
+											<div class="roomname">${room.roomname}</div>
+										</div>
+										<div class="period">
+											<div class="checkin">
+												<div class="cktitle">체크인</div>
+												<div class="ckdate">${room.date1}</div>
+												<div class="cktime">${room.checkIn}</div>
+											</div>
+											<div class="checkout">
+												<div class="cktitle">체크아웃</div>
+												<div class="ckdate">${room.date2}</div>
+												<div class="cktime">${room.checkout}</div>
+											</div>
+										</div>
+										<div class="price">
+											<span class="pdate">${room.rentalType}
+												/
+												<span id="date${loop.index}"></span>
+											</span>
+											&nbsp;
+											<span class="tprice">
+												<b id="totalpricea${loop.index}"></b>원
+											</span>
+										</div>
+										<div class="freepriod">무료취소는 예약일로부터 3일 전까지만 가능합니다. 그 이후엔 수수료가 발생할 수 있습니다.</div>
+										<div class="comeway">방문수단 선택</div>
+									</div>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<div class="hotelcontent">
+									<script>
+										var roomPrice = '${room.price}';
+										var price = '${room.price}';
+									</script>
+									<div class="hotelandroom">
+										<div class="hotelname">${room.hotelname}</div>
+										<div class="roomname">${room.roomname}</div>
+									</div>
+									<div class="period">
+										<div class="checkin">
+											<div class="cktitle">체크인</div>
+											<div class="ckdate" id="intime"></div>
+											<div class="cktime">${room.checkIn}</div>
+										</div>
+										<div class="checkout">
+											<div class="cktitle">체크아웃</div>
+											<div class="ckdate" id="outtime"></div>
+											<div class="cktime">${room.checkout}</div>
+										</div>
+									</div>
+									<div class="price">
+										<span class="pdate">${room.rentalType}
+											/
+											<span id="date"></span>
+										</span>
+										&nbsp;
+										<span class="tprice">
+											<b id="totalpricea"></b>원
+										</span>
+									</div>
+									<div class="freepriod">무료취소는 예약일로부터 3일 전까지만 가능합니다. 그 이후엔 수수료가 발생할 수 있습니다.</div>
+									<div class="comeway">방문수단 선택</div>
 								</div>
-								<div class="checkout">
-									<div class="cktitle">체크아웃</div>
-									<div class="ckdate" id="outtime"></div>
-									<div class="cktime">${room.checkout}</div>
-								</div>
-							</div>
-							<div class="price">
-								<span class="pdate">${room.rentalType}
-									/
-									<span id="date"></span>
-								</span>
-								&nbsp;
-								<span class="tprice">
-									<b id="totalprice"></b>원
-								</span>
-							</div>
-							<div class="freepriod">무료취소는 예약일로부터 3일 전까지만 가능합니다. 그 이후엔 수수료가 발생할 수 있습니다.</div>
-							<div class="comeway">방문수단 선택</div>
-						</div>
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<div class="infoContatiner">
 						<div class="infotitle">예약자 정보*</div>
@@ -141,7 +219,7 @@
 						<div class="infotitle">결제 금액</div>
 						<div class="bill">
 							<span>상품 금액</span>
-							<span id="totalprice2"></span>
+							<span id="totalprice"></span>
 						</div>
 						<div class="billborder">
 							<div class="bill">
@@ -313,7 +391,7 @@
 									// URL 매개변수로 전달하기 위해 JSON 문자열을 인코딩
 									var roomDataUrlEncoded = encodeURIComponent(roomDataJson);
 									// room 데이터를 쿼리 매개변수로 포함한 URL 구성
-									var paymentPageUrl = '/KakaoPayPage?roomData='
+									var paymentPageUrl = 'KakaoPayPage?roomData='
 											+ roomDataUrlEncoded;
 									// 해당 URL로 새 창 열기
 									window.open(paymentPageUrl, '_blank');

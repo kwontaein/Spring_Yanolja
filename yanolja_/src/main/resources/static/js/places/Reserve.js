@@ -79,10 +79,12 @@ $(document).ready(
 		}
 
 		const options = {
+			year: 'numeric',
 			weekday: 'short',
 			month: '2-digit',
 			day: '2-digit'
 		};
+		
 		const formattedStartDate = selectedStartDate
 			.toLocaleDateString("ko-KR", options);
 		const formattedEndDate = selectedEndDate
@@ -99,16 +101,16 @@ $(document).ready(
 		const formattedEndDate2 = selectedEndDate
 			.toLocaleDateString("ko-KR", options2);
 
-		console.log(formattedStartDate2);
-		console.log(formattedEndDate2);
-
 		const intime = document.getElementById("intime");
 		const outtime = document.getElementById("outtime");
 		const date = document.getElementById("date");
+		
+		const totalpricea = document.getElementById("totalpricea");
 		const totalprice = document.getElementById("totalprice");
-		const totalprice2 = document.getElementById("totalprice2");
 		const totalprice3 = document.getElementById("totalprice3");
+		
 		const paymentprice = document.getElementById("paymentprice");
+		
 		const discount = document.getElementById("discount");
 		const discount2 = document.getElementById("discount2");
 		const discount3 = document.getElementById("discount3");
@@ -118,18 +120,21 @@ $(document).ready(
 				- selectedStartDate.getTime();
 			const daysDifference = Math.floor(timeDifference
 				/ (1000 * 60 * 60 * 24));
-
 			price = roomPrice * daysDifference;
 			console.log(price);
 			intime.textContent = `${formattedStartDate2}`;
 			outtime.textContent = ` ${formattedEndDate2} `;
+			
 			date.textContent = `${daysDifference}박`;
-			totalprice.textContent = `${price}`;
-			totalprice2.textContent = `${price}원`;
+			
+			totalpricea.textContent = `${price}`;
+			totalprice.textContent = `${price}원`;
 			totalprice3.textContent = `${price}원`;
+			
 			discount.textContent = `${(price) / 200}`;
 			discount2.textContent = `${(price) / 200}`;
 			discount3.textContent = `${(price) / 200}`;
+			
 			paymentprice.textContent = `${price}원 `;
 		}
 

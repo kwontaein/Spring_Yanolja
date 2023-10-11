@@ -77,10 +77,11 @@ public class RoomResponse {
 	}
 
 	// 카트 정보
-	public RoomResponse(String hotelname, String loc, int roomid, int maxManCnt, String roomname, int price,
+	public RoomResponse(String hotelname,String rentalType, String loc, int roomid, int maxManCnt, String roomname, int price,
 			int defaultmancnt, String checkIn, String checkout) {
 		super();
 		this.hotelname = hotelname;
+		this.rentalType = rentalType;
 		this.loc = loc;
 		this.roomid = roomid;
 		this.maxManCnt = maxManCnt;
@@ -245,4 +246,14 @@ public class RoomResponse {
 	public void setLoc(String loc) {
 		this.loc = loc;
 	}
+
+	public void setRentalType(String rentalType) {
+		this.rentalType = rentalType;
+	}
+
+	@Override
+	public String toString() {
+		return "RoomResponse [hotelname=" + hotelname + ", roomname=" + roomname + "]";
+	}
+	
 }

@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +56,11 @@ public class MainController {
 	public String test2() {
 		// 모든 호텔 목록을 조회하고 "post" 모델 속성에 추가
 		return "User/test"; // User/test 템플릿을 렌더링
+	}
+
+	@GetMapping("/KakaoPayPage")
+	public String kakaopay() {
+		return "KakaoPay/KaKaoPay";
 	}
 
 	@GetMapping("/calendar")
@@ -347,69 +353,84 @@ public class MainController {
 	}
 
 	@GetMapping("/Reserve")
-	public String reserve(@RequestParam int roomid, Model model, HttpSession session) {
-		RoomResponse roomdetail = mainService.findRoomDetail(roomid, sessionDate1);
+	public String reserve(@RequestParam(value = "roomid", required = false) Integer roomid,
+			@RequestParam(value = "roomids", required = false) List<Integer> roomids, Model model,
+			HttpSession session) {
+		List<Cartinfo> cartRoomInfoList = getCartRoomInfoList(session);
+
+		if (cartRoomInfoList != null && cartRoomInfoList.size() != 0 && roomid == null) {
+			System.out.println(roomids);
+			// roomids 리스트에 있는 각 roomid를 cartRoomids 리스트에서 검색하여 삭제합니다
+			List<Cartinfo> updatedCartRoomInfos = cartRoomInfoList.stream()
+					.filter(cartInfo -> roomids.contains(cartInfo.getRoomid())).collect(Collectors.toList());
+
+			List<RoomResponse> combinedList = combineCartInfoWithRoomResponse(updatedCartRoomInfos);
+
+			// combinedList를 hotelname으로 정렬
+			combinedList.sort(Comparator.comparing(RoomResponse::getHotelname));
+			model.addAttribute("room2", combinedList);
+		} else if (roomid != null) {
+			RoomResponse roomdetail = mainService.cartlist2(roomid);
+			model.addAttribute("room", roomdetail);
+		}
 
 		Object uname = session.getAttribute("username");
 		if (uname != null) {
 			String phone = mainService.findUPhone(uname.toString());
 			model.addAttribute("phone", phone);
 		}
-		model.addAttribute("room", roomdetail);
 		return "Search/Reserve/Reserve";
-	}
-
-	@GetMapping("/KakaoPayPage")
-	public String kakaopay() {
-		return "KakaoPay/KaKaoPay";
 	}
 
 	@GetMapping("/cart")
 	public String cart(HttpSession session, Model model) {
-
-		List<Cartinfo> cartRoomInfoList = (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+		List<Cartinfo> cartRoomInfoList = getCartRoomInfoList(session);
 
 		if (cartRoomInfoList != null && cartRoomInfoList.size() != 0) {
-			List<Integer> roomIds = new ArrayList<>();
-			if (cartRoomInfoList != null) {
-				for (Cartinfo cartInfo : cartRoomInfoList) {
-					roomIds.add(cartInfo.getRoomid());
-				}
-			}
-			// 오류남
-			List<RoomResponse> Cartroom = mainService.cartlist(roomIds);
-			// 두 리스트를 합칠 결과 리스트
-			List<RoomResponse> combinedList = new ArrayList<>();
+			List<RoomResponse> combinedList = combineCartInfoWithRoomResponse(cartRoomInfoList);
 
-			// 두 리스트를 순회하면서 합칩니다.
-			for (RoomResponse roomResponse : Cartroom) {
-				for (Cartinfo cartInfo : cartRoomInfoList) {
-					if (roomResponse.getRoomid() == cartInfo.getRoomid()) {
-						// Cartinfo와 RoomResponse를 합쳐서 새로운 객체를 생성합니다.
-						RoomResponse combinedInfo = new RoomResponse();
-						combinedInfo.setHotelname(roomResponse.getHotelname());
-						combinedInfo.setLoc(roomResponse.getLoc());
-						combinedInfo.setRoomid(roomResponse.getRoomid());
-						combinedInfo.setMaxManCnt(roomResponse.getMaxManCnt());
-						combinedInfo.setRoomname(roomResponse.getRoomname());
-						combinedInfo.setPrice(roomResponse.getPrice());
-						combinedInfo.setDefaultmancnt(roomResponse.getDefaultmancnt());
-						combinedInfo.setCheckIn(roomResponse.getCheckIn());
-						combinedInfo.setCheckout(roomResponse.getCheckout());
-						combinedInfo.setDate1(cartInfo.getDate1());
-						combinedInfo.setDate2(cartInfo.getDate2());
-						// 결과 리스트에 추가합니다.
-						combinedList.add(combinedInfo);
-						break;
-					}
-				}
-			} // Cartroom 리스트를 hotelname을 기준으로 정렬
+			// combinedList를 hotelname으로 정렬
 			combinedList.sort(Comparator.comparing(RoomResponse::getHotelname));
 			model.addAttribute("Cartroom", combinedList);
-
 		}
 
 		return "User/cart";
+	}
+
+	// 카트 룸 정보를 검색하는 공통 메소드
+	private List<Cartinfo> getCartRoomInfoList(HttpSession session) {
+		return (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+	}
+
+	// Cartinfo를 RoomResponse와 결합하는 공통 메소드
+	private List<RoomResponse> combineCartInfoWithRoomResponse(List<Cartinfo> cartRoomInfoList) {
+		List<Integer> roomIds = cartRoomInfoList.stream().map(Cartinfo::getRoomid).collect(Collectors.toList());
+		System.out.println(roomIds);
+		List<RoomResponse> Cartroom = mainService.cartlist(roomIds);
+		List<RoomResponse> combinedList = new ArrayList<>();
+
+		for (RoomResponse roomResponse : Cartroom) {
+			for (Cartinfo cartInfo : cartRoomInfoList) {
+				if (roomResponse.getRoomid() == cartInfo.getRoomid()) {
+					RoomResponse combinedInfo = new RoomResponse();
+					combinedInfo.setHotelname(roomResponse.getHotelname());
+					combinedInfo.setLoc(roomResponse.getLoc());
+					combinedInfo.setRoomid(roomResponse.getRoomid());
+					combinedInfo.setMaxManCnt(roomResponse.getMaxManCnt());
+					combinedInfo.setRoomname(roomResponse.getRoomname());
+					combinedInfo.setPrice(roomResponse.getPrice());
+					combinedInfo.setDefaultmancnt(roomResponse.getDefaultmancnt());
+					combinedInfo.setCheckIn(roomResponse.getCheckIn());
+					combinedInfo.setCheckout(roomResponse.getCheckout());
+					combinedInfo.setDate1(cartInfo.getDate1());
+					combinedInfo.setDate2(cartInfo.getDate2());
+					combinedInfo.setRentalType(roomResponse.getRentalType());
+					combinedList.add(combinedInfo);
+					break;
+				}
+			}
+		}
+		return combinedList;
 	}
 
 	@PostMapping("/addToCart")
@@ -460,7 +481,6 @@ public class MainController {
 		// roomids 리스트에 있는 각 roomid를 cartRoomids 리스트에서 검색하여 삭제합니다
 		List<Cartinfo> updatedCartRoomInfos = new ArrayList<>(cartRoomids);
 		for (int roomid : roomids) {
-			System.out.println("실행");
 			updatedCartRoomInfos.removeIf(cartInfo -> cartInfo.getRoomid() == roomid);
 		}
 		// 리스트를 다시 세션에 저장합니다.

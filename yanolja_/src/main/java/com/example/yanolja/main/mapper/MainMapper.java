@@ -76,6 +76,8 @@ public interface MainMapper {
 
 	List<RoomResponse> cartlist(List<Integer> roomIds);
 
+	RoomResponse cartlist2(Integer roomId);
+
 	/**
 	 * 방 리스트 조회
 	 * 

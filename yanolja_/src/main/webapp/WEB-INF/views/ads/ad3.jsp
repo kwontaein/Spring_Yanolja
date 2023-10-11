@@ -7,6 +7,7 @@
 <style>
 .BenefitBanner_banner__1aiwU {
 	width: 728px;
+	padding:0 20px;
 	color: inherit;
 	text-decoration: none;
 	height: 5rem;

@@ -18,8 +18,8 @@
 				<b>객실상세</b>
 			</div>
 			<div>
-				<a>집</a>
-				<a>카</a>
+				<a href="/">집</a>
+				<a href="/cart">카</a>
 			</div>
 		</div>
 	</header>

@@ -20,7 +20,7 @@
 					<a href="/Search">
 						<div>검색창</div>
 					</a>
-					<a>
+					<a href="/cart">
 						<div>장바구니</div>
 					</a>
 				</c:when>
@@ -33,7 +33,7 @@
 					<a href="/Search">
 						<div>검색창</div>
 					</a>
-					<a>
+					<a href="/cart">
 						<div>장바구니</div>
 					</a>
 				</c:when>
@@ -53,7 +53,7 @@
 					<a href="/Search">
 						<div>검색창</div>
 					</a>
-					<a>
+					<a href="/cart">
 						<div>장바구니</div>
 					</a>
 				</c:otherwise>

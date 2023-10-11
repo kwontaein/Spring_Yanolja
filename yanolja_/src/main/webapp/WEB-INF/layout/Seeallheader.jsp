@@ -13,7 +13,7 @@
 				<a href="/">
 					<div>&lt;</div>
 				</a>
-				<a>
+				<a href="/cart">
 					<div>장바구니</div>
 				</a>
 			</div>

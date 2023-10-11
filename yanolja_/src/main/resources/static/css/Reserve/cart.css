@@ -11,13 +11,18 @@ body {
 .cartContainer {
 	display: flex;
 	justify-content: center;
+	margin-top: 120px;
+	padding-bottom: 180px;
 }
 
 .header {
+	position: fixed;
+	top: 0;
 	background-color: white;
 	width: 100%;
 	display: flex;
 	justify-content: center;
+	z-index: 10;
 }
 
 .head {
@@ -76,8 +81,30 @@ body {
 .goods {
 	margin-top: 12px;
 	background-color: white;
+	padding: 20px;
 }
-
+.goods>div>h3{
+	margin-top: 0;
+}
+.goods>.goods_content{
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0;
+	align-items: center;
+}
+.point{
+	display: flex;
+	background-color: #f2f2f2;
+	padding: 0 16px;
+	height: 36px;
+	align-items: center;
+	font-size: 12px;
+}
+.final_expected{
+	margin-top: 8px;
+	border-top: 1px lightgray solid;
+	height:40px;
+}
 .listdiv {
 	display: flex;
 	width: 728px;
@@ -105,4 +132,56 @@ body {
 	height: 16px;
 	top: 0;
 	right: 0;
+}
+footer{
+	position:fixed;
+	bottom: 0;
+	width: 100%;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+	z-index: 10;
+}
+.footcontent{
+	width: 728px;
+	padding:0 20px;
+	padding-bottom: 20px;
+}
+.footerprice{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.final_pay{
+	display: flex;
+	align-items: center;
+	padding: 13px 16px;
+}
+
+.reserve {
+	padding: 13px 16px;
+    background-color: deeppink;
+    color: white;
+    cursor: pointer; 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.not-clickable {
+	padding: 13px 16px;
+    background-color: #cccccc; 
+    color: white;
+    cursor: not-allowed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.more{
+	margin-top: 12px;
+    padding: 0;
+    border: 0;
+    font-size: 12px;
+    color: #919191;
 }

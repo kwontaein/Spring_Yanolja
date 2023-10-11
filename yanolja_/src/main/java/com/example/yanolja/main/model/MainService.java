@@ -226,7 +226,9 @@ public class MainService {
 	public List<RoomResponse> cartlist(List<Integer> roomIds){
 		return mainMapper.cartlist(roomIds);
 	}
-
+	public RoomResponse cartlist2(Integer roomId){
+		return mainMapper.cartlist2(roomId);
+	}
 	public FacilityResponse facility(int roomid) {
 		return mainMapper.facility(roomid);
 	}
