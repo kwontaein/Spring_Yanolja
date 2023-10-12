@@ -48,7 +48,7 @@ function selectAll(checkbox) {
 	// 전체 동의 체크박스의 상태에 따라 모든 약관 체크박스를 선택 또는 해제합니다.
 	var isChecked = checkbox.checked;
 	var allAgreementCheckboxes = document.querySelectorAll('input[name="agreed"]');
-	for (var i = 0; i < allAgreementCheckboxes.length; i++) {
+	for (var i = 0; i < 3; i++) {
 		allAgreementCheckboxes[i].checked = isChecked;
 	}
 
@@ -56,6 +56,54 @@ function selectAll(checkbox) {
 	checkAgreements();
 }
 
+// 모달 열기
+function openModal() {
+	var modal = document.getElementById("myModal");
+	modal.style.display = "block";
+}
+
+// 모달 닫기
+function closeModal() {
+	var modal = document.getElementById("myModal");
+	modal.style.display = "none";
+}
+
+// 결제 성공 메시지 표시 및 모달 열기
+function displayPaymentSuccessMessage() {
+	openModal(); // 모달 열기
+}
+// 결제 성공 메시지 표시 및 모달 열기
+function payCancel() {
+	$.ajax({
+		url: '/refund', // 서버의 엔드포인트 URL
+		method: 'post',     // HTTP GET 요청
+		success: function(data) {
+			// 서버로부터 받은 데이터를 화면에 표시
+			alert("결제가 취소되었습니다.");
+			closeModal(); // 모달 닫기
+		},
+		error: function() {
+			// 에러 처리
+			alert("에러");
+		}
+	});
+
+}
+// 결제 성공 메시지 표시 및 모달 열기
+function payAgree() {
+	$.ajax({
+		url: '/Reserve_Agree', // 서버의 엔드포인트 URL
+		method: 'GET',     // HTTP GET 요청
+		success: function(data) {
+			// 서버로부터 받은 데이터를 화면에 표시
+			alert("결제 성공");
+		},
+		error: function() {
+			// 에러 처리
+			alert("에러");
+		}
+	});
+}
 $(document).ready(
 	function() {
 		checkAgreements();
@@ -77,16 +125,15 @@ $(document).ready(
 			.getTime()) {
 			selectedEndDate.setDate(selectedEndDate.getDate() + 1);
 		}
-
 		const options = {
-			year: 'numeric',
-			weekday: 'short',
 			month: '2-digit',
-			day: '2-digit'
+			day: '2-digit',
+			weekday: 'short'
 		};
-		
+
 		const formattedStartDate = selectedStartDate
 			.toLocaleDateString("ko-KR", options);
+
 		const formattedEndDate = selectedEndDate
 			.toLocaleDateString("ko-KR", options);
 
@@ -96,6 +143,7 @@ $(document).ready(
 			day: '2-digit',
 			weekday: 'short'
 		};
+
 		const formattedStartDate2 = selectedStartDate
 			.toLocaleDateString("ko-KR", options2);
 		const formattedEndDate2 = selectedEndDate
@@ -103,14 +151,18 @@ $(document).ready(
 
 		const intime = document.getElementById("intime");
 		const outtime = document.getElementById("outtime");
+
+		const indate = document.getElementById("indate");
+		const outdate = document.getElementById("outdate");
+
 		const date = document.getElementById("date");
-		
+
 		const totalpricea = document.getElementById("totalpricea");
 		const totalprice = document.getElementById("totalprice");
 		const totalprice3 = document.getElementById("totalprice3");
-		
+
 		const paymentprice = document.getElementById("paymentprice");
-		
+
 		const discount = document.getElementById("discount");
 		const discount2 = document.getElementById("discount2");
 		const discount3 = document.getElementById("discount3");
@@ -122,19 +174,24 @@ $(document).ready(
 				/ (1000 * 60 * 60 * 24));
 			price = roomPrice * daysDifference;
 			console.log(price);
+
+
 			intime.textContent = `${formattedStartDate2}`;
 			outtime.textContent = ` ${formattedEndDate2} `;
-			
+
+			indate.textContent = `${formattedStartDate}`;
+			outdate.textContent = ` ${formattedEndDate} `;
+
 			date.textContent = `${daysDifference}박`;
-			
+
 			totalpricea.textContent = `${price}`;
 			totalprice.textContent = `${price}원`;
 			totalprice3.textContent = `${price}원`;
-			
+
 			discount.textContent = `${(price) / 200}`;
 			discount2.textContent = `${(price) / 200}`;
 			discount3.textContent = `${(price) / 200}`;
-			
+
 			paymentprice.textContent = `${price}원 `;
 		}
 
@@ -169,3 +226,4 @@ $(document).ready(
 			});
 		}
 	});
+

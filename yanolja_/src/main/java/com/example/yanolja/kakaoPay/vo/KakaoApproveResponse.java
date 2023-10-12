@@ -11,26 +11,10 @@ public class KakaoApproveResponse {
 	private Amount amount; // 결제 금액 정보
 	private String item_name; // 상품명
 	private String item_code; // 상품 코드
-	private int quantity, tax_free_amount, vat_amount; // 상품 수량
+	private int quantity; // 상품 수량
 	private String created_at; // 결제 요청 시간
 	private String approved_at; // 결제 승인 시간
 	private String payload; // 결제 승인 요청에 대해 저장 값, 요청 시 전달 내용
-
-	public int getTax_free_amount() {
-		return tax_free_amount;
-	}
-
-	public void setTax_free_amount(int tax_free_amount) {
-		this.tax_free_amount = tax_free_amount;
-	}
-
-	public int getVat_amount() {
-		return vat_amount;
-	}
-
-	public void setVat_amount(int vat_amount) {
-		this.vat_amount = vat_amount;
-	}
 
 	public String getAid() {
 		return aid;

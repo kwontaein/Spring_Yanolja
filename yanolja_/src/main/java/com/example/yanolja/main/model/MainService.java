@@ -1,6 +1,7 @@
 package com.example.yanolja.main.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,7 +96,7 @@ public class MainService {
 	public List<MainResponse> TofindByKindDesc(String kindhotel) {
 		return mainMapper.TofindByKindDesc(kindhotel);
 	}
-	
+
 	/**
 	 * 호텔 리스트 조회
 	 * 
@@ -222,14 +223,30 @@ public class MainService {
 	public List<MainResponse> findLocateBy(final int regionid) {
 		return mainMapper.findlocateby(regionid);
 	}
-	
-	public List<RoomResponse> cartlist(List<Integer> roomIds){
+
+	public List<RoomResponse> cartlist(List<Integer> roomIds) {
 		return mainMapper.cartlist(roomIds);
 	}
-	public RoomResponse cartlist2(Integer roomId){
+
+	public RoomResponse cartlist2(Integer roomId) {
 		return mainMapper.cartlist2(roomId);
 	}
+
 	public FacilityResponse facility(int roomid) {
 		return mainMapper.facility(roomid);
+	}
+
+	public Map<String, Integer> findHRids(String roomname, String hotelname) {
+		return mainMapper.findHRids(roomname, hotelname);
+	}
+
+	public void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone,
+			String order_number) {
+		mainMapper.insertReserve(parameterMap, user_name, user_phone, order_number);
+	}
+
+	public void insertReserveOne(int hotelid, int roomid, String date1List, String date2List, String user_name,
+			String user_phone, String order_number) {
+		mainMapper.insertReserveOne(hotelid, roomid, date1List, date2List, user_name, user_phone, order_number);
 	}
 }

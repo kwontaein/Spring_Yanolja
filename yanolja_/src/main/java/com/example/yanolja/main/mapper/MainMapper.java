@@ -1,6 +1,7 @@
 package com.example.yanolja.main.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -200,4 +201,10 @@ public interface MainMapper {
 	 */
 	int count();
 
+	Map<String, Integer> findHRids(String roomname, String hotelname);
+
+	void insertReserve(List<Map<String, Object>>  parameterMap, String user_name, String user_phone, String order_number);
+
+	void insertReserveOne(int hotelid, int roomid, String date1List, String date2List, String user_name,
+			String user_phone, String order_number);
 }

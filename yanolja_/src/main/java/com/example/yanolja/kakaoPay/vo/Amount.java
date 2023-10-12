@@ -3,7 +3,7 @@ package com.example.yanolja.kakaoPay.vo;
 public class Amount {
 	private int total; // 총 결제 금액
 	private int tax_free; // 비과세 금액
-	private int tax; // 부가세 금액
+	private int vat; // 부가세 금액
 	private int point; // 사용한 포인트
 	private int discount; // 할인금액
 	private int green_deposit; // 컵 보증금
@@ -20,11 +20,11 @@ public class Amount {
 	public void setTax_free(int tax_free) {
 		this.tax_free = tax_free;
 	}
-	public int getTax() {
-		return tax;
+	public int getVat() {
+		return vat;
 	}
-	public void setTax(int tax) {
-		this.tax = tax;
+	public void setVat(int vat) {
+		this.vat = vat;
 	}
 	public int getPoint() {
 		return point;

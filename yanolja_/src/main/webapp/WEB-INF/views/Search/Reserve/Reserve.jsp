@@ -11,6 +11,9 @@
 <script src="${path}/js/places/Reserve.js"></script>
 <script>
 	var totalPrice = 0; // 전체 가격을 저장할 변수
+
+	var date1Array = []; // 배열 생성
+	var date2Array = []; // 배열 생성
 </script>
 </head>
 <body>
@@ -64,37 +67,112 @@
 								<c:forEach items="${room2}" var="room" varStatus="loop">
 									<div class="hotelcontent">
 										<script>
-											$(document).ready(
-												function() {
-												
-												var price = '${room.price}';
+											$(document)
+													.ready(
+															function() {
+																var price = '${room.price}';
+																var date1Str = '${room.date1}';
+																var date2Str = '${room.date2}';
 
-												var date1Str = '${room.date1}';
-												var date2Str = '${room.date2}';
-												// Date 객체로 변환
-												var date1 = new Date(date1Str);
-												var date2 = new Date(date2Str);
-												var timeDifference = date2 - date1;
+																var dateParts1 = date1Str
+																		.split('.'); // 날짜를 구성하는 부분 분리
+																var dateParts2 = date2Str
+																		.split('.'); // 날짜를 구성하는 부분 분리
 
-												var daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+																// 날짜를 YYYY-MM-DD 형식으로 변환
+																var date1Formatted = dateParts1[0]
+																		+ '-'
+																		+ dateParts1[1]
+																		+ '-'
+																		+ dateParts1[2];
+																var date2Formatted = dateParts2[0]
+																		+ '-'
+																		+ dateParts2[1]
+																		+ '-'
+																		+ dateParts2[2];
 
-												var totalPriceForRoom = daysDifference * price;
-												totalPrice += totalPriceForRoom;
+																var date1 = new Date(
+																		date1Formatted);
+																var date2 = new Date(
+																		date2Formatted);
 
-												document.getElementById('date${loop.index}').textContent = daysDifference + '박'; // 결과를 원하는 DOM 요소에 표시
-												document.getElementById('totalpricea${loop.index}').textContent = daysDifference * price; // 결과를 원하는 DOM 요소에 표시
-												document.getElementById('totalprice').textContent = totalPrice; // 결과를 원하는 DOM 요소에 표시
-												
-												document.getElementById("totalprice3").textContent = totalPrice +'원';
-												
-												document.getElementById("discount").textContent = totalPrice / 200;
-												document.getElementById("discount2").textContent = totalPrice / 200;
-												document.getElementById("discount3").textContent = totalPrice / 200;
-												
-												document.getElementById("paymentprice").textContent = totalPrice + '원';
-											});
+																date1Array
+																		.push(date1);
+																date2Array
+																		.push(date2);
 
-												
+																var smallestDate1 = new Date(
+																		Math.min
+																				.apply(
+																						null,
+																						date1Array));
+																var lastestDate2 = new Date(
+																		Math.max
+																				.apply(
+																						null,
+																						date2Array));
+
+																// 옵션 설정
+																const options = {
+																	month : '2-digit',
+																	day : '2-digit',
+																	weekday : 'short'
+																};
+
+																// 날짜 포맷팅
+																const smallestDate1Formatted = smallestDate1
+																		.toLocaleDateString(
+																				"ko-KR",
+																				options);
+																const lastestDate2Formatted = lastestDate2
+																		.toLocaleDateString(
+																				"ko-KR",
+																				options);
+
+																document
+																		.getElementById('smallestDate1').textContent = smallestDate1Formatted;
+																document
+																		.getElementById('lastestDate2').textContent = lastestDate2Formatted;
+
+																// Date 객체로 변환
+																var date1 = new Date(
+																		date1Str);
+																var date2 = new Date(
+																		date2Str);
+																var timeDifference = date2
+																		- date1;
+
+																var daysDifference = timeDifference
+																		/ (1000 * 60 * 60 * 24);
+
+																var totalPriceForRoom = daysDifference
+																		* price;
+																totalPrice += totalPriceForRoom;
+
+																document
+																		.getElementById('date${loop.index}').textContent = daysDifference
+																		+ '박'; // 결과를 원하는 DOM 요소에 표시
+																document
+																		.getElementById('totalpricea${loop.index}').textContent = daysDifference
+																		* price; // 결과를 원하는 DOM 요소에 표시
+																document
+																		.getElementById('totalprice').textContent = totalPrice; // 결과를 원하는 DOM 요소에 표시
+
+																document
+																		.getElementById("totalprice3").textContent = totalPrice
+																		+ '원';
+
+																document
+																		.getElementById("discount").textContent = totalPrice / 200;
+																document
+																		.getElementById("discount2").textContent = totalPrice / 200;
+																document
+																		.getElementById("discount3").textContent = totalPrice / 200;
+
+																document
+																		.getElementById("paymentprice").textContent = totalPrice
+																		+ '원';
+															});
 										</script>
 										<div class="hotelandroom">
 											<c:if test="${prevHotelName ne room.hotelname}">
@@ -375,25 +453,43 @@
 							<script>
 								function openPaymentPage() {
 									var usernameInput = document
-											.getElementById('nameinput');
+											.getElementById('nameinput2');
+									var userphoneInput = document
+											.getElementById('phoneinput2');
 									var username = usernameInput.value;
-									// 전달하려는 room 데이터 가져오기
-									var roomData = {
+									var userPhone = userphoneInput.value;
+
+									
+									var roomData = {};
+
+									<c:choose>
+									<c:when test="${room2 == null}">
+									roomData = {
 										hotelname : '${room.hotelname}',
 										roomname : '${room.roomname}',
 										roomid : '${room.roomid}',
 										price : price,
 										username : username,
-									// 필요한 경우 다른 room 데이터 속성을 추가하세요
+										userphone : userPhone
 									};
-									// room 데이터를 JSON 문자열로 변환
+									</c:when>
+									<c:otherwise>
+									roomData = {
+										hotelname : '${room2[0].hotelname}',
+										roomname : '${room2[0].roomname}' + '외'
+												+ '건',
+										roomid : '${room2[0].roomid}',
+										price : totalPrice,
+										username : username,
+										userphone : userPhone
+									};
+									</c:otherwise>
+									</c:choose>
+
 									var roomDataJson = JSON.stringify(roomData);
-									// URL 매개변수로 전달하기 위해 JSON 문자열을 인코딩
 									var roomDataUrlEncoded = encodeURIComponent(roomDataJson);
-									// room 데이터를 쿼리 매개변수로 포함한 URL 구성
 									var paymentPageUrl = 'KakaoPayPage?roomData='
 											+ roomDataUrlEncoded;
-									// 해당 URL로 새 창 열기
 									window.open(paymentPageUrl, '_blank');
 								}
 							</script>
@@ -401,6 +497,67 @@
 						<div class="explain2">(주)야놀자는 통신판매중개업자로서, 통신판매의 당사자가 아니라는 사실을 고지하며 상품의 결제, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<div class="modalinfo">
+				<span>
+					${partner_user_id}님 체크인 날짜는 <br>
+					<span class="red"></span>
+					입니다.
+				</span>
+			</div>
+			<hr>
+			<div class="checkTime">
+				<div>
+					<span>체크인</span>
+					<span class="time">
+						<span id="indate"></span>
+						<c:choose>
+							<c:when test="${room2 == null}">
+                        ${room.checkIn} 이후
+                    </c:when>
+							<c:otherwise>
+								<span id="smallestDate1"> </span>
+							</c:otherwise>
+						</c:choose>
+					</span>
+				</div>
+				<div>
+					<span>체크아웃</span>
+					<span class="time">
+						<span id="outdate"></span>
+						<c:choose>
+							<c:when test="${room2 == null}">
+                        ${room.checkout} 이전
+                    </c:when>
+							<c:otherwise>
+								<span id="lastestDate2"> </span>
+							</c:otherwise>
+						</c:choose>
+					</span>
+				</div>
+			</div>
+			<hr>
+			<div class="Warnnig">
+				<div>
+					<span>
+						• 숙소의 <b class="red">취소규정</b>을 반드시 확인하세요.
+					</span>
+				</div>
+				<div>
+					<span>
+						• <b class="red">당일취소</b>가 불가능한 상품입니다.
+					</span>
+				</div>
+			</div>
+			<hr>
+			<div class="proceed">
+				<div class="cancel" onclick="payCancel()">취소</div>
+				|
+				<div class="red" onclick="payAgree()">동의 및 결제</div>
 			</div>
 		</div>
 	</div>

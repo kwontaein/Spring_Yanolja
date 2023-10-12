@@ -2,6 +2,7 @@ package com.example.yanolja.main.post;
 
 public class RoomResponse {
 	private String hotelname;
+	private int hotelid;
 	private int roomid;
 	private int maxManCnt;
 	private String roomname;
@@ -77,10 +78,11 @@ public class RoomResponse {
 	}
 
 	// 카트 정보
-	public RoomResponse(String hotelname,String rentalType, String loc, int roomid, int maxManCnt, String roomname, int price,
-			int defaultmancnt, String checkIn, String checkout) {
+	public RoomResponse(String hotelname, int hotelid, String rentalType, String loc, int roomid, int maxManCnt,
+			String roomname, int price, int defaultmancnt, String checkIn, String checkout) {
 		super();
 		this.hotelname = hotelname;
+		this.hotelid = hotelid;
 		this.rentalType = rentalType;
 		this.loc = loc;
 		this.roomid = roomid;
@@ -94,6 +96,10 @@ public class RoomResponse {
 
 	public RoomResponse() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public int getHotelid() {
+		return hotelid;
 	}
 
 	public int getRoomid() {
@@ -207,6 +213,10 @@ public class RoomResponse {
 		this.hotelname = hotelname;
 	}
 
+	public void setHotelid(int hotelid) {
+		this.hotelid = hotelid;
+	}
+
 	public void setRoomid(int roomid) {
 		this.roomid = roomid;
 	}
@@ -255,5 +265,5 @@ public class RoomResponse {
 	public String toString() {
 		return "RoomResponse [hotelname=" + hotelname + ", roomname=" + roomname + "]";
 	}
-	
+
 }

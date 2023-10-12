@@ -622,7 +622,7 @@
 	<select id="cartlist"
 		resultType="com.example.yanolja.main.post.RoomResponse">
 		<foreach collection="list" item="roomid"
-			open="select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS hotelname,rentalType,
+			open="select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS hotelname,hotelid,rentalType,
 (select roadloc from location where location.hotelid = room.hotelid) as loc, roomid, MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout from room where roomid in ("
 			separator="," close=")">
 			#{roomid}
@@ -630,11 +630,15 @@
 	</select>
 	<select id="cartlist2"
 		resultType="com.example.yanolja.main.post.RoomResponse">
-		select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS
-		hotelname,rentalType,
-		(select roadloc from location where location.hotelid = room.hotelid) as loc,
-		roomid, MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout
-		from room where roomid = #{roomid}
+		select (SELECT hotelname FROM hotel WHERE hotel.hotelid =
+		room.hotelid) AS
+		hotelname,hotelid,rentalType,
+		(select roadloc from
+		location where location.hotelid = room.hotelid) as loc,
+		roomid,
+		MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout
+		from room
+		where roomid = #{roomid}
 	</select>
 	<select id="reserve_possible2"
 		resultType="com.example.yanolja.main.post.ReserveResponse">
@@ -685,4 +689,35 @@
 		#{hotelid}
 		GROUP BY DateList.reservedate;
 	</select>
+	<select id="findHRids" resultType="Map">
+		select hotelid, roomid from
+		room where roomname = #{roomname}
+		and hotelid = (select hotelid from
+		hotel where hotel.hotelname = #{hotelname});
+	</select>
+
+	<insert id="insertReserve">
+		INSERT INTO Reserve (hotelid,roomid, reservedate, reserveEndDate,
+		user_name,
+		user_phone,order_number)
+		VALUES
+		<foreach item="dataMap" collection="parameterMap"
+			separator=",">
+			(#{dataMap.hotelId}, #{dataMap.roomid}, #{dataMap.date1},
+			#{dataMap.date2}, #{user_name}, #{user_phone}, #{order_number})
+		</foreach>
+	</insert>
+
+	<insert id="insertReserveOne">
+		INSERT INTO Reserve (hotelid,roomid, reservedate,
+		reserveEndDate,
+		user_name,
+		user_phone,order_number)
+		VALUES
+		(#{hotelid},#{roomid},
+		#{date1List},
+		#{date2List},
+		#{user_name},
+		#{user_phone},#{order_number})
+	</insert>
 </mapper>

@@ -22,6 +22,7 @@
 					// URL 매개변수를 디코딩하고 JSON으로 파싱
 					var roomData = JSON
 							.parse(decodeURIComponent(roomDataUrlEncoded));
+					console.log(roomData.userPhone);
 					// roomdata 객체 생성 (예제 데이터)
 					var roomdata = {
 						hotelname : roomData.hotelname,
@@ -29,6 +30,7 @@
 						roomid : roomData.roomid,
 						price : roomData.price,
 						username : roomData.username,
+						userPhone : roomData.userphone,
 					// 기타 room 데이터 속성에 대한 추가
 					};
 
@@ -42,6 +44,7 @@
 
 					// 폼을 자동으로 제출
 					form.submit();
+			
 				});
 	</script>
 	<form method="post" action="/kakaoPay"></form>

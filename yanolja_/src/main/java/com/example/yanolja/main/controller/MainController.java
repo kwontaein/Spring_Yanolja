@@ -1,12 +1,17 @@
 package com.example.yanolja.main.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -359,25 +364,29 @@ public class MainController {
 		List<Cartinfo> cartRoomInfoList = getCartRoomInfoList(session);
 
 		if (cartRoomInfoList != null && cartRoomInfoList.size() != 0 && roomid == null) {
-			System.out.println(roomids);
-			// roomids 리스트에 있는 각 roomid를 cartRoomids 리스트에서 검색하여 삭제합니다
+			// 받아온 roomids 이외의 값들을 삭제합니다
 			List<Cartinfo> updatedCartRoomInfos = cartRoomInfoList.stream()
 					.filter(cartInfo -> roomids.contains(cartInfo.getRoomid())).collect(Collectors.toList());
 
 			List<RoomResponse> combinedList = combineCartInfoWithRoomResponse(updatedCartRoomInfos);
-
+			// 카카오 결제에서 사용하기 위한 세션
+			session.setAttribute("combinedList", combinedList);
 			// combinedList를 hotelname으로 정렬
 			combinedList.sort(Comparator.comparing(RoomResponse::getHotelname));
 			model.addAttribute("room2", combinedList);
 		} else if (roomid != null) {
 			RoomResponse roomdetail = mainService.cartlist2(roomid);
+			// 카카오 결제에서 사용하기 위한 세션
+			session.setAttribute("roomdetail", roomdetail);
 			model.addAttribute("room", roomdetail);
 		}
 
 		Object uname = session.getAttribute("username");
 		if (uname != null) {
 			String phone = mainService.findUPhone(uname.toString());
-			model.addAttribute("phone", phone);
+			if (phone != null) {
+				model.addAttribute("phone", phone);
+			}
 		}
 		return "Search/Reserve/Reserve";
 	}
@@ -405,7 +414,6 @@ public class MainController {
 	// Cartinfo를 RoomResponse와 결합하는 공통 메소드
 	private List<RoomResponse> combineCartInfoWithRoomResponse(List<Cartinfo> cartRoomInfoList) {
 		List<Integer> roomIds = cartRoomInfoList.stream().map(Cartinfo::getRoomid).collect(Collectors.toList());
-		System.out.println(roomIds);
 		List<RoomResponse> Cartroom = mainService.cartlist(roomIds);
 		List<RoomResponse> combinedList = new ArrayList<>();
 
@@ -414,6 +422,7 @@ public class MainController {
 				if (roomResponse.getRoomid() == cartInfo.getRoomid()) {
 					RoomResponse combinedInfo = new RoomResponse();
 					combinedInfo.setHotelname(roomResponse.getHotelname());
+					combinedInfo.setHotelid(roomResponse.getHotelid());
 					combinedInfo.setLoc(roomResponse.getLoc());
 					combinedInfo.setRoomid(roomResponse.getRoomid());
 					combinedInfo.setMaxManCnt(roomResponse.getMaxManCnt());
@@ -436,8 +445,10 @@ public class MainController {
 	@PostMapping("/addToCart")
 	public String addToCart(@RequestParam("roomid") int roomid, @RequestParam("StartDate") String Date1,
 			@RequestParam("EndDate") String Date2, HttpSession session) {
+
 		// 세션에서 기존에 저장된 RoomInfo 리스트를 가져옴.
 		List<Cartinfo> cartRoomInfoList = (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+
 		// 만약 세션에 저장된 리스트가 없다면 새로운 리스트를 생성.
 		if (cartRoomInfoList == null) {
 			cartRoomInfoList = new ArrayList<>();
@@ -490,6 +501,71 @@ public class MainController {
 		return "redirect:cart";
 	}
 
+	@GetMapping("/Reserve_Agree")
+	public String ReserveAgree(HttpSession session) {
+		String user_name = (String) session.getAttribute("partner_user_id");
+		String user_phone = (String) session.getAttribute("userPhone");
+		String order_number = (String) session.getAttribute("partner_order_id");
+
+		List<RoomResponse> combinedList = (List<RoomResponse>) session.getAttribute("combinedList");
+		if (combinedList != null) {
+			// 필요한 값을 추출
+			List<Integer> hotelIds = combinedList.stream().map(RoomResponse::getHotelid).collect(Collectors.toList());
+			List<Integer> roomIds = combinedList.stream().map(RoomResponse::getRoomid).collect(Collectors.toList());
+			List<String> date1List = combinedList.stream().map(RoomResponse::getDate1).collect(Collectors.toList());
+			List<String> date2List = combinedList.stream().map(RoomResponse::getDate2).collect(Collectors.toList());
+
+			List<Map<String, Object>> parameterList = new ArrayList<>();
+			// combinedList를 기반으로 데이터를 추가
+			for (RoomResponse roomResponse : combinedList) {
+				Map<String, Object> dataMap = new HashMap<>();
+				dataMap.put("hotelId", roomResponse.getHotelid());
+				dataMap.put("roomid", roomResponse.getRoomid());
+
+				// 날짜 문자열 파싱
+				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
+				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+				try {
+					Date date1 = inputFormat.parse(roomResponse.getDate1());
+					Date date2 = inputFormat.parse(roomResponse.getDate2());
+
+					String formattedDate1 = outputFormat.format(date1);
+					String formattedDate2 = outputFormat.format(date2);
+
+					dataMap.put("date1", formattedDate1);
+					dataMap.put("date2", formattedDate2);
+					parameterList.add(dataMap);
+				} catch (ParseException e) {
+					// 파싱 오류 처리
+					e.printStackTrace();
+				}
+			}
+
+			System.out.println(parameterList + "/" + user_name + "/" + user_phone + "/" + order_number);
+			mainService.insertReserve(parameterList, user_name, user_phone, order_number);
+		} else {
+			RoomResponse roomdetail = (RoomResponse) session.getAttribute("roomdetail");
+			System.out.println(roomdetail);
+			String hotelName = roomdetail.getHotelname();
+			String roomName = roomdetail.getRoomname();
+			session.getAttribute(sessionDate1);
+			session.getAttribute(sessionDate2);
+			System.out.println(sessionDate1 + "/" + sessionDate2);
+
+			Map<String, Integer> Ids = mainService.findHRids(roomName, hotelName);
+			System.out.println(Ids);
+			int hotelid = Ids.get("hotelid");
+			int roomid = Ids.get("roomid");
+
+			System.out.println(hotelName + "/" + roomName + "/" + sessionDate1 + "/" + sessionDate2 + "/" + user_name
+					+ "/" + user_phone + "/" + order_number);
+			mainService.insertReserveOne(hotelid, roomid, sessionDate1, sessionDate2, user_name, user_phone,
+					order_number);
+
+		}
+		return "redirect:/";
+	}
 	// 게시글 작성 페이지
 	/*
 	 * @GetMapping("/Main/write") public String openPostWrite(@RequestParam(value =

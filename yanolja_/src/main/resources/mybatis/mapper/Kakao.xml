@@ -9,10 +9,17 @@
 	</select>
 
 	<insert id="insertUser">
-	INSERT INTO User
+		INSERT INTO User
 		(email, password, name, phone,
 		createdate, masteryn)
 		VALUES(#{email},#{password},#{name},01012345678,#{createdate},0);
 	</insert>
-
+	<insert id="reserveinsert">
+		INSERT INTO reserve (hotel_name, date1, date2)
+		VALUES
+		<foreach item="hotelName" collection="hotelNames"
+			separator=",">
+			(#{hotelName}, #{date1List[${item_index}], #{date2List[${item_index}]})
+		</foreach>
+	</insert>
 </mapper>
