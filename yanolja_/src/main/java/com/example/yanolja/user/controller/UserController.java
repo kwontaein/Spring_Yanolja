@@ -77,9 +77,12 @@ public class UserController {
 		// 현재 로그인한 사용자의 세션 정보를 가져올 수 있음
 		if (userDetails != null) {
 			String username = userDetails.getUName();
+			int userid = userDetails.getUserid();
 			// 여기에서 필요한 세션 정보를 HttpSession에 추가합니다.
 			session.setAttribute("username", username);
-			System.out.println(username);
+			session.setAttribute("userid", userid);
+			System.out.println("username =" + username);
+			System.out.println("userid =" + userid);
 		}
 		return "redirect:/";
 	}

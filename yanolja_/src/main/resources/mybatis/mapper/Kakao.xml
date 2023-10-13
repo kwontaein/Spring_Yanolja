@@ -7,7 +7,10 @@
 		resultType="com.example.yanolja.kakao.oauth2.User">
 		SELECT * FROM user WHERE email = #{email}
 	</select>
-
+	<select id="findUserid"
+		resultType="int">
+		SELECT userid FROM user WHERE email = #{email}
+	</select>
 	<insert id="insertUser">
 		INSERT INTO User
 		(email, password, name, phone,

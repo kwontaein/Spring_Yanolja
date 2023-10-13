@@ -48,7 +48,7 @@ function selectAll(checkbox) {
 	// 전체 동의 체크박스의 상태에 따라 모든 약관 체크박스를 선택 또는 해제합니다.
 	var isChecked = checkbox.checked;
 	var allAgreementCheckboxes = document.querySelectorAll('input[name="agreed"]');
-	for (var i = 0; i < 3; i++) {
+	for (var i = 0; i < allAgreementCheckboxes.length; i++) {
 		allAgreementCheckboxes[i].checked = isChecked;
 	}
 
@@ -93,10 +93,12 @@ function payCancel() {
 function payAgree() {
 	$.ajax({
 		url: '/Reserve_Agree', // 서버의 엔드포인트 URL
-		method: 'GET',     // HTTP GET 요청
+		method: 'post',     // HTTP GET 요청
 		success: function(data) {
 			// 서버로부터 받은 데이터를 화면에 표시
 			alert("결제 성공");
+			closeModal(); // 모달 닫기
+			window.location.href = '/Reserve_history?ordernumber=' + data;
 		},
 		error: function() {
 			// 에러 처리
@@ -104,6 +106,7 @@ function payAgree() {
 		}
 	});
 }
+
 $(document).ready(
 	function() {
 		checkAgreements();

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.yanolja.main.mapper.MainMapper;
+import com.example.yanolja.main.post.BookResponse;
 import com.example.yanolja.main.post.FacilityResponse;
 import com.example.yanolja.main.post.InfoResponse;
 import com.example.yanolja.main.post.MainRequest;
@@ -248,5 +249,20 @@ public class MainService {
 	public void insertReserveOne(int hotelid, int roomid, String date1List, String date2List, String user_name,
 			String user_phone, String order_number) {
 		mainMapper.insertReserveOne(hotelid, roomid, date1List, date2List, user_name, user_phone, order_number);
+	}
+
+	public void insertBook(int userid ,int roomid ,String bookdate) {
+		mainMapper.insertBook(userid, roomid, bookdate);
+	}
+	
+	public void insertBookList(int userid ,List<Map<String, Object>> parameterMap) {
+		mainMapper.insertBookList(userid, parameterMap);
+	}
+	
+	public ReserveResponse selectReserve_order(String ordernumber) {
+		return mainMapper.selectReserve_order(ordernumber);
+	}
+	public List<BookResponse> selectBook(int userid, int period) {
+		return mainMapper.selectBook(userid ,period);
 	}
 }

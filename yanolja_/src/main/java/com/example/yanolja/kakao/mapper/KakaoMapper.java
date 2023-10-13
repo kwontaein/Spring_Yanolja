@@ -9,6 +9,8 @@ public interface KakaoMapper {
 	User findByUsername(String username);
 
 	User findByEmail(String email);
+	
+	int findUserid(String email);
 
 	void insertUser(User user);
 }

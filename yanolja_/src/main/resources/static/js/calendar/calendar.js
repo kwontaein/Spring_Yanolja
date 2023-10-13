@@ -1,5 +1,12 @@
 $(document).ready(function(data) {
 
+	const options = {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		weekday: 'short'
+	};
+
 	function getParameterByName(name, url = window.location.href) {
 		name = name.replace(/[\[\]]/g, '\\$&');
 		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
@@ -143,15 +150,15 @@ $(document).ready(function(data) {
 
 			// 선택된 기간을 버튼에 표시
 			if (selectedStartDate && selectedEndDate) {
-				const formattedStartDate = selectedStartDate.toLocaleDateString();
-				const formattedEndDate = selectedEndDate.toLocaleDateString();
+				const formattedStartDate = selectedStartDate.toLocaleDateString("ko-KR", options);
+				const formattedEndDate = selectedEndDate.toLocaleDateString("ko-KR", options);
 				const timeDifference = selectedEndDate.getTime() - selectedStartDate.getTime();
 				const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 				$('#dateRangeButton').text(`${formattedStartDate} - ${formattedEndDate} (${daysDifference}박)`);
 
 				// 선택한 날짜를 세션에 저장합니다.
 			} else if (selectedStartDate) {
-				const formattedStartDate = selectedStartDate.toLocaleDateString();
+				const formattedStartDate = selectedStartDate.toLocaleDateString("ko-KR", options);
 				$('#dateRangeButton').text(`${formattedStartDate} 체크인 검색`);
 
 				// 선택한 날짜를 세션에서 제거합니다.
@@ -198,15 +205,15 @@ $(document).ready(function(data) {
 	updateDateRangeButtonText(selectedStartDate, selectedEndDate);
 
 	function saveDateToSession(startDate, endDate) {
-		sessionStorage.setItem('selectedStartDate', startDate.toISOString());
-		// 기간을 계산합니다.
-		const timeDifference = endDate.getTime() - startDate.getTime();
-		const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-		sessionStorage.setItem('totalDate', daysDifference);
+		sessionStorage.setItem('selectedStartDate', startDate.toLocaleDateString("ko-KR", options));
 
-		
 		if (endDate) {
-			sessionStorage.setItem('selectedEndDate', endDate.toISOString());
+			sessionStorage.setItem('selectedEndDate', endDate.toLocaleDateString("ko-KR", options));	
+			// 기간을 계산합니다.
+			const timeDifference = endDate.getTime() - startDate.getTime();
+			const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+			sessionStorage.setItem('totalDate', daysDifference);
+
 		} else {
 			sessionStorage.removeItem('selectedEndDate');
 		}
@@ -217,8 +224,8 @@ $(document).ready(function(data) {
 		const dateRangeButton = $('#dateRangeButton');
 
 		if (startDate && endDate) {
-			const formattedStartDate = startDate.toLocaleDateString();
-			const formattedEndDate = endDate.toLocaleDateString();
+			const formattedStartDate = startDate.toLocaleDateString("ko-KR", options);
+			const formattedEndDate = endDate.toLocaleDateString("ko-KR", options);
 
 			// 기간을 계산합니다.
 			const timeDifference = endDate.getTime() - startDate.getTime();
@@ -226,7 +233,7 @@ $(document).ready(function(data) {
 
 			dateRangeButton.text(`${formattedStartDate} - ${formattedEndDate} (${daysDifference}박)`);
 		} else if (startDate) {
-			const formattedStartDate = startDate.toLocaleDateString();
+			const formattedStartDate = startDate.toLocaleDateString("ko-KR", options);
 			dateRangeButton.text(`${formattedStartDate} 체크인 검색`);
 		}
 		saveDateToSession(selectedStartDate, selectedEndDate);
@@ -265,8 +272,8 @@ $(document).ready(function(data) {
 			url: '/calendar', // Spring 컨트롤러 URL
 			type: 'get',
 			data: {
-				selectedStartDate: selectedStartDate,
-				selectedEndDate: selectedEndDate,
+				selectedStartDate: selectedStartDate.toLocaleDateString("ko-KR", options),
+				selectedEndDate: selectedEndDate.toLocaleDateString("ko-KR", options),
 				hotelid: hotelid,
 				roomid: roomid
 			},

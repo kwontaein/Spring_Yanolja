@@ -36,23 +36,23 @@ public class KakaoController {
 
 			// 추출한 정보를 기반으로 회원가입 또는 로그인 처리
 			if (kakaoInfo != null) {
-				System.out.println(kakaoInfo.getEmail());
 				User existingUser = kakaoService.findByEmail(kakaoInfo.getEmail());
-				System.out.println(existingUser);
 				if (existingUser == null) {
 					// 사용자가 등록되어 있지 않다면 회원가입 수행
 					User newUser = new User();
 					newUser.setEmail(kakaoInfo.getEmail());
 					// 다른 필요한 정보도 설정
-					System.out.println("카카오 계정 회원가입 실행 : " + kakaoInfo.getEmail());
 					kakaoService.insertUser(newUser);
 				} else {
 					// 이미 등록된 사용자라면 로그인 처리
 					// Spring Security를 사용한다면, SecurityContext에 사용자 정보 저장
+
+					int userid = kakaoService.findUserid(kakaoInfo.getEmail()); // userid 조회
+
 					Authentication authentication = new UsernamePasswordAuthenticationToken(existingUser, null);
 					SecurityContextHolder.getContext().setAuthentication(authentication);
-					System.out.println("시큐리티 로그인 실행");
 					session.setAttribute("username", existingUser.getName());
+					session.setAttribute("userid", userid);
 					// 예: SecurityContextHolder.getContext().setAuthentication(...);
 				}
 			}
@@ -68,6 +68,5 @@ public class KakaoController {
 	public String kakaologin() {
 		return "User/Kakao";
 	}
-
 
 }

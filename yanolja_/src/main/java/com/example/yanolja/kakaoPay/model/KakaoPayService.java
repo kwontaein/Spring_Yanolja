@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -34,9 +35,17 @@ public class KakaoPayService {
 	@Autowired
 	HttpSession session;
 
-	public String kakaoPayReady(String hotelname, String roomname, String roomid, String price, String username, String userPhone) {
+	public String kakaoPayReady(String hotelname, String roomname, String roomid, String price, String username,
+			String userPhone) {
+
+		Random random = new Random();
+		// 5자리 난수 생성 (범위: 00001 ~ 99999)
+		int min = 1; // 5자리 최소값
+		int max = 99999; // 5자리 최대값
+		int randomNum = random.nextInt(max - min + 1) + min;
 
 		System.out.println("kakaoPayReady 실행");
+
 		int price2 = Integer.parseInt(price);
 		int p1 = (price2 * 10) / 110;
 		int p2 = price2 - ((price2 * 10) / 110);
@@ -46,15 +55,15 @@ public class KakaoPayService {
 		String formatedNow = now.format(DateTimeFormatter.ofPattern("yyMMddHHmm"));
 
 		session.setAttribute("partner_user_id", username);
-		session.setAttribute("partner_order_id", formatedNow + roomid);
+		session.setAttribute("partner_order_id", formatedNow + roomid + randomNum);
 		session.setAttribute("price", price);
 		session.setAttribute("vat", vat);
 		session.setAttribute("userPhone", userPhone);
-		
+
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid); // 가맹점 코드
-		parameters.add("partner_order_id", formatedNow + roomid); // 주문번호 : 결제날짜 + 룸아이디
+		parameters.add("partner_order_id", formatedNow + roomid + randomNum); // 주문번호 : 결제날짜 + 룸아이디
 		parameters.add("partner_user_id", username); // 유저네임 username
 		parameters.add("item_name", hotelname + ", " + roomname); // 호텔 이름 + (방번호)방이름
 		parameters.add("quantity", "1"); // 상품 수량

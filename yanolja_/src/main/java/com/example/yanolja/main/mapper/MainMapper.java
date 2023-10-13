@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.yanolja.main.post.BookResponse;
 import com.example.yanolja.main.post.FacilityResponse;
 import com.example.yanolja.main.post.InfoResponse;
 import com.example.yanolja.main.post.MainRequest;
@@ -203,8 +204,17 @@ public interface MainMapper {
 
 	Map<String, Integer> findHRids(String roomname, String hotelname);
 
-	void insertReserve(List<Map<String, Object>>  parameterMap, String user_name, String user_phone, String order_number);
+	void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone,
+			String order_number);
 
 	void insertReserveOne(int hotelid, int roomid, String date1List, String date2List, String user_name,
 			String user_phone, String order_number);
+
+	void insertBook(int userid, int roomid, String bookdate);
+
+	void insertBookList(int userid, List<Map<String, Object>> parameterMap);
+
+	ReserveResponse selectReserve_order(String ordernumber);
+	
+	List<BookResponse> selectBook(int userid , int period);
 }

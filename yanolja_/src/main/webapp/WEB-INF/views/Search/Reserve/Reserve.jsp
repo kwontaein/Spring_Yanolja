@@ -436,10 +436,10 @@
 								<div class="agree">
 									<input type="checkbox" name="agreed" value="require3" onchange="checkAgreements()">[필수] 3
 								</div>
-								<div class="agree">
+								<div class="selectagree">
 									<input type="checkbox" name="agreed" value="norequire4">[선택] 4
 								</div>
-								<div class="agree">
+								<div class="selectagree">
 									<input type="checkbox" name="agreed" value="norequire5">[선택] 5
 								</div>
 							</c:if>

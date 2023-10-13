@@ -3,6 +3,7 @@ package com.example.yanolja.kakao.oauth2;
 import java.sql.Timestamp;
 
 public class User {
+	private int userid;
 	private String name;
 	private String email;
 	private String password;
@@ -10,6 +11,11 @@ public class User {
 	private Timestamp modifydate;
 	private int phone;
 	private String masteryn;
+
+
+	public int getUserid() {
+		return userid;
+	}
 
 	public String getName() {
 		return name;

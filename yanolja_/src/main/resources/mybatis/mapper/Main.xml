@@ -720,4 +720,43 @@
 		#{user_name},
 		#{user_phone},#{order_number})
 	</insert>
+
+	<insert id="insertBook">
+		INSERT INTO book (userid , roomid , bookdate)
+		VALUE
+		(#{userid} , #{roomid}, #{bookdate})
+	</insert>
+	<insert id="insertBookList">
+		INSERT INTO book (userid , roomid , bookdate)
+		VALUE
+		<foreach item="dataMap" collection="parameterMap"
+			separator=",">
+			(#{userid} , #{dataMap.roomid}, #{dataMap.date1})
+		</foreach>
+	</insert>
+	<select id="selectReserve_order"
+		resultType="com.example.yanolja.main.post.ReserveResponse">
+		select
+		(SELECT h.hotelname FROM hotel h WHERE h.hotelid =
+		reserve.hotelid) AS
+		hotelname,
+		(SELECT r.roomname FROM room r WHERE
+		r.roomid = reserve.roomid) AS roomname,
+		reservedate,user_name
+		from
+		reserve
+		where order_number = #{ordernumber}
+	</select>
+	<select id="selectBook">
+		SELECT
+		(SELECT h.hotelname FROM hotel h WHERE h.hotelid = r.hotelid) AS hotelname,
+		(SELECT r.roomname FROM room r WHERE r.roomid = rs.roomid) AS roomname,
+		rs.user_name,
+		rs.reservedate
+		FROM book b
+		JOIN room r ON b.roomid = r.roomid
+		JOIN reserve rs ON r.roomid = rs.roomid
+		WHERE b.userid = #{userid}
+		AND DATEDIFF(CURDATE(), rs.reservedate) >= -#{period}
+	</select>
 </mapper>

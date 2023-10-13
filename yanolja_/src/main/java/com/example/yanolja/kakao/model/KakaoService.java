@@ -150,6 +150,11 @@ public class KakaoService {
 		return kakaoMapper.findByEmail(email);
 	}
 
+	// 사용자 이메일로 조회하여 Userid 반환
+	public int findUserid(String email) {
+		return kakaoMapper.findUserid(email);
+	}
+
 	public void insertUser(User user) {
 		// MyBatis를 사용하여 사용자 정보를 데이터베이스에 저장
 		System.out.println("insertUser 실행");

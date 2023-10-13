@@ -1,0 +1,171 @@
+@charset "UTF-8";
+html{
+	height: 100%;
+}
+body{
+	background-color: #f2f2f2;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	}
+header{
+	background-color: white;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 104px;
+}
+.head{
+	width: 768px;
+}
+.top{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+    width: 100%;
+    height: 48px;
+    line-height: 2.7rem;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a1a1a;
+    max-width: 768px;
+    margin: 0 auto;
+}
+.btm{
+	display: flex;
+    max-width: 768px;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 12px;
+    margin: 0 auto;
+}
+.category{
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	width: 360px;
+	margin: 0 10px 0 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 11px 8px;
+}
+
+.period{
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	width: 360px;
+	margin: 0  0 0 10px ;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 11px 8px;
+}
+.rh_container{
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: center;
+}
+.rh_wrapper{
+	background-color: white;
+	width: 768px;
+	height: auto;
+	display: flex;
+	justify-content: center;
+}
+.rh_list{
+	height: 500px;
+	display: 88%;
+	align-items: center;
+	}
+.NoMember{
+	display: flex;
+	align-items: center;
+}
+.reserve_status{
+	height: 386px;
+	width: 668px;
+	padding: 50px;
+	
+}
+.rss{
+	padding-bottom: 40px;
+}
+.rsinput{
+	width: 100%;
+	border: none;
+	outline: none;
+}
+.phonecheck{
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 40px;
+}
+.postbtn{
+	flex: 3 auto;
+	margin-right: 10px;
+}
+.postbtn>button{
+	width: 100%;
+	height: 32px;
+    background: #ccc;
+    color: #fff;
+    border: none;
+}
+
+.checkinput{
+	flex: 4 auto;
+}
+.rsvbtn{
+	padding-bottom: 0;
+}
+.rsvbtn>button{
+	width: 100%;
+    height: 45px;
+    font-weight: 700;
+    border: none;
+    color: #fff;
+    background: #ccc;
+    text-align: center;
+    font-size: 15px;
+}
+.ps{
+	font-size: 12px;
+	color: gray;
+	padding: 20px 0;
+}
+.modal {
+    display: none; /* 모달을 기본적으로 숨김 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경에 어둡게 처리 */
+    z-index: 999; /* 다른 요소 위에 놓기 위한 높은 z-index */
+}
+
+/* 모달 컨테이너 내용 */
+.modal-content {
+    background-color: #fff;
+    max-width: 80%; /* 모달의 최대 너비 조정 */
+    margin: 0 auto; /* 수평 가운데 정렬 */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* 모달 닫기 버튼 */
+.modal-content button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+}
