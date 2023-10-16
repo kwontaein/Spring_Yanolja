@@ -1,0 +1,178 @@
+@charset "UTF-8";
+html{
+	margin:0;
+	padding: 0;
+}
+body{
+	background-color: #f2f2f2;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	}
+header{
+	background-color: white;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 104px;
+}
+.head{
+	width: 768px;
+}
+.top{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+    width: 100%;
+    height: 48px;
+    line-height: 2.7rem;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a1a1a;
+    max-width: 768px;
+    margin: 0 auto;
+}
+.wrap {
+    height: 100vh;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 32px;
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: 600;
+}
+.review_container{
+	display: flex;
+	justify-content: center;
+}
+.review_wrapper{
+	width: 668px;
+	padding: 50px;
+	background-color: white;
+}
+
+.rating{
+	padding: 20px 0;
+}
+.rating>div{
+	display: flex;
+	justify-content: space-between;
+}
+.save{
+	width: 100%;
+	height: 48px;
+	display: flex;
+	justify-content: center;
+}
+.savebtn{
+	width: 100%;
+	padding: 0 20px;
+	height: 48px;
+	background-color: deeppink;
+	border: none;
+	color: white;
+}
+
+.star1 {
+	position: relative;
+	font-size: 2rem;
+	color: #ddd;
+}
+
+.star1 input {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.star1 span {
+	width: 0;
+	position: absolute;
+	left: 0;
+	color: red;
+	overflow: hidden;
+	pointer-events: none;
+}
+.star2 {
+	position: relative;
+	font-size: 2rem;
+	color: #ddd;
+}
+
+.star2 input {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.star2 span {
+	width: 0;
+	position: absolute;
+	left: 0;
+	color: red;
+	overflow: hidden;
+	pointer-events: none;
+}.star3 {
+	position: relative;
+	font-size: 2rem;
+	color: #ddd;
+}
+
+.star3 input {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.star3 span {
+	width: 0;
+	position: absolute;
+	left: 0;
+	color: red;
+	overflow: hidden;
+	pointer-events: none;
+}.star4 {
+	position: relative;
+	font-size: 2rem;
+	color: #ddd;
+}
+
+.star4 input {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.star4 span {
+	width: 0;
+	position: absolute;
+	left: 0;
+	color: red;
+	overflow: hidden;
+	pointer-events: none;
+}
+

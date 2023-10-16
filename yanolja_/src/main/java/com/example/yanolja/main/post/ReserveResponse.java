@@ -6,13 +6,14 @@ import java.time.format.DateTimeFormatter;
 public class ReserveResponse {
 
 	private String hotelname;
+	private String rentalType;
 	private String roomname;
 	private String user_name;
-	
-
-
+	private String order_number;
 	private LocalDateTime reserveDate;
+	private LocalDateTime reserveEndDate;
 	private String reserveDate2;
+	private String reserveEndDate2;
 	private int reserveCnt;
 	private boolean hasRoom; // 크거나 같은지 여부를 저장하는 변수
 
@@ -27,7 +28,7 @@ public class ReserveResponse {
 		this.reserveCnt = reserveCnt;
 		this.hasRoom = reserveCnt > compareValue;
 	}
-	
+
 	public ReserveResponse(String hotelname, String roomname, LocalDateTime reserveDate, String user_name) {
 		super();
 		this.hotelname = hotelname;
@@ -35,7 +36,37 @@ public class ReserveResponse {
 		this.user_name = user_name;
 		this.reserveDate = reserveDate;
 	}
-	
+
+	public ReserveResponse(String hotelname, String roomname, LocalDateTime reserveDate, LocalDateTime reserveEndDate,
+			String order_number) {
+		super();
+		this.hotelname = hotelname;
+		this.roomname = roomname;
+		this.reserveDate = reserveDate;
+		this.reserveEndDate = reserveEndDate;
+		this.order_number = order_number;
+	}
+
+	public ReserveResponse(String hotelname, String rentalType, String roomname, LocalDateTime reserveDate) {
+		super();
+		this.hotelname = hotelname;
+		this.rentalType = rentalType;
+		this.roomname = roomname;
+		this.reserveDate = reserveDate;
+	}
+
+	public String getRentalType() {
+		return rentalType;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public LocalDateTime getReserveDate() {
+		return reserveDate;
+	}
+
 	public String getReserveDate2() {
 		// 원하는 포맷을 지정합니다. 예: "yyyy-MM-dd"
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -43,8 +74,14 @@ public class ReserveResponse {
 		return reserveDate2;
 	}
 
-	public LocalDateTime getReserveDate() {
-		return reserveDate;
+	public LocalDateTime getReserveEndDate() {
+		return reserveEndDate;
+	}
+
+	public String getReserveEndDate2() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String reserveEndDate2 = reserveEndDate.format(formatter);
+		return reserveEndDate2;
 	}
 
 	public int getReserveCnt() {
@@ -54,7 +91,7 @@ public class ReserveResponse {
 	public boolean isHasRoom() {
 		return hasRoom;
 	}
-	
+
 	public String getHotelname() {
 		return hotelname;
 	}

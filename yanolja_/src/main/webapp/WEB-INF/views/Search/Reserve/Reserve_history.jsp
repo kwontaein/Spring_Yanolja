@@ -11,11 +11,11 @@
 
 </head>
 <script type="text/javascript">
-	function oninputPhone(target) {
+/* 	function oninputPhone(target) {
 		target.value = target.value.replace(/[^0-9]/g, '').replace(
 				/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g,
 				"$1-$2-$3");
-	}
+	} */
 	function loadReservationData(selectedPeriod) {
 		$.ajax({
 			url : '/Reserve_List',
@@ -26,11 +26,31 @@
 			success : function(data) {
 				// AJAX 요청 성공 처리
 				$('#reservationList').html(data);
-				console.log("실행");
 			},
 			error : function() {
 				// AJAX 요청 실패 처리
-				alert("에러 발생");
+				alert("예약 정보가 없습니다.");
+			}
+		});
+	}
+	function sendDataViaAjax() {
+		var name = document.getElementById("name").value;
+		var ordernumber = document.getElementById("ordernumber").value;
+		var phone = document.getElementById("phone").value;
+
+		$.ajax({
+			type : "Get", 
+			url : "/Reserve_history_NotUser",
+			data : {
+				name : name,
+				order_number : ordernumber,
+				phone : phone
+			},
+			success : function(data) {
+				$('#reserve_status').html(data);
+			},
+			error : function(error) {
+				console.error("오류 발생: " + error);
 			}
 		});
 	}
@@ -47,7 +67,7 @@
 		$("#closemodal button").click(function() {
 			$("#periodModal").css("display", "none");
 		});
-		
+
 		// 선택한 기간을 AJAX로 서버로 보내기
 		$(".periodOption").click(function() {
 			var selectedPeriod = $(this).data('value');
@@ -95,7 +115,7 @@
 				</c:when>
 				<c:otherwise>
 					<div class="NoMember">
-						<div class="reserve_status">
+						<div class="reserve_status" id="reserve_status">
 							<div class="rss">
 								<input type="text" id="name" class="rsinput" name="reserveinfo" placeholder="예약자 성명" />
 								<hr>
@@ -105,7 +125,7 @@
 								<hr>
 							</div>
 							<div class="rss">
-								<input type="text" id="phone" class="rsinput" name="reserveinfo" placeholder="휴대폰번호" oninput="oninputPhone(this)" maxlength="14" />
+								<input type="text" id="phone" class="rsinput" name="reserveinfo" placeholder="휴대폰번호" maxlength="14" />
 								<hr>
 							</div>
 							<div class="phonecheck">
@@ -118,7 +138,7 @@
 								</div>
 							</div>
 							<div class="rsvbtn">
-								<button>비회원 예약조회</button>
+								<button onclick="sendDataViaAjax()">비회원 예약조회</button>
 							</div>
 							<div class="ps">
 								<span>회원으로 예약한 경우 로그인 후 이용해주세요</span>

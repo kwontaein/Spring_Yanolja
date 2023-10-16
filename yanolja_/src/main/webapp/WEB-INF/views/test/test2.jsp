@@ -3,39 +3,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Swiper with Dynamic Content</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<link rel="stylesheet" href="${path}/css/swiper.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<title>별점 평가</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+.star {
+	position: relative;
+	font-size: 2rem;
+	color: #ddd;
+}
+
+.star input {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.star span {
+	width: 0;
+	position: absolute;
+	left: 0;
+	color: red;
+	overflow: hidden;
+	pointer-events: none;
+}
+</style>
+<script>
+
+        $(document).ready(function() {
+            $('input[type="range"]').on('input', function() {
+            	console.log("실행");
+                drawStar(this);
+            });
+            // jQuery 코드
+            const drawStar = (target) => {
+            	console.log(target.value +"됨");
+                $('.star span').css('width', (target.value * 10)+ "%");
+                
+            };
+        });
+    </script>
 </head>
 <body>
-	<%@ include file="../../layout/header.jsp"%>
-	<div class="wrap">
-		<div class="custom_slide_wrap">
-			<div class="swiper-pagination-custom mt-40 mb-30"></div>
-		</div>
-		<div class="swiper-bottom">
-			<div class="swiper-wrapper">
-				<c:forEach var="i" begin="1" end="4">
-					<div class="swiper-slide">
-						<div class="bh_item_inner">
-							<div class="bh_content">
-								<p>Slide ${i}</p>
-								<div class="contents_box">
-									<div>
-										<!-- Include된 파일을 여기에 표시 -->
-										<div id="includedContent${i}"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</c:forEach>
-			</div>
-		</div>
-	</div>
-	<script src="${path}/js/test.js?var=23-09-08"></script>
+	<span class="star">
+		★★★★★
+		<span>★★★★★</span>
+		<input type="range" value="1" step="1" min="0" max="10" style="pointer-events: auto;">
+	</span>
 </body>
 </html>
+

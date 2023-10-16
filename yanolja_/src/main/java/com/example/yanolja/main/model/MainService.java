@@ -151,6 +151,10 @@ public class MainService {
 		return mainMapper.reserve_possible(hotelid);
 	};
 
+	public ReserveResponse selectForReview(int roomid) {
+		return mainMapper.selectForReview(roomid);
+	}
+	
 	/**
 	 * 방 리스트 조회
 	 * 
@@ -259,10 +263,14 @@ public class MainService {
 		mainMapper.insertBookList(userid, parameterMap);
 	}
 	
-	public ReserveResponse selectReserve_order(String ordernumber) {
+	public List<ReserveResponse> selectReserve_order(String ordernumber) {
 		return mainMapper.selectReserve_order(ordernumber);
 	}
 	public List<BookResponse> selectBook(int userid, int period) {
 		return mainMapper.selectBook(userid ,period);
+	}
+	
+	public List<ReserveResponse> select_p_Reserve(String name, String phone, String order_number) {
+		return mainMapper.select_p_Reserve(name ,phone,order_number);
 	}
 }

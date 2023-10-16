@@ -116,7 +116,7 @@
 				<h2>비회원 예약 내역</h2>
 				<div class="booklist">
 					<div>
-						<a>
+						<a href="/Reserve_history">
 							<span>국내숙소/놀거리/교통 예약내역 </span>
 							<span class="RecordLink_forwardIcon__2NvgZ"></span>
 						</a>

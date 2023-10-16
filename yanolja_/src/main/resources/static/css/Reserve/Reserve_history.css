@@ -77,7 +77,7 @@ header{
 	justify-content: center;
 }
 .rh_list{
-	height: 500px;
+	min-height: 500px;
 	display: 88%;
 	align-items: center;
 	}
@@ -168,4 +168,11 @@ header{
     border: none;
     cursor: pointer;
     font-size: 20px;
+}
+
+.Notuser{
+	height: 386px;
+	width: 668px;
+	padding: 50px;
+	
 }

@@ -62,7 +62,7 @@ public class MainController {
 	@GetMapping("/test2")
 	public String test2() {
 		// 모든 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		return "User/test"; // User/test 템플릿을 렌더링
+		return "test/test2"; // User/test 템플릿을 렌더링
 	}
 
 //카카오 페이 결제 페이지--------------------------------------------------------------------------------
@@ -445,36 +445,44 @@ public class MainController {
 
 	// 회원 예약 내역 조회 페이지
 	@GetMapping("Reserve_history")
-	public String ReserveHistory( Model model,
+	public String ReserveHistory(Model model,
 			@RequestParam(value = "ordernumber", required = false) String ordernumber) {
 		// book 테이블에서 userid = #{userid} 인 정보 조회
-		System.out.println(ordernumber);
+		//System.out.println(ordernumber);
 		if (ordernumber != null) {
-			ReserveResponse reserve = mainService.selectReserve_order(ordernumber);
+			List<ReserveResponse> reserve = mainService.selectReserve_order(ordernumber);
 			System.out.println(reserve.toString());
 			model.addAttribute("reserve", reserve);
 			model.addAttribute("ordernumber", ordernumber);
 			return "Search/Reserve/Reserve_By_OrderNumber";
 		} else {
-			//모델에 목록 담아서 보여주는 코드 추가
+			// 모델에 목록 담아서 보여주는 코드 추가
 			return "Search/Reserve/Reserve_history";
 		}
 	}
 
 	@GetMapping("Reserve_List")
-	public String postReserveHistory(HttpSession session,Model model,
+	public String postReserveHistory(HttpSession session, Model model,
 			@RequestParam(value = "period", required = false) int period) {
 		// book 테이블에서 userid = #{userid} 인 정보 조회 3 /6 /12 /24 개월 까지 가능 개월수 받아오기
-		int userid = (int) session.getAttribute("userid");
-		System.out.println(userid);
-		List<BookResponse> Book = mainService.selectBook(userid , period);
-		model.addAttribute("Book", Book);
+		Integer userid = (Integer) session.getAttribute("userid");
+		if (userid != null) {
+			List<BookResponse> Book = mainService.selectBook(userid, period);
+			model.addAttribute("Book", Book);
+		}
 		return "Search/Reserve/Reserve_List";
 	}
 
 	// 비회원 예약 내역 조회 반환
 	@GetMapping("Reserve_history_NotUser")
-	public String ReserveHistoryN() {
+	public String ReserveHistoryN(@RequestParam(value = "name", required = true) String name,
+			@RequestParam(value = "phone", required = true) String phone,
+			@RequestParam(value = "order_number", required = true) String order_number, Model model) {
+		List<ReserveResponse> pesonal_reserve = mainService.select_p_Reserve(name, phone, order_number);
+		if(pesonal_reserve == null) {
+			System.out.println("값이 없습니다");
+		}
+		model.addAttribute("pesonal_reserve", pesonal_reserve);
 		// 주문번호 이름 전화번호로 일치하는 정보 찾아서 반환
 		return "Search/Reserve/Reserve_history_NotUser";
 	}
@@ -556,7 +564,19 @@ public class MainController {
 		// 원하는 처리를 수행한 후, 다른 페이지로 리다이렉트하거나 뷰를 반환할 수 있습니다.
 		return "redirect:cart";
 	}
-
+//---------------------------------------------------------------------------------------------------------
+	//후기작성
+	@GetMapping("/writeReview")
+	public String writeReview(@RequestParam(value="roomid") int roomid, Model model) {
+		//호텔, 객실이름 및 사용자 이름 가져오기
+		
+		//입력받은 별점 db에 넣기
+		ReserveResponse loadRs = mainService.selectForReview(roomid);
+		model.addAttribute("loadRs", loadRs);
+		return "User/review";
+	}
+	
+	
 // 메소드 ---------------------------------------------------------------------------------------------------	
 	// 날짜 세션 설정
 	private String updateSessionAttribute(HttpSession session, String attributeName, String sessionValue,

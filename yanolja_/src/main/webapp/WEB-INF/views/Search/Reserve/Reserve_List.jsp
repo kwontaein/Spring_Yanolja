@@ -5,17 +5,66 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+.book_container {
+	width: 768px;
+}
+
+.book_wrapper {
+	padding: 50px;
+}
+
+.book_conts {
+	padding: 10px 0;
+}
+
+.book_conts>div {
+	width: 100%;
+}
+
+.title {
+	padding: 0 10px;
+}
+
+h3 {
+	margin: 0;
+	padding: 0;
+}
+</style>
 </head>
 <body>
-	<div>
-		<c:forEach items="${Book}" var="book">
-			<div>
-				<div>${book.hotelname}</div>
-				<div>${book.roomname}</div>
-				<div>${book.user_name}</div>
-				<div>${book.reservedate}</div>
-			</div>
-		</c:forEach>
+	<div class="book_container">
+		<div class="book_wrapper">
+			<h3>${username}님의예약내역</h3>
+			<hr>
+			<c:forEach items="${Book}" var="book">
+				<div class="book_conts">
+					<div>
+						<span class="title">호텔명 : </span>
+						<span>${book.hotelname}</span>
+					</div>
+					<div>
+						<span class="title">객실명 : </span>
+						<span>${book.roomname}</span>
+					</div>
+					<div>
+						<span class="title">사용자 : </span>
+						<span>${book.user_name}</span>
+					</div>
+					<div>
+						<span class="title">예약일 : </span>
+						<span>${book.reservedate2}</span>
+					</div>
+					<br>
+					<div style="width: 100%; height: 40px; background-color: deeppink; display: flex; align-items: center; justify-content: center;">
+						<a style="color: white; text-decoration: none;" href="/writeReview?roomid=${book.roomid}">
+							<span>후기 작성하기</span>
+						</a>
+					</div>
+				</div>
+				<hr>
+			</c:forEach>
+		</div>
 	</div>
 </body>
 </html>

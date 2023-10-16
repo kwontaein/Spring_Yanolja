@@ -90,7 +90,7 @@ public interface MainMapper {
 	String findUPhone(String uname);
 
 	List<ReserveResponse> reserve_possible(int hotelid);
-
+	ReserveResponse selectForReview(int roomid);
 	/**
 	 * 방 리스트 조회
 	 * 
@@ -214,7 +214,9 @@ public interface MainMapper {
 
 	void insertBookList(int userid, List<Map<String, Object>> parameterMap);
 
-	ReserveResponse selectReserve_order(String ordernumber);
+	List<ReserveResponse> selectReserve_order(String ordernumber);
 	
 	List<BookResponse> selectBook(int userid , int period);
+	
+	List<ReserveResponse> select_p_Reserve(String name, String phone, String order_number);
 }

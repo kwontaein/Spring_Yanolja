@@ -749,14 +749,50 @@
 	</select>
 	<select id="selectBook">
 		SELECT
-		(SELECT h.hotelname FROM hotel h WHERE h.hotelid = r.hotelid) AS hotelname,
-		(SELECT r.roomname FROM room r WHERE r.roomid = rs.roomid) AS roomname,
+		r.roomid,
+		(SELECT h.hotelname FROM hotel h WHERE
+		h.hotelid = r.hotelid) AS hotelname,
+		(SELECT r.roomname FROM room r
+		WHERE r.roomid = rs.roomid) AS roomname,
 		rs.user_name,
 		rs.reservedate
 		FROM book b
 		JOIN room r ON b.roomid = r.roomid
-		JOIN reserve rs ON r.roomid = rs.roomid
+		JOIN reserve rs ON
+		r.roomid = rs.roomid
 		WHERE b.userid = #{userid}
-		AND DATEDIFF(CURDATE(), rs.reservedate) >= -#{period}
+		AND DATEDIFF(CURDATE(),
+		rs.reservedate) >= -#{period}
+	</select>
+	<select id="selectForReview">
+		SELECT
+		(SELECT hotelname FROM hotel WHERE
+		hotel.hotelid = room.hotelid) AS
+		hotelname,
+		rentalType,
+		roomname,
+		(select
+		reservedate from reserve where reserve.roomid = room.roomid) as
+		reservedate
+		FROM room
+		WHERE roomid = #{roomid};
+	</select>
+
+	<select id="select_p_Reserve">
+		select
+		(SELECT h.hotelname FROM hotel h WHERE
+		h.hotelid =
+		reserve.hotelid) AS
+		hotelname,
+		(SELECT r.roomname FROM room r
+		WHERE
+		r.roomid =
+		reserve.roomid) AS roomname,
+		reservedate,reserveEndDate,order_number
+		from
+		reserve
+		where
+		order_number =
+		#{order_number} and user_name = #{name} and user_phone=#{phone}
 	</select>
 </mapper>
