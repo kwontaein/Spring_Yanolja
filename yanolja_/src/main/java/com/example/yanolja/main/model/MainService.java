@@ -154,7 +154,7 @@ public class MainService {
 	public ReserveResponse selectForReview(int roomid) {
 		return mainMapper.selectForReview(roomid);
 	}
-	
+
 	/**
 	 * 방 리스트 조회
 	 * 
@@ -171,6 +171,10 @@ public class MainService {
 	 */
 	public List<PolicyResponse> hotelpolicy(final int hotelid) {
 		return mainMapper.hotelpolicy(hotelid);
+	}
+
+	public int findHotelId(int roomid) {
+		return mainMapper.findHotelId(roomid);
 	}
 
 	/**
@@ -255,22 +259,31 @@ public class MainService {
 		mainMapper.insertReserveOne(hotelid, roomid, date1List, date2List, user_name, user_phone, order_number);
 	}
 
-	public void insertBook(int userid ,int roomid ,String bookdate) {
+	public void insertBook(int userid, int roomid, String bookdate) {
 		mainMapper.insertBook(userid, roomid, bookdate);
 	}
-	
-	public void insertBookList(int userid ,List<Map<String, Object>> parameterMap) {
-		mainMapper.insertBookList(userid, parameterMap);
+
+	public void insertBookList(int userid, List<Map<String, Object>> parameterMap,String order_number) {
+		mainMapper.insertBookList(userid, parameterMap, order_number);
 	}
-	
+
 	public List<ReserveResponse> selectReserve_order(String ordernumber) {
 		return mainMapper.selectReserve_order(ordernumber);
 	}
+
 	public List<BookResponse> selectBook(int userid, int period) {
-		return mainMapper.selectBook(userid ,period);
+		return mainMapper.selectBook(userid, period);
 	}
-	
+
 	public List<ReserveResponse> select_p_Reserve(String name, String phone, String order_number) {
-		return mainMapper.select_p_Reserve(name ,phone,order_number);
+		return mainMapper.select_p_Reserve(name, phone, order_number);
+	}
+
+	public void insertReview(int hotelid, int roomid,int userid, double rating1, double rating2, double rating3, double rating4,
+			String textData) {
+		mainMapper.insertReview(hotelid,roomid,userid,rating1,rating2,rating3,rating4,textData);
+	}
+	public void updateReivewYn(int bookid) {
+		mainMapper.updateReivewYn(bookid);
 	}
 }

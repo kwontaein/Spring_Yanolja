@@ -268,9 +268,14 @@ public class MainController {
 
 		if (hotelid != null) {
 			List<ReviewResponse> review = mainService.review(hotelid);
+			List<String> roomnameList = review.stream().map(ReviewResponse::getRoomname) // roomname 값을 추출
+					.distinct() // 중복 제거
+					.collect(Collectors.toList()); // 새로운 리스트에 저장
+			System.out.println(roomnameList);
 			ReviewResponse review_detail = mainService.rating_detail(hotelid);
 			model.addAttribute("review", review);
 			model.addAttribute("review_detail", review_detail);
+			model.addAttribute("roomnameList", roomnameList);
 		} else if (roomid != null) {
 			List<ReviewResponse> review = mainService.reviewroom(roomid);
 			int cnt = mainService.reviewroomcnt(roomid);
@@ -418,7 +423,7 @@ public class MainController {
 			mainService.insertReserve(parameterList, user_name, user_phone, order_number);
 
 			if (userid != null) {
-				mainService.insertBookList(userid, parameterList);
+				mainService.insertBookList(userid, parameterList, order_number);
 			}
 		} else {
 			RoomResponse roomdetail = (RoomResponse) session.getAttribute("roomdetail");
@@ -448,7 +453,7 @@ public class MainController {
 	public String ReserveHistory(Model model,
 			@RequestParam(value = "ordernumber", required = false) String ordernumber) {
 		// book 테이블에서 userid = #{userid} 인 정보 조회
-		//System.out.println(ordernumber);
+		// System.out.println(ordernumber);
 		if (ordernumber != null) {
 			List<ReserveResponse> reserve = mainService.selectReserve_order(ordernumber);
 			System.out.println(reserve.toString());
@@ -464,6 +469,7 @@ public class MainController {
 	@GetMapping("Reserve_List")
 	public String postReserveHistory(HttpSession session, Model model,
 			@RequestParam(value = "period", required = false) int period) {
+
 		// book 테이블에서 userid = #{userid} 인 정보 조회 3 /6 /12 /24 개월 까지 가능 개월수 받아오기
 		Integer userid = (Integer) session.getAttribute("userid");
 		if (userid != null) {
@@ -479,7 +485,7 @@ public class MainController {
 			@RequestParam(value = "phone", required = true) String phone,
 			@RequestParam(value = "order_number", required = true) String order_number, Model model) {
 		List<ReserveResponse> pesonal_reserve = mainService.select_p_Reserve(name, phone, order_number);
-		if(pesonal_reserve == null) {
+		if (pesonal_reserve == null) {
 			System.out.println("값이 없습니다");
 		}
 		model.addAttribute("pesonal_reserve", pesonal_reserve);
@@ -564,19 +570,36 @@ public class MainController {
 		// 원하는 처리를 수행한 후, 다른 페이지로 리다이렉트하거나 뷰를 반환할 수 있습니다.
 		return "redirect:cart";
 	}
+
 //---------------------------------------------------------------------------------------------------------
-	//후기작성
+	// 후기작성
 	@GetMapping("/writeReview")
-	public String writeReview(@RequestParam(value="roomid") int roomid, Model model) {
-		//호텔, 객실이름 및 사용자 이름 가져오기
-		
-		//입력받은 별점 db에 넣기
+	public String writeReview(@RequestParam(value = "roomid") int roomid, @RequestParam(value = "bookid") int bookid,
+			Model model) {
+		// 유저아이디, 해당 아이디와 룸아이디로 이루어진 예약정보가 없거나, 후기 갯수 < 해당 정보 라면 잘못된 접근입니다. 라는 문구 작성
+		// 호텔, 객실이름 및 사용자 이름 가져오기
 		ReserveResponse loadRs = mainService.selectForReview(roomid);
 		model.addAttribute("loadRs", loadRs);
-		return "User/review";
+		model.addAttribute("bookid", bookid);
+		return "User/writeReview";
 	}
-	
-	
+
+	@PostMapping("/writeReview.do")
+	@ResponseBody
+	public String insertReview(@RequestParam(value = "rating1") double rating1,
+			@RequestParam(value = "rating2") double rating2, @RequestParam(value = "rating3") double rating3,
+			@RequestParam(value = "rating4") double rating4, @RequestParam(value = "textData") String textData,
+			@RequestParam(value = "roomid") int roomid, @RequestParam(value = "bookid") int bookid,
+			HttpSession session) {
+
+		// 호텔아이디 받아서 insert
+		int userid = (int) session.getAttribute("userid");
+		int hotelid = mainService.findHotelId(roomid);
+		mainService.updateReivewYn(bookid);
+		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);
+		return "success";
+	}
+
 // 메소드 ---------------------------------------------------------------------------------------------------	
 	// 날짜 세션 설정
 	private String updateSessionAttribute(HttpSession session, String attributeName, String sessionValue,

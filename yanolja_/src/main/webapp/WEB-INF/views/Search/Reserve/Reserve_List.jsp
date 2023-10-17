@@ -56,11 +56,22 @@ h3 {
 						<span>${book.reservedate2}</span>
 					</div>
 					<br>
-					<div style="width: 100%; height: 40px; background-color: deeppink; display: flex; align-items: center; justify-content: center;">
-						<a style="color: white; text-decoration: none;" href="/writeReview?roomid=${book.roomid}">
-							<span>후기 작성하기</span>
-						</a>
-					</div>
+					<c:choose>
+						<c:when test="${book.canreview eq '후기 작성하기' && book.review_cnt == 0}">
+							<div style="width: 100%; height: 40px; background-color: deeppink; display: flex; align-items: center; justify-content: center;">
+								<a style="color: white; text-decoration: none;" href="/writeReview?roomid=${book.roomid}&bookid=${book.bookid}">
+									<span>${book.canreview}</span>
+								</a>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div style="width: 100%; height: 40px; background-color: gray; display: flex; align-items: center; justify-content: center;">
+								<a style="color: white; text-decoration: none; cursor:not-allowed;">
+									<span>${book.canreview}</span>
+								</a>
+							</div>
+						</c:otherwise>
+					</c:choose>
 				</div>
 				<hr>
 			</c:forEach>

@@ -6,6 +6,41 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="${path}/css/places/review.css" />
+<script type="text/javascript">
+	// JavaScript
+	// 모달 열기 버튼 클릭 시 모달 열기
+	document.getElementById('selectroom').addEventListener('click', function() {
+		document.getElementById('myModal').style.display = 'block';
+	});
+
+	// 모달 닫기 버튼 클릭 시 모달 닫기
+	document.querySelector('.close').addEventListener('click', function() {
+		document.getElementById('myModal').style.display = 'none';
+	});
+	
+	// 객실 선택 시 리뷰 필터링 및 표시
+    const roomElements = document.querySelectorAll('.rooms');
+    roomElements.forEach(roomElement => {
+        roomElement.addEventListener('click', function() {
+            const selectedRoom = this.getAttribute('data-room');
+            const reviewElements = document.querySelectorAll('.listroom');
+
+            reviewElements.forEach(reviewElement => {
+                const reviewRoom = reviewElement.querySelector('.listroomname').textContent;
+                if (selectedRoom === 'all' || selectedRoom === reviewRoom) {
+                    reviewElement.parentElement.style.display = 'block';
+                } else {
+                    reviewElement.parentElement.style.display = 'none';
+                }
+            });
+            const selectedRoomName = this.textContent;
+            document.getElementById('selectroom').textContent = selectedRoomName + ' ▼';
+
+            document.getElementById('myModal').style.display = 'none';
+            
+        });
+    });
+</script>
 </head>
 <body>
 	<div class="ratingContainer">
@@ -69,14 +104,14 @@
 			<div>
 				<c:if test="${not empty review}">
 					<c:if test="${not empty review_detail}">
-						<div class="selectroom">객실 전체 ▼</div>
+						<div class="selectroom" id="selectroom">객실 전체 ▼</div>
 					</c:if>
 					<div class="reviewlist">
 						<div class="reviewoption">
-							<div class="option1">최근작성순 ▼</div>
+							<div class="option1" id="desc">최근작성순 ▼</div>
 							<div class="option2">
 								<span>포토후기만 보기</span>
-								<input type="checkbox">
+								<input type="checkbox" id="onlyphoto">
 							</div>
 						</div>
 						<c:forEach items="${review}" var="review">
@@ -90,7 +125,9 @@
 								</div>
 								<div class="listinfo">${review.username}|${review.ratingdate2}</div>
 								<div class="listroom">
-									<span>객실명</span>${review.roomname}</div>
+									<span>객실명</span>
+									<span class="listroomname">${review.roomname}</span>
+								</div>
 								<div class="listrvcontent">${review.reviewcontent}</div>
 							</div>
 						</c:forEach>
@@ -104,6 +141,20 @@
 						<h2>호텔을 예약하고 첫 후기 작성자가 되어보세요!</h2>
 					</div>
 				</c:if>
+			</div>
+		</div>
+	</div>
+	<!-- HTML -->
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<div class="modal_wrapper">
+				<span class="close">&times;</span>
+				<div class="roomlists">
+					<div class="rooms" data-room="all">객실 전체</div>
+					<c:forEach items="${roomnameList}" var="room">
+						<div class="rooms" data-room="${room}">${room}</div>
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>

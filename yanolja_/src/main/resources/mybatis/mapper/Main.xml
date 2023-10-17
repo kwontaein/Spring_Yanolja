@@ -121,6 +121,15 @@
 		hotelid = #{value}
 	</select>
 
+	<!--호텔아이디 조회 -->
+	<select id="findHotelId">
+		SELECT
+		hotelid
+		FROM
+		room
+		WHERE
+		roomid = #{roomid}
+	</select>
 	<!--수정 -->
 	<update id="update"
 		parameterType="com.example.yanolja.main.post.MainRequest">
@@ -737,10 +746,13 @@
 	<select id="selectReserve_order"
 		resultType="com.example.yanolja.main.post.ReserveResponse">
 		select
-		(SELECT h.hotelname FROM hotel h WHERE h.hotelid =
+		roomid,
+		(SELECT h.hotelname FROM hotel h WHERE
+		h.hotelid =
 		reserve.hotelid) AS
 		hotelname,
-		(SELECT r.roomname FROM room r WHERE
+		(SELECT r.roomname FROM room r
+		WHERE
 		r.roomid = reserve.roomid) AS roomname,
 		reservedate,user_name
 		from
@@ -748,22 +760,29 @@
 		where order_number = #{ordernumber}
 	</select>
 	<select id="selectBook">
-		SELECT
-		r.roomid,
-		(SELECT h.hotelname FROM hotel h WHERE
-		h.hotelid = r.hotelid) AS hotelname,
-		(SELECT r.roomname FROM room r
-		WHERE r.roomid = rs.roomid) AS roomname,
+		select
+		b.bookid,
+		b.roomid,
+		(SELECT h.hotelname FROM
+		hotel h WHERE h.hotelid = r.hotelid) AS hotelname,
+		r.roomname,
 		rs.user_name,
-		rs.reservedate
-		FROM book b
-		JOIN room r ON b.roomid = r.roomid
-		JOIN reserve rs ON
-		r.roomid = rs.roomid
-		WHERE b.userid = #{userid}
-		AND DATEDIFF(CURDATE(),
-		rs.reservedate) >= -#{period}
+		rs.reservedate,
+		rs.reserveEndDate,
+		COALESCE(b.reviewYN, 0) AS reviewYN
+		from book b
+		JOIN room
+		r ON b.roomid = r.roomid
+		JOIN reserve rs ON r.roomid = rs.roomid
+		JOIN
+		review rv ON b.userid = rv.userid
+		where b.userid = #{userid} AND
+		DATEDIFF(CURDATE(), reservedate) >= -#{period}
+		group by b.bookid ,
+		rs.user_name,rs.reservedate, rs.reserveEndDate
+		ORDER BY reservedate ASC
 	</select>
+
 	<select id="selectForReview">
 		SELECT
 		(SELECT hotelname FROM hotel WHERE
@@ -772,7 +791,7 @@
 		rentalType,
 		roomname,
 		(select
-		reservedate from reserve where reserve.roomid = room.roomid) as
+		reservedate from reserve where order_number = #{order_number}) as
 		reservedate
 		FROM room
 		WHERE roomid = #{roomid};
@@ -795,4 +814,18 @@
 		order_number =
 		#{order_number} and user_name = #{name} and user_phone=#{phone}
 	</select>
+
+	<insert id="insertReview">
+		INSERT INTO review (roomid, hotelid,
+		userid,
+		reviewcontent, Kindness, cleanliness, convenience,
+		Loc_satisfy,
+		ratingdate)
+		VALUE
+		(#{roomid} , #{hotelid}, #{userid} , #{textData} ,
+		#{rating1} , #{rating2} , #{rating3} , #{rating4} , Now())
+	</insert>
+	<update id="updateReivewYn">
+		update book set reviewYN = true where bookid = #{bookid};
+	</update>
 </mapper>

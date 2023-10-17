@@ -59,6 +59,7 @@ function sendAjaxRequest(hotelid, kindid) {
 		}
 	});
 }
+
 // 고유한 URL을 가져오는 함수
 function getAjaxURL(kindid) {
 	// hotelid에 따라 다른 URL을 반환

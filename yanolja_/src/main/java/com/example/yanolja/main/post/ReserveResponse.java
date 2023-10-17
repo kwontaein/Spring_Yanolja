@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ReserveResponse {
-
+	
+	private int roomid;
 	private String hotelname;
 	private String rentalType;
 	private String roomname;
@@ -17,26 +18,21 @@ public class ReserveResponse {
 	private int reserveCnt;
 	private boolean hasRoom; // 크거나 같은지 여부를 저장하는 변수
 
+	// reserve_possible
 	public ReserveResponse(LocalDateTime reserveDate, int reserveCnt) {
 		super();
 		this.reserveDate = reserveDate;
 		this.reserveCnt = reserveCnt;
 	}
 
+	// reserve_possible2
 	public ReserveResponse(LocalDateTime reserveDate, int reserveCnt, int compareValue) {
 		this.reserveDate = reserveDate;
 		this.reserveCnt = reserveCnt;
 		this.hasRoom = reserveCnt > compareValue;
 	}
 
-	public ReserveResponse(String hotelname, String roomname, LocalDateTime reserveDate, String user_name) {
-		super();
-		this.hotelname = hotelname;
-		this.roomname = roomname;
-		this.user_name = user_name;
-		this.reserveDate = reserveDate;
-	}
-
+//select_p_Reserve
 	public ReserveResponse(String hotelname, String roomname, LocalDateTime reserveDate, LocalDateTime reserveEndDate,
 			String order_number) {
 		super();
@@ -47,12 +43,28 @@ public class ReserveResponse {
 		this.order_number = order_number;
 	}
 
+	//selectReserve_order
+	public ReserveResponse(int roomid , String hotelname, String roomname, LocalDateTime reserveDate, String user_name) {
+		super();
+		this.roomid = roomid;
+		this.hotelname = hotelname;
+		this.roomname = roomname;
+		this.user_name = user_name;
+		this.reserveDate = reserveDate;
+	}
+
+	// selectForReview
 	public ReserveResponse(String hotelname, String rentalType, String roomname, LocalDateTime reserveDate) {
 		super();
 		this.hotelname = hotelname;
 		this.rentalType = rentalType;
 		this.roomname = roomname;
 		this.reserveDate = reserveDate;
+	}
+	
+	
+	public int getRoomid() {
+		return roomid;
 	}
 
 	public String getRentalType() {
