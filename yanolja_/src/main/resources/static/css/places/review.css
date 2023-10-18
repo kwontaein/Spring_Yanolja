@@ -178,3 +178,46 @@
   text-decoration: none;
   cursor: pointer;
 }	
+/* CSS */
+.order_modal{
+	display: none;
+    position: fixed;
+    bottom: 0; z-index: 1;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:  rgba(0, 0, 0, 0.5);
+}
+.order-modal-content{
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: end;
+}
+.order_modal_wrapper{
+	width: 600px;
+	padding: 0 20px;
+	height: auto;
+	background-color: white;
+	bottom: 0;
+    overflow-y: auto;
+	border-radius: 10px 10px 0 0;
+    max-height: 70vh;
+}
+.order_close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.order_by{
+	padding: 20px;
+}
+.order_lists{
+	padding:20px 0;
+}
+.order_close:hover {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}	

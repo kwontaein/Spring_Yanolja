@@ -6,141 +6,230 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="${path}/css/places/review.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-	// JavaScript
-	// 모달 열기 버튼 클릭 시 모달 열기
-	document.getElementById('selectroom').addEventListener('click', function() {
-		document.getElementById('myModal').style.display = 'block';
-	});
+	$(document).ready(
+			function() {
+				
+				const onlyPhotoCheckbox = $('#onlyphoto');
+				const myModal = $('#myModal');
+				const orderMyModal = $('#order_myModal');
 
-	// 모달 닫기 버튼 클릭 시 모달 닫기
-	document.querySelector('.close').addEventListener('click', function() {
-		document.getElementById('myModal').style.display = 'none';
-	});
+				var roomname = '${selectedroomname}'; // 초기 설정할 값으로 변경
+				$('#selectroomname').text(roomname);
+
+				// 정렬 이름 설정
+				const orderNames = {
+					'ratingdate asc' : '최근작성순',
+					'rating asc' : '별점 높은 순',
+					'rating desc' : '별점 낮은 순'
+				};
+
+				const initialOrderBy = localStorage.getItem('orderbyn')
+						|| 'ratingdate asc';
+				const orderName = orderNames[initialOrderBy];
+				$('#orderbyname').text(orderName);
+
+				// 공통 함수로 모달 열기
+				function openModal(modal) {
+					modal.css('display', 'block');
+				}
+
+				// 공통 함수로 모달 닫기
+				function closeModal(modal) {
+					modal.css('display', 'none');
+				}
+
+				// 객실 및 정렬 모달 열기
+				$('#selectroom, #orderby').on('click', function() {
+					if ($(this).attr('id') === 'selectroom') {
+						openModal(myModal);
+					} else {
+						openModal(orderMyModal);
+					}
+				});
+
+				// 객실 및 정렬 모달 닫기
+				$('.close, .order_close').on('click', function() {
+					if ($(this).hasClass('close')) {
+						closeModal(myModal);
+					} else {
+						closeModal(orderMyModal);
+					}
+				});
+			});
+	
+	function getParameterByName(name, url = window.location.href) {
+		name = name.replace(/[\[\]]/g, '\\$&');
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
 	
 	// 객실 선택 시 리뷰 필터링 및 표시
-    const roomElements = document.querySelectorAll('.rooms');
-    roomElements.forEach(roomElement => {
-        roomElement.addEventListener('click', function() {
-            const selectedRoom = this.getAttribute('data-room');
-            const reviewElements = document.querySelectorAll('.listroom');
+	$('.rooms').on('click', function() {
+		console.log("실행");
+		const roomname = $(this).data('room');
+		const orderby = 'ratingdate asc';
+		const onlyPhoto = $('#onlyphoto').checked;
+		doajax(roomname, orderby, onlyPhoto);
+		document.getElementById('myModal').style.display = 'none';
+	});
 
-            reviewElements.forEach(reviewElement => {
-                const reviewRoom = reviewElement.querySelector('.listroomname').textContent;
-                if (selectedRoom === 'all' || selectedRoom === reviewRoom) {
-                    reviewElement.parentElement.style.display = 'block';
-                } else {
-                    reviewElement.parentElement.style.display = 'none';
-                }
-            });
-            const selectedRoomName = this.textContent;
-            document.getElementById('selectroom').textContent = selectedRoomName + ' ▼';
+	// 정렬 시 리뷰 필터링 및 표시
+	$('.order_by').on('click', function() {
+		console.log("실행");
+		const roomname = '${selectedroomname}';
+		const orderby = $(this).data('order');
+		const onlyPhoto = $('#onlyphoto').checked;
+		localStorage.setItem('orderbyn', orderby);
+		doajax(roomname, orderby, onlyPhoto);
+		document.getElementById('myModal').style.display = 'none';
+	});
 
-            document.getElementById('myModal').style.display = 'none';
-            
-        });
-    });
+	// '포토후기만 보기' 체크박스의 상태 변경 이벤트를 감지
+	$('#onlyphoto').on('change', function() {
+		console.log("실행");
+		const roomname = '${selectedroomname}';
+		const orderby = localStorage.getItem('orderbyn');
+		const onlyPhoto = this.checked;
+		doajax(roomname, orderby, onlyPhoto);
+	});
+
+	function doajax(roomname, orderby, onlyPhoto) {
+		var hotelid = getParameterByName('hotelid');
+		var roomid = getParameterByName('roomid');
+		console.log("ajax실행");
+		$.ajax({
+			type : 'Get',
+			url : '/Review', // 실제 서버 엔드포인트 URL로 변경
+			data : {
+				hotelid : hotelid,
+				roomid : roomid,
+				roomname : roomname,
+				orderby : orderby,
+				onlyPhoto : onlyPhoto,
+			},
+			success : function(data) {
+				$(".changedinfo").html(data);
+				$(".review").html(data);
+			},
+			error : function(error) {
+				console.error(error);
+			},
+		});
+	}
 </script>
 </head>
 <body>
-	<div class="ratingContainer">
-		<div class="ratingWrapper">
-			<div class="ratingHead">
-				<div class="ratingtitle">
-					<c:if test="${not empty review}">
-						<span>후기 (${cnt})</span>
-						<span>후기정책</span>
-					</c:if>
-				</div>
-				<c:if test="${not empty review_detail}">
-					<div class="rating_content">
-						<div>
-							<div class="alltotalrating">
-								<div>
-									<svg width="2.8rem" height="2.8rem" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="css-12cnc2s">
+	<div class="reviewall">
+		<div class="ratingContainer">
+			<div class="ratingWrapper">
+				<div class="ratingHead">
+					<div class="ratingtitle">
+						<c:if test="${not empty review}">
+							<span>후기 (${review_detail.review_cnt})</span>
+							<span>후기정책</span>
+						</c:if>
+					</div>
+					<c:if test="${not empty review_detail}">
+						<div class="rating_content">
+							<div>
+								<div class="alltotalrating">
+									<div>
+										<svg width="2.8rem" height="2.8rem" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="css-12cnc2s">
 								<linearGradient id="half">
 								<stop offset="50%" stop-color="#fdbd00"></stop>
 								<stop offset="0" stop-color="#ffffff"></stop></linearGradient>
 								<path d="M7.12095 11.3897C7.04568 11.3481 6.95432 11.3481 6.87905 11.3897L3.0935 13.4823C3.05697 13.5025 3.01324 13.4717 3.01996 13.4305L3.74674 8.975C3.75951 8.89669 3.73435 8.81696 3.67894 8.76016L0.586662 5.59082C0.558242 5.56169 0.574668 5.51262 0.614898 5.50648L4.87464 4.85565C4.95705 4.84305 5.02777 4.79021 5.06319 4.71474L6.95474 0.684808C6.97273 0.646468 7.02727 0.646467 7.04526 0.684808L8.93681 4.71474C8.97223 4.79021 9.04295 4.84305 9.12536 4.85565L13.3851 5.50648C13.4253 5.51262 13.4418 5.56169 13.4133 5.59082L10.3211 8.76016C10.2656 8.81696 10.2405 8.89669 10.2533 8.975L10.98 13.4305C10.9868 13.4717 10.943 13.5025 10.9065 13.4823L7.12095 11.3897Z" fill="#fdbd00" stroke="#E7AC00" stroke-width="0.5" stroke-linejoin="round"></path></svg>
+									</div>
+									<strong>${review_detail.rating}</strong>/5
 								</div>
-								<strong>${review_detail.rating}</strong>/5
+								<div class="ratingab">최근 12개월 누적 평점</div>
 							</div>
-							<div class="ratingab">최근 12개월 누적 평점</div>
+							<div>
+								<div class="totalrating">
+									<span>친절도</span>
+									<div id="progress-container">
+										<div id="progress-bar" style="width : ${review_detail.kindness*20}%"></div>
+									</div>
+									<span>${review_detail.kindness}</span>
+								</div>
+								<div class="totalrating">
+									<span>청결도</span>
+									<div id="progress-container">
+										<div id="progress-bar" style="width : ${review_detail.convenience*20}%"></div>
+									</div>
+									<span>${review_detail.convenience}</span>
+								</div>
+								<div class="totalrating">
+									<span>편의성</span>
+									<div id="progress-container">
+										<div id="progress-bar" style="width : ${review_detail.cleanliness*20}%"></div>
+									</div>
+									<span>${review_detail.cleanliness}</span>
+								</div>
+								<div class="totalrating">
+									<span>위치만족도</span>
+									<div id="progress-container">
+										<div id="progress-bar" style="width : ${review_detail.loc_satisfy*20}%"></div>
+									</div>
+									<span>${review_detail.loc_satisfy}</span>
+								</div>
+							</div>
 						</div>
-						<div>
-							<div class="totalrating">
-								<span>친절도</span>
-								<div id="progress-container">
-									<div id="progress-bar" style="width : ${review_detail.kindness*20}%"></div>
-								</div>
-								<span>${review_detail.kindness}</span>
-							</div>
-							<div class="totalrating">
-								<span>청결도</span>
-								<div id="progress-container">
-									<div id="progress-bar" style="width : ${review_detail.convenience*20}%"></div>
-								</div>
-								<span>${review_detail.convenience}</span>
-							</div>
-							<div class="totalrating">
-								<span>편의성</span>
-								<div id="progress-container">
-									<div id="progress-bar" style="width : ${review_detail.cleanliness*20}%"></div>
-								</div>
-								<span>${review_detail.cleanliness}</span>
-							</div>
-							<div class="totalrating">
-								<span>위치만족도</span>
-								<div id="progress-container">
-									<div id="progress-bar" style="width : ${review_detail.loc_satisfy*20}%"></div>
-								</div>
-								<span>${review_detail.loc_satisfy}</span>
-							</div>
-						</div>
-					</div>
-					<div class="ratinginfo">평가 기준 안내</div>
-				</c:if>
-			</div>
-			<div>
-				<c:if test="${not empty review}">
-					<c:if test="${not empty review_detail}">
-						<div class="selectroom" id="selectroom">객실 전체 ▼</div>
+						<div class="ratinginfo">평가 기준 안내</div>
 					</c:if>
-					<div class="reviewlist">
-						<div class="reviewoption">
-							<div class="option1" id="desc">최근작성순 ▼</div>
-							<div class="option2">
-								<span>포토후기만 보기</span>
-								<input type="checkbox" id="onlyphoto">
+				</div>
+				<div>
+					<c:if test="${ not empty roomnameList}">
+						<div class="selectroom" id="selectroom">
+							<span id="selectroomname">객실 전체</span>
+							<span>▼</span>
+						</div>
+					</c:if>
+					<c:if test="${not empty review}">
+						<div class="reviewlist">
+							<div class="reviewoption">
+								<div class="option1" id="orderby">
+									<span id="orderbyname">최근작성순</span>
+									<span>▼</span>
+								</div>
+								<div class="option2">
+									<span>포토후기만 보기</span>
+									<input type="checkbox" id="onlyphoto">
+								</div>
+							</div>
+							<c:forEach items="${review}" var="review">
+								<div class="listcontent">
+									<div class="listrating">
+										<span class="star">
+											★★★★★
+											<span style="width:${review.rating * 20}%">★★★★★</span>
+										</span>
+										<span>•••</span>
+									</div>
+									<div class="listinfo">${review.username}|${review.ratingdate2}</div>
+									<div class="listroom">
+										<span>객실명</span>
+										<span class="listroomname">${review.roomname}</span>
+									</div>
+									<div class="listrvcontent">${review.reviewcontent}</div>
+								</div>
+							</c:forEach>
+							<div class="lastreview">
+								<span>마지막 리뷰입니다</span>
 							</div>
 						</div>
-						<c:forEach items="${review}" var="review">
-							<div class="listcontent">
-								<div class="listrating">
-									<span class="star">
-										★★★★★
-										<span style="width:${review.rating * 20}%">★★★★★</span>
-									</span>
-									<span>•••</span>
-								</div>
-								<div class="listinfo">${review.username}|${review.ratingdate2}</div>
-								<div class="listroom">
-									<span>객실명</span>
-									<span class="listroomname">${review.roomname}</span>
-								</div>
-								<div class="listrvcontent">${review.reviewcontent}</div>
-							</div>
-						</c:forEach>
-						<div class="lastreview">
-							<span>마지막 리뷰입니다</span>
+					</c:if>
+					<c:if test="${empty review}">
+						<div class="nocontent">
+							<h2>호텔을 예약하고 첫 후기 작성자가 되어보세요!</h2>
 						</div>
-					</div>
-				</c:if>
-				<c:if test="${empty review}">
-					<div class="nocontent">
-						<h2>호텔을 예약하고 첫 후기 작성자가 되어보세요!</h2>
-					</div>
-				</c:if>
+					</c:if>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -150,10 +239,22 @@
 			<div class="modal_wrapper">
 				<span class="close">&times;</span>
 				<div class="roomlists">
-					<div class="rooms" data-room="all">객실 전체</div>
+					<div class="rooms" data-room="객실 전체">객실 전체</div>
 					<c:forEach items="${roomnameList}" var="room">
 						<div class="rooms" data-room="${room}">${room}</div>
 					</c:forEach>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="order_myModal" class="order_modal">
+		<div class="order-modal-content">
+			<div class="order_modal_wrapper">
+				<span class="order_close">&times;</span>
+				<div class="order_lists">
+					<div class="order_by" data-order="ratingdate asc">최근작성순</div>
+					<div class="order_by" data-order="rating asc">별점 높은 순</div>
+					<div class="order_by" data-order="rating DESC">별점 낮은 순</div>
 				</div>
 			</div>
 		</div>

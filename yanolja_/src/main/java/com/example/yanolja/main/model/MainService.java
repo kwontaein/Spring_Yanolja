@@ -203,12 +203,16 @@ public class MainService {
 		return mainMapper.reviewroomcnt(roomid);
 	}
 
-	public List<ReviewResponse> review(final int hotelid) {
-		return mainMapper.review(hotelid);
+	public List<ReviewResponse> review(final int hotelid, String roomname, String orderby, boolean onlyPhoto) {
+		return mainMapper.review(hotelid, roomname, orderby, onlyPhoto);
 	}
 
-	public List<ReviewResponse> reviewroom(final int roomid) {
-		return mainMapper.review(roomid);
+	public List<String> roomnameList(final int hotelid) {
+		return mainMapper.roomnameList(hotelid);
+	}
+
+	public List<ReviewResponse> reviewroom(int roomid, String orderby, boolean onlyPhoto) {
+		return mainMapper.reviewroom(roomid, orderby, onlyPhoto);
 	}
 
 	public ReviewResponse rating_detail(int hotelid) {
@@ -263,7 +267,7 @@ public class MainService {
 		mainMapper.insertBook(userid, roomid, bookdate);
 	}
 
-	public void insertBookList(int userid, List<Map<String, Object>> parameterMap,String order_number) {
+	public void insertBookList(int userid, List<Map<String, Object>> parameterMap, String order_number) {
 		mainMapper.insertBookList(userid, parameterMap, order_number);
 	}
 
@@ -279,10 +283,11 @@ public class MainService {
 		return mainMapper.select_p_Reserve(name, phone, order_number);
 	}
 
-	public void insertReview(int hotelid, int roomid,int userid, double rating1, double rating2, double rating3, double rating4,
-			String textData) {
-		mainMapper.insertReview(hotelid,roomid,userid,rating1,rating2,rating3,rating4,textData);
+	public void insertReview(int hotelid, int roomid, int userid, double rating1, double rating2, double rating3,
+			double rating4, String textData) {
+		mainMapper.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);
 	}
+
 	public void updateReivewYn(int bookid) {
 		mainMapper.updateReivewYn(bookid);
 	}

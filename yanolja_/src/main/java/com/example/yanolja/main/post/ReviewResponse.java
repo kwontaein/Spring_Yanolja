@@ -11,6 +11,10 @@ public class ReviewResponse {
 	private LocalDateTime ratingdate;
 	private String ratingdate2;
 
+	private int image;
+	
+	private int userid;
+
 	private int review_cnt;
 	private float rating;
 	private float kindness;
@@ -18,16 +22,20 @@ public class ReviewResponse {
 	private float cleanliness;
 	private float loc_satisfy;
 
+	// review
 	public ReviewResponse(float rating, String username, String roomname, String reviewcontent,
-			LocalDateTime ratingdate) {
+			LocalDateTime ratingdate, int image,int userid) {
 		super();
 		this.rating = rating;
 		this.username = username;
 		this.roomname = roomname;
 		this.reviewcontent = reviewcontent;
 		this.ratingdate = ratingdate;
+		this.image = image;
+		this.userid = userid;
 	}
 
+	// rating
 	public ReviewResponse(int review_cnt, float rating, float kindness, float convenience, float cleanliness,
 			float loc_satisfy) {
 		super();
@@ -46,6 +54,10 @@ public class ReviewResponse {
 			return firstTwoChars + asterisks;
 		}
 		return username;
+	}
+
+	public int getImage() {
+		return image;
 	}
 
 	public String getRoomname() {
@@ -88,6 +100,12 @@ public class ReviewResponse {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY.MM.dd", Locale.KOREAN);
 		String ratingdate2 = ratingdate.format(formatter);
 		return ratingdate2;
+	}
+
+	@Override
+	public String toString() {
+		return "ReviewResponse [username=" + username + ", roomname=" + roomname + ", reviewcontent=" + reviewcontent
+				+ ", ratingdate=" + ratingdate + ", ratingdate2=" + ratingdate2 + ", review_cnt=" + review_cnt + "]";
 	}
 
 }

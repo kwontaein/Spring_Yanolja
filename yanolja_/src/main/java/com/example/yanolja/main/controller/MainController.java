@@ -264,25 +264,44 @@ public class MainController {
 	// 후기 정보
 	@GetMapping("/Review")
 	public String Review(@RequestParam(required = false) Integer hotelid,
-			@RequestParam(required = false) Integer roomid, Model model) {
+			@RequestParam(required = false) Integer roomid, @RequestParam(required = false) String roomname,
+			@RequestParam(required = false) String orderby, @RequestParam(required = false) boolean onlyPhoto,
+			Model model) {
+		String rn;
+		String ob;
+		if (roomname == null)
+			rn = "객실 전체";
+		else
+			rn = roomname;
 
-		if (hotelid != null) {
-			List<ReviewResponse> review = mainService.review(hotelid);
-			List<String> roomnameList = review.stream().map(ReviewResponse::getRoomname) // roomname 값을 추출
-					.distinct() // 중복 제거
-					.collect(Collectors.toList()); // 새로운 리스트에 저장
-			System.out.println(roomnameList);
+		if (orderby == null)
+			ob = "ratingdate asc";
+		else
+			ob = orderby;
+		if (hotelid != null && roomid == null) {
+			List<ReviewResponse> review = mainService.review(hotelid, rn, orderby, onlyPhoto);
+			List<String> roomnameList = mainService.roomnameList(hotelid); // 새로운 리스트에 저장
 			ReviewResponse review_detail = mainService.rating_detail(hotelid);
-			model.addAttribute("review", review);
-			model.addAttribute("review_detail", review_detail);
-			model.addAttribute("roomnameList", roomnameList);
+
+			model.addAttribute("selectedroomname", rn).addAttribute("selectedorderby", ob)
+					.addAttribute("review", review).addAttribute("review_detail", review_detail)
+					.addAttribute("roomnameList", roomnameList);
 		} else if (roomid != null) {
-			List<ReviewResponse> review = mainService.reviewroom(roomid);
+			List<ReviewResponse> reviewroom = mainService.reviewroom(roomid, orderby, onlyPhoto);
 			int cnt = mainService.reviewroomcnt(roomid);
-			model.addAttribute("cnt", cnt);
-			model.addAttribute("review", review);
+			model.addAttribute("cnt", cnt).addAttribute("review", reviewroom);
 		}
 		return "places/infodetail/review";
+	}
+
+	// 후기 무한스크롤 추가
+	@PostMapping("/Review.Do")
+	@ResponseBody
+	public Object ReviewDo(@RequestParam(required = false) String roomname, Model model) {
+
+		Map<String, Object> reviews = new HashMap<String, Object>();
+		// reviews.put("a", );
+		return "success";
 	}
 
 	// 위치/교통

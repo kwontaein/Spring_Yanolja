@@ -128,14 +128,16 @@ public interface MainMapper {
 	 * 
 	 * @return 후기
 	 */
-	List<ReviewResponse> review(int hotelid);
+	List<ReviewResponse> review(int hotelid, String roomname, String orderby, boolean onlyPhoto);
+
+	List<String> roomnameList(int hotelid);
 
 	/**
 	 * 방 후기 조회
 	 * 
 	 * @return 후기
 	 */
-	List<ReviewResponse> reviewroom(int roomid);
+	List<ReviewResponse> reviewroom(int roomid ,String orderby , boolean onlyPhoto);
 
 	/**
 	 * 평점 세부 조회
@@ -216,7 +218,7 @@ public interface MainMapper {
 
 	void insertBook(int userid, int roomid, String bookdate);
 
-	void insertBookList(int userid, List<Map<String, Object>> parameterMap,String order_number);
+	void insertBookList(int userid, List<Map<String, Object>> parameterMap, String order_number);
 
 	List<ReserveResponse> selectReserve_order(String ordernumber);
 
@@ -224,7 +226,8 @@ public interface MainMapper {
 
 	List<ReserveResponse> select_p_Reserve(String name, String phone, String order_number);
 
-	void insertReview(int hotelid, int roomid,int userid, double rating1, double rating2, double rating3, double rating4,
-			String textData);
+	void insertReview(int hotelid, int roomid, int userid, double rating1, double rating2, double rating3,
+			double rating4, String textData);
+
 	void updateReivewYn(int bookid);
 }

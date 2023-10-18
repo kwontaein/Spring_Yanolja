@@ -520,31 +520,49 @@
 		from
 		room
 		where
-		hotelid = #{hotelid};
+		hotelid = #{hotelid}
+	</select>
+	<select id="roomnameList">
+		select
+		roomname
+		from
+		room
+		where
+		hotelid = #{hotelid}
 	</select>
 
 	<sql id="reviewColums">
-		(SELECT format((avg_value),1)
-		FROM (SELECT
-		(AVG(Kindness) +
-		AVG(cleanliness) +
-		AVG(convenience) + AVG(Loc_satisfy)) / 4 AS
-		avg_value
-		FROM review where
-		hotelid = #{hotelid}) subquery) as rating,
+		FORMAT((AVG(Kindness) + AVG(cleanliness) + AVG(convenience) + AVG(Loc_satisfy)) / 4, 1) AS rating,
 		(select name from user where
 		user.userid = review.userid) as username,
 		(select roomname from room
 		where room.roomid = review.roomid) as
-		roomname,reviewcontent,ratingdate
+		roomname,reviewcontent,ratingdate,
+		coalesce((select imgid from image
+		where image.reviewid = review.reviewid) , 0) as
+		image ,userid <!-- 원래 reviewid 
+			대신 사진 들어가야 함 -->
 	</sql>
 
 	<select id="review"
 		resultType="com.example.yanolja.main.post.ReviewResponse">
 		select
 		<include refid="reviewColums" />
+
 		from review
-		where hotelid = #{hotelid}
+		where hotelid = #{hotelid} and roomid =
+		coalesce((select
+		roomid
+		from room where roomname = #{roomname} and hotelid = #{hotelid})
+		,
+		roomid)
+		<if test="onlyPhoto == true">
+			and (select imgid from image where image.reviewid =
+			review.reviewid) is
+			not null
+		</if>
+		group by reviewid
+		ORDER BY #{orderby}
 	</select>
 
 	<select id="reviewroom"
@@ -555,6 +573,13 @@
 		review
 		where
 		roomid= #{roomid}
+		<if test="onlyPhoto == true">
+			and (select imgid from image where image.reviewid =
+			review.reviewid) is
+			not null
+		</if>
+		group by reviewid
+		ORDER BY #{orderby}
 	</select>
 
 	<select id="reviewroomcnt" resultType="int">
@@ -769,14 +794,17 @@
 		rs.user_name,
 		rs.reservedate,
 		rs.reserveEndDate,
-		COALESCE(b.reviewYN, 0) AS reviewYN
+		COALESCE(b.reviewYN, 0)
+		AS reviewYN
 		from book b
 		JOIN room
 		r ON b.roomid = r.roomid
-		JOIN reserve rs ON r.roomid = rs.roomid
+		JOIN reserve rs
+		ON r.roomid = rs.roomid
 		JOIN
 		review rv ON b.userid = rv.userid
-		where b.userid = #{userid} AND
+		where
+		b.userid = #{userid} AND
 		DATEDIFF(CURDATE(), reservedate) >= -#{period}
 		group by b.bookid ,
 		rs.user_name,rs.reservedate, rs.reserveEndDate
@@ -826,6 +854,7 @@
 		#{rating1} , #{rating2} , #{rating3} , #{rating4} , Now())
 	</insert>
 	<update id="updateReivewYn">
-		update book set reviewYN = true where bookid = #{bookid};
+		update book set reviewYN = true where bookid =
+		#{bookid};
 	</update>
 </mapper>

@@ -36,7 +36,7 @@ $(document).ready(function() {
 		selectedEndDate.setDate(selectedEndDate.getDate() + 1);
 	}
 
-	const options = { year:'numeric', weekday: 'short', month: '2-digit', day: '2-digit' };
+	const options = { year: 'numeric', weekday: 'short', month: '2-digit', day: '2-digit' };
 	const formattedStartDate = selectedStartDate.toLocaleDateString("ko-KR", options);
 	const formattedEndDate = selectedEndDate.toLocaleDateString("ko-KR", options);
 
@@ -128,11 +128,14 @@ $(document).ready(function() {
 
 	function reviewAjax(roomid) {
 		var roomid = getParameterByName('roomid');
+		console.log(roomid);
+
 		$.ajax({
 			type: 'get',
 			url: '/Review',
 			data: {
 				roomid: roomid,
+				orderby: 'ratingdate asc',
 			},
 			success: function(data) {
 				$('.review').html(data);
