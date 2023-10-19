@@ -532,7 +532,8 @@
 	</select>
 
 	<sql id="reviewColums">
-		FORMAT((AVG(Kindness) + AVG(cleanliness) + AVG(convenience) + AVG(Loc_satisfy)) / 4, 1) AS rating,
+		FORMAT((AVG(Kindness) + AVG(cleanliness) + AVG(convenience) +
+		AVG(Loc_satisfy)) / 4, 1) AS rating,
 		(select name from user where
 		user.userid = review.userid) as username,
 		(select roomname from room
@@ -543,7 +544,9 @@
 		image ,userid <!-- 원래 reviewid 
 			대신 사진 들어가야 함 -->
 	</sql>
-
+	<select id="lastReviewid">
+		SELECT MAX(reviewid) AS lastreviewid FROM review;
+	</select>
 	<select id="review"
 		resultType="com.example.yanolja.main.post.ReviewResponse">
 		select
@@ -857,4 +860,11 @@
 		update book set reviewYN = true where bookid =
 		#{bookid};
 	</update>
+	
+	<insert id="saveImage">
+		INSERT INTO image (hotelid,
+		reviewid ,imgname,imgdata)
+		VALUE
+		(#{hotelid},#{currentReviewid},#{originalFileName},#{imageBytes})
+	</insert>
 </mapper>

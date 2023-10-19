@@ -137,7 +137,7 @@ public interface MainMapper {
 	 * 
 	 * @return 후기
 	 */
-	List<ReviewResponse> reviewroom(int roomid ,String orderby , boolean onlyPhoto);
+	List<ReviewResponse> reviewroom(int roomid, String orderby, boolean onlyPhoto);
 
 	/**
 	 * 평점 세부 조회
@@ -230,4 +230,8 @@ public interface MainMapper {
 			double rating4, String textData);
 
 	void updateReivewYn(int bookid);
+
+	void saveImage(int hotelid, int currentReviewid, String originalFileName, byte[] imageBytes);
+
+	int lastReviewid();
 }

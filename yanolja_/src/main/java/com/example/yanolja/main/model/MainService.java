@@ -1,5 +1,6 @@
 package com.example.yanolja.main.model;
 
+import java.awt.Image;
 import java.util.List;
 import java.util.Map;
 
@@ -290,5 +291,14 @@ public class MainService {
 
 	public void updateReivewYn(int bookid) {
 		mainMapper.updateReivewYn(bookid);
+	}
+
+	public void saveImage(int hotelid, int currentReviewid, String originalFileName, byte[] imageBytes) {
+		// TODO Auto-generated method stub
+		mainMapper.saveImage(hotelid,currentReviewid,originalFileName,imageBytes);
+	}
+
+	public int lastReviewid() {
+		return mainMapper.lastReviewid();
 	}
 }

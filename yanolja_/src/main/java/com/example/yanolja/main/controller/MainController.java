@@ -1,5 +1,6 @@
 package com.example.yanolja.main.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yanolja.main.model.MainService;
 import com.example.yanolja.main.post.BookResponse;
@@ -63,6 +65,35 @@ public class MainController {
 	public String test2() {
 		// 모든 호텔 목록을 조회하고 "post" 모델 속성에 추가
 		return "test/test2"; // User/test 템플릿을 렌더링
+	}
+
+	// 테스트 호출
+	@GetMapping("/test3")
+	public String test3() {
+		// 모든 호텔 목록을 조회하고 "post" 모델 속성에 추가
+		return "test/test3"; // User/test 템플릿을 렌더링
+	}
+
+	@ResponseBody
+	@PostMapping("/file-upload")
+	public String testfileUpload(@RequestParam("article_file") MultipartFile[] multipartFiles) {
+		String strResult = "{ \"result\":\"FAIL\" }";
+
+		for (MultipartFile file : multipartFiles) {
+			try {
+				byte[] imageBytes = file.getBytes();
+				String originalFileName = file.getOriginalFilename();
+				// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
+				System.out.println(originalFileName + " " + imageBytes);
+				// mainService.saveImage(originalFileName, imageBytes);
+				strResult = "{ \"result\":\"OK\" }";
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+
+		return strResult;
 	}
 
 //카카오 페이 결제 페이지--------------------------------------------------------------------------------
@@ -193,8 +224,9 @@ public class MainController {
 //--------------------------------------------------------------------------------
 	// 내용 보기 (호텔 상세정보)
 	@GetMapping("/places/View.do")
-	public String openPlaceView(@RequestParam final Long hotelid, Model model) {
+	public String openPlaceView(@RequestParam final Long hotelid, Model model, HttpSession session) {
 		MainResponse post = mainService.findPostById(hotelid);
+		session.setAttribute("resentViewHotelid", hotelid);// 최근 본 호텔아이디 세션에 저장해서 이 값이 있을 경우 보여줄 자료 출력
 		model.addAttribute("post", post);
 		return "places/Viewplace";
 	}
@@ -609,13 +641,32 @@ public class MainController {
 			@RequestParam(value = "rating2") double rating2, @RequestParam(value = "rating3") double rating3,
 			@RequestParam(value = "rating4") double rating4, @RequestParam(value = "textData") String textData,
 			@RequestParam(value = "roomid") int roomid, @RequestParam(value = "bookid") int bookid,
+			@RequestParam(value = "article_file", required = false) MultipartFile[] multipartFiles,
 			HttpSession session) {
 
 		// 호텔아이디 받아서 insert
+
 		int userid = (int) session.getAttribute("userid");
 		int hotelid = mainService.findHotelId(roomid);
+
+		int CurrentReviewid = mainService.lastReviewid() + 1;
+		System.out.println("CurrentReviewid : " + CurrentReviewid);
+		for (MultipartFile file : multipartFiles) {
+			try {
+				byte[] imageBytes = file.getBytes();
+				String originalFileName = file.getOriginalFilename();
+				// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
+				System.out.println(originalFileName + " " + imageBytes);
+				mainService.saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+
 		mainService.updateReivewYn(bookid);
 		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);
+
 		return "success";
 	}
 

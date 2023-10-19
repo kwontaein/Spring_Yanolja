@@ -10,6 +10,7 @@
 <body>
 	<script>
     $(document).ready(function() {
+    	$("#input_file").on("change", fileCheck);
     	
     	const urlParams = new URL(location.href).searchParams;
 
@@ -74,26 +75,48 @@
         $("#savebtn").on("click", function(event) {
             event.preventDefault(); // 기본 양식 제출 동작을 막음
 
+            // 스타 등급 값들
+            if (!star1Value || !star2Value || !star3Value || !star4Value || !totalStar) {
+                alert("평가를 완료해주세요.");
+                return; // 전송을 중단
+            }
+            
             // textarea의 값을 가져옴
             var textareaValue = $("#reviewcontent").val();
-
+            
+            // 리뷰 내용 유효성 검사
+            if (!textareaValue) {
+                alert("후기 내용을 입력해주세요.");
+                return; // 전송을 중단
+            }
+        	var form = $("form")[0];
+			var formData = new FormData(form);
+			for (var x = 0; x < content_files.length; x++) {
+				// 삭제 안한것만 담아 준다. 
+				if (!content_files[x].is_delete) {
+					formData.append("article_file", content_files[x]);
+				}
+			}
+			
+			  	formData.append("textData", textareaValue);
+			    formData.append("rating1", star1Value);
+			    formData.append("rating2", star2Value);
+			    formData.append("rating3", star3Value);
+			    formData.append("rating4", star4Value);
+			    formData.append("roomid", roomid);
+			    formData.append("bookid", bookid);
+			
             // Ajax POST 요청을 생성
-            $.ajax({
+           $.ajax({
                 type: "POST",
                 url: "/writeReview.do", // 서버 엔드포인트 URL
-                data: { 	
-                	rating1 : star1Value,
-    				rating2 : star2Value,
-    				rating3 : star3Value,
-    				rating4 : star4Value,
-    				textData: textareaValue,
-    				roomid : roomid,
-    				bookid : bookid
-    				}, // 전송할 데이터 및 데이터 이름
+                data:formData, // 전송할 데이터 및 데이터 이름
+                processData: false, // 필수: FormData의 프로세싱을 비활성화
+                contentType: false, // 필수: 컨텐츠 타입을 false로 설정
                 success: function(data) {
                     // 성공 시 서버 응답 처리
                     console.log(data);
-                    window.location.href="/Reserve_history";
+                   // window.location.href="/Reserve_history";
                     
                 },
                 error: function(error) {
@@ -101,7 +124,7 @@
                     console.error(error);
                 }
             });
-        });
+        }); 
     });
 </script>
 	<header style="height: 48px;">
@@ -196,8 +219,11 @@
 					<h4>후기 작성</h4>
 				</div>
 				<div style="display: flex; justify-content: center;">
-					<textarea id="reviewcontent" cols="90" rows="10"></textarea>
+					<textarea id="reviewcontent" cols="90" rows="10" placeholder="ㅋㅋㅋㅋ등과 같은 내용이 의미가 없는 후기는 보여지지 않을 수 있습니다"></textarea>
 				</div>
+			</div>
+			<div class="photoupload">
+				<%@include file="./photoUpload.jsp"%>
 			</div>
 			<hr>
 			<div class="save">
