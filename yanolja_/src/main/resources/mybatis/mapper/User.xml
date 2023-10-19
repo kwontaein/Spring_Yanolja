@@ -16,7 +16,44 @@
 	<insert id="userSave"
 		parameterType="com.example.yanolja.user.vo.UserVo">
 		INSERT INTO User
-		(email, password, name, phone, createdate, masteryn)
+		(email, password, name, phone,
+		createdate, masteryn)
 		VALUES(#{email},#{password},#{name},#{phone},#{createdate},#{masteryn});
 	</insert>
+	<select id="UserByCnt">
+		select count(*) from review where userid = #{userid}
+	</select>
+	<select id="UserByreview">
+		select
+		FORMAT((AVG(Kindness) + AVG(cleanliness) +
+		AVG(convenience) + AVG(Loc_satisfy)) / 4, 1) AS
+		rating,
+		(select name
+		from user where
+		user.userid = review.userid) as
+		username,
+		(SELECT
+		hotelname from hotel where hotel.hotelid = review.hotelid),(SELECT
+		kindhotel from hotel where hotel.hotelid = review.hotelid),
+		(select
+		roomname from room
+		where room.roomid = review.roomid)
+		as
+		roomname,(select rentalType from room
+		where room.roomid =
+		review.roomid) as
+		rentalType,reviewcontent,ratingdate ,
+		coalesce((select imgdata from image
+		where image.reviewid =
+		review.reviewid) , 0)
+		as image
+		from
+		review
+		where
+		userid = #{userid}
+		group by
+		reviewid
+		order by ratingdate
+		asc;
+	</select>
 </mapper>

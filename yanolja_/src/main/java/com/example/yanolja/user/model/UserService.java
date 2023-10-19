@@ -2,6 +2,7 @@ package com.example.yanolja.user.model;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.yanolja.main.post.ReviewResponse;
 import com.example.yanolja.user.mapper.UserMapper;
 import com.example.yanolja.user.vo.UserVo;
 
@@ -79,6 +81,16 @@ public class UserService implements UserDetailsService {
 			throw new UsernameNotFoundException("User not authorized.");
 		}
 		return userdetails;
+	}
+
+	public List<ReviewResponse> UserByreview(int userid) {
+		// TODO Auto-generated method stub
+		return userMapper.UserByreview(userid);
+	}
+
+	public int UserByCnt(int userid) {
+		// TODO Auto-generated method stub
+		return userMapper.UserByCnt(userid);
 	}
 
 }

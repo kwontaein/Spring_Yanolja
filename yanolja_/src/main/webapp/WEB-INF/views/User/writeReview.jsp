@@ -219,7 +219,7 @@
 					<h4>후기 작성</h4>
 				</div>
 				<div style="display: flex; justify-content: center;">
-					<textarea id="reviewcontent" cols="90" rows="10" placeholder="ㅋㅋㅋㅋ등과 같은 내용이 의미가 없는 후기는 보여지지 않을 수 있습니다"></textarea>
+					<textarea id="reviewcontent" cols="90" rows="10" placeholder="'ㅋㅋㅋㅋ'와 같이 내용이 의미가 없는 후기는 보여지지 않을 수 있습니다"></textarea>
 				</div>
 			</div>
 			<div class="photoupload">

@@ -1,29 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="en">
 <head>
-<title>파일업로드예제</title>
+<title></title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-	<div class="container" style="border: 5px solid lightgray; border-style: dashed; outline: none; width:647px;">
+	<div class="container" style="border: 5px solid lightgray; border-style: dashed; outline: none; width: 647px; display: flex; justify-content: center;">
 		<form name="dataForm" id="dataForm">
-			<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">파일 추가</button>
-			<input id="input_file" multiple="multiple" type="file" style="display: none;">
-			<span style="font-size: 10px; color: gray;">※첨부파일은 최대 5개까지 등록이 가능합니다.</span>
-			<div class="data_file_txt" id="data_file_txt" style="margin: 40px;">
-				<span>첨부 파일</span>
-				<br />
-				<div id="articlefileChange"></div>
+			<div style="text-align: center; margin: 10px;">
+				<input id="input_file" multiple="multiple" type="file" style="display: none;">
+				<p style="font-size: 10px; color: gray;">※첨부파일은 최대 5개까지 등록이 가능합니다.</p>
+				<p style="font-size: 10px; color: gray;">※파일 클릭시 첨부된 파일이 삭제됩니다.</p>
+				<div class="data_file_txt" id="data_file_txt" style="margin: 20px;">
+					<br />
+					<div id="articlefileChange"></div>
+				</div>
+				<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">클릭해서 파일 추가</button>
 			</div>
-			<button type="submit" style="border: 1px solid #ddd; outline: none;">전송</button>
 		</form>
 	</div>
 	<!-- 파일 업로드 스크립트 -->
 	<script>
-		$(document).ready(function()
-		// input file 파일 첨부시 fileCheck 함수 실행
-		{
+		$(document).ready(function() {// input file 파일 첨부시 fileCheck 함수 실행
 			$("#input_file").on("change", fileCheck);
 		});
 
@@ -63,6 +62,12 @@
 			// 각각의 파일 배열담기 및 기타
 			filesArr
 					.forEach(function(f) {
+						// 파일의 확장자 확인 (대소문자 구분 없이)
+						var ext = f.name.split('.').pop().toLowerCase();
+						if (ext !== 'jpg' && ext !== 'jpeg' && ext !== 'png') {
+							alert('이미지 형식의 파일만 업로드할 수 있습니다.');
+							return;
+						}
 						var reader = new FileReader();
 						reader.onload = function(e) {
 							content_files.push(f);

@@ -1,5 +1,7 @@
 package com.example.yanolja.user.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.yanolja.kakao.model.KakaoService;
+import com.example.yanolja.main.post.ReviewResponse;
 import com.example.yanolja.user.CustomUserDetails;
 import com.example.yanolja.user.model.EmailService;
 import com.example.yanolja.user.model.UserService;
@@ -28,7 +31,7 @@ public class UserController {
 
 	@Value("${kakao.logout_redirect.url}")
 	private String KAKAO_LOGOUT_REDIRECT_URL;
-	
+
 	@Autowired
 	UserService userService;
 	@Autowired
@@ -106,6 +109,19 @@ public class UserController {
 	@RequestMapping("/mypage")
 	public String myPage() {
 		return "User/Mypage";
+	}
+
+	@GetMapping("/myreview")
+	public String Myreview(HttpSession session, Model model) {
+		// username 세션에서 가져와서 검색
+		// 내가 쓴 리뷰 목록 가져오는 코드 추가
+		int userid = (int) session.getAttribute("userid");
+		List<ReviewResponse> review = userService.UserByreview(userid);
+		int room_cnt = userService.UserByCnt(userid);
+
+		model.addAttribute("room_cnt", room_cnt);
+		model.addAttribute("review", review);
+		return "User/UserOption/MyReview";
 	}
 
 	// 회원가입 폼

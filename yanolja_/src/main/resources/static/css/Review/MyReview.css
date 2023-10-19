@@ -1,0 +1,93 @@
+@charset "UTF-8";
+html{
+	margin:0;
+	padding: 0;
+}
+body{
+	background-color: #f2f2f2;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	}
+	
+body::-webkit-scrollbar{
+	display: none;	
+	}
+	
+header{
+	position: fixed;
+	background-color: white;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 48px;
+}
+.mrheader{
+	width: 768px;
+}
+.mrhcontainer{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+    width: 100%;
+    height: 48px;
+    line-height: 2.7rem;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a1a1a;
+    max-width: 768px;
+    margin: 0 auto;
+}
+.mrContainer{
+	display: flex;
+	justify-content: center;
+	padding-top: 48px;
+}
+.mrWrapper{
+	width: 688px;
+	padding: 40px;
+	background-color: #fff;
+}
+.Reviewinfo{
+	background-color: #f2f2f2;
+	border-radius: 5px;
+	padding: 20px;
+	margin-bottom: 20px;
+}
+.mr{
+	margin:20px 0;
+}
+.mrHotel{
+	display: flex;
+	justify-content: space-between;
+}
+.mrReview{
+	display: flex;
+	width: 100%;
+}
+.listphoto>img{
+	width: 200px;
+	height: 132px;
+	border-radius: 5px;
+}
+.date{
+	flex: 1 auto;
+	text-align: right;
+}
+.star {
+    position: relative;
+    font-size: 20px;
+    color: #ddd;
+  }
+  
+  .star span {
+    width: 0;
+    position: absolute; 
+    left: 0;
+    color: orange;
+    overflow: hidden;
+    pointer-events: none;
+  }

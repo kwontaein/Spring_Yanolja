@@ -330,9 +330,7 @@ public class MainController {
 	@PostMapping("/Review.Do")
 	@ResponseBody
 	public Object ReviewDo(@RequestParam(required = false) String roomname, Model model) {
-
 		Map<String, Object> reviews = new HashMap<String, Object>();
-		// reviews.put("a", );
 		return "success";
 	}
 
@@ -557,7 +555,6 @@ public class MainController {
 			combinedList.sort(Comparator.comparing(RoomResponse::getHotelname));
 			model.addAttribute("Cartroom", combinedList);
 		}
-
 		return "User/cart";
 	}
 

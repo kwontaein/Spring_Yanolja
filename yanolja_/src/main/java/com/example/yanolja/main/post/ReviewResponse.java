@@ -2,18 +2,25 @@ package com.example.yanolja.main.post;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Locale;
 
 public class ReviewResponse {
+	private String hotelname;
+	private String kindhotel;
+	private String rentalType;
 	private String username;
 	private String roomname;
+
 	private String reviewcontent;
 	private LocalDateTime ratingdate;
 	private String ratingdate2;
 
-	private int image;
-	
+	private byte[] image;
+	private String base64Image; // Base64로 인코딩
 	private int userid;
+
+	private boolean shouldMaskUsername;
 
 	private int review_cnt;
 	private float rating;
@@ -24,7 +31,7 @@ public class ReviewResponse {
 
 	// review
 	public ReviewResponse(float rating, String username, String roomname, String reviewcontent,
-			LocalDateTime ratingdate, int image,int userid) {
+			LocalDateTime ratingdate, byte[] image, int userid) {
 		super();
 		this.rating = rating;
 		this.username = username;
@@ -33,6 +40,7 @@ public class ReviewResponse {
 		this.ratingdate = ratingdate;
 		this.image = image;
 		this.userid = userid;
+		this.shouldMaskUsername = true;
 	}
 
 	// rating
@@ -47,8 +55,36 @@ public class ReviewResponse {
 		this.loc_satisfy = loc_satisfy;
 	}
 
+	// userbyreview
+	public ReviewResponse(float rating, String username, String hotelname, String kindhotel, String roomname,
+			String rentalType, String reviewcontent, LocalDateTime ratingdate, byte[] image) {
+		super();
+		this.rating = rating;
+		this.username = username;
+		this.hotelname = hotelname;
+		this.kindhotel = kindhotel;
+		this.roomname = roomname;
+		this.rentalType = rentalType;
+		this.reviewcontent = reviewcontent;
+		this.ratingdate = ratingdate;
+		this.image = image;
+		this.shouldMaskUsername = false;
+	}
+
+	public String getRentalType() {
+		return rentalType;
+	}
+
+	public String getKindhotel() {
+		return kindhotel;
+	}
+
+	public String getHotelname() {
+		return hotelname;
+	}
+
 	public String getUsername() {
-		if (username != null && username.length() >= 2) {
+		if (shouldMaskUsername && username != null && username.length() >= 2) {
 			String firstTwoChars = username.substring(0, 2);
 			String asterisks = "*".repeat(username.length() - 2);
 			return firstTwoChars + asterisks;
@@ -56,7 +92,13 @@ public class ReviewResponse {
 		return username;
 	}
 
-	public int getImage() {
+	public String getBase64Image() {
+		base64Image = Base64.getEncoder().encodeToString(image);
+		return base64Image;
+	}
+
+	// 이미지 데이터를 바이트 배열로 반환
+	public byte[] getImage() {
 		return image;
 	}
 

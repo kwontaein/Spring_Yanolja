@@ -539,7 +539,7 @@
 		(select roomname from room
 		where room.roomid = review.roomid) as
 		roomname,reviewcontent,ratingdate,
-		coalesce((select imgid from image
+		coalesce((select imgdata from image
 		where image.reviewid = review.reviewid) , 0) as
 		image ,userid <!-- 원래 reviewid 
 			대신 사진 들어가야 함 -->
@@ -551,7 +551,6 @@
 		resultType="com.example.yanolja.main.post.ReviewResponse">
 		select
 		<include refid="reviewColums" />
-
 		from review
 		where hotelid = #{hotelid} and roomid =
 		coalesce((select

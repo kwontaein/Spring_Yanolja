@@ -10,7 +10,14 @@
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-				
+				 // Local Storage에서 'onlyphoto' 항목 가져오기
+			    const onlyPhoto2 = localStorage.getItem('onlyphoto') === 'true';
+				 
+			    // 'onlyphoto' 체크박스 상태 설정
+			    $('#onlyphoto').prop('checked', onlyPhoto2);
+			  
+			    
+			    
 				const onlyPhotoCheckbox = $('#onlyphoto');
 				const myModal = $('#myModal');
 				const orderMyModal = $('#order_myModal');
@@ -70,7 +77,6 @@
 	
 	// 객실 선택 시 리뷰 필터링 및 표시
 	$('.rooms').on('click', function() {
-		console.log("실행");
 		const roomname = $(this).data('room');
 		const orderby = 'ratingdate asc';
 		const onlyPhoto = $('#onlyphoto').checked;
@@ -80,7 +86,6 @@
 
 	// 정렬 시 리뷰 필터링 및 표시
 	$('.order_by').on('click', function() {
-		console.log("실행");
 		const roomname = '${selectedroomname}';
 		const orderby = $(this).data('order');
 		const onlyPhoto = $('#onlyphoto').checked;
@@ -91,16 +96,23 @@
 
 	// '포토후기만 보기' 체크박스의 상태 변경 이벤트를 감지
 	$('#onlyphoto').on('change', function() {
-		console.log("실행");
 		const roomname = '${selectedroomname}';
 		const orderby = localStorage.getItem('orderbyn');
 		const onlyPhoto = this.checked;
+		localStorage.setItem('onlyphoto', onlyPhoto);
 		doajax(roomname, orderby, onlyPhoto);
 	});
 
 	function doajax(roomname, orderby, onlyPhoto) {
 		var hotelid = getParameterByName('hotelid');
 		var roomid = getParameterByName('roomid');
+		var onlyPhoto2 ;
+		if(onlyPhoto2= localStorage.getItem('onlyphoto') === 'true'){
+			var op = onlyPhoto2;
+		}else{
+			var op = onlyPhoto;
+		}
+		
 		console.log("ajax실행");
 		$.ajax({
 			type : 'Get',
@@ -110,7 +122,7 @@
 				roomid : roomid,
 				roomname : roomname,
 				orderby : orderby,
-				onlyPhoto : onlyPhoto,
+				onlyPhoto : op,
 			},
 			success : function(data) {
 				$(".changedinfo").html(data);
@@ -190,18 +202,18 @@
 							<span>▼</span>
 						</div>
 					</c:if>
-					<c:if test="${not empty review}">
-						<div class="reviewlist">
-							<div class="reviewoption">
-								<div class="option1" id="orderby">
-									<span id="orderbyname">최근작성순</span>
-									<span>▼</span>
-								</div>
-								<div class="option2">
-									<span>포토후기만 보기</span>
-									<input type="checkbox" id="onlyphoto">
-								</div>
+					<div class="reviewlist">
+						<div class="reviewoption">
+							<div class="option1" id="orderby">
+								<span id="orderbyname">최근작성순</span>
+								<span>▼</span>
 							</div>
+							<div class="option2">
+								<span>포토후기만 보기</span>
+								<input type="checkbox" id="onlyphoto">
+							</div>
+						</div>
+						<c:if test="${not empty review}">
 							<c:forEach items="${review}" var="review">
 								<div class="listcontent">
 									<div class="listrating">
@@ -217,13 +229,18 @@
 										<span class="listroomname">${review.roomname}</span>
 									</div>
 									<div class="listrvcontent">${review.reviewcontent}</div>
+									<c:if test="${review.base64Image != 'MA=='}">
+										<div class="listphoto">
+											<img src="data:image/png;base64,${review.base64Image}" alt="이미지">
+										</div>
+									</c:if>
 								</div>
 							</c:forEach>
-							<div class="lastreview">
-								<span>마지막 리뷰입니다</span>
-							</div>
+						</c:if>
+						<div class="lastreview">
+							<span>마지막 리뷰입니다</span>
 						</div>
-					</c:if>
+					</div>
 					<c:if test="${empty review}">
 						<div class="nocontent">
 							<h2>호텔을 예약하고 첫 후기 작성자가 되어보세요!</h2>
