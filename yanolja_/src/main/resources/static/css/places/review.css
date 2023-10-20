@@ -221,3 +221,16 @@
   text-decoration: none;
   cursor: pointer;
 }	
+.swiper-slide>img{
+	width: 200px;
+	height: 132px;
+	border-radius: 5px;
+}
+.swiper-container{
+	margin-top: 10px;
+	overflow: hidden;
+	width: 688px;
+	}
+.swiper-slide {
+	width: 230px !important;	
+	}

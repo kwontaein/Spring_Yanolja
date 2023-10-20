@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.example.yanolja.main.post.BookResponse;
 import com.example.yanolja.main.post.FacilityResponse;
+import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.InfoResponse;
 import com.example.yanolja.main.post.MainRequest;
 import com.example.yanolja.main.post.MainResponse;
@@ -231,7 +232,19 @@ public interface MainMapper {
 
 	void updateReivewYn(int bookid);
 
-	void saveImage(int hotelid, int currentReviewid, String originalFileName, byte[] imageBytes);
+	void saveImage(int hotelid, int currentReviewid, String originalFileName, byte[] imageBytes, int userid);
 
 	int lastReviewid();
+
+	List<ImageResponse> reviewAllPhotos(Integer hotelid);
+
+	void DeleteReviewById(int reviewid);
+
+	void DeletePhotoById(int reviewid);
+
+	int selectRsByreview(int reviewid);
+
+	ReviewResponse selectForReviewUpdate(int roomIdbyReview);
+
+	List<ImageResponse> ReviewInseredPhoto(Integer reviewid);
 }

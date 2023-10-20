@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.yanolja.main.mapper.MainMapper;
 import com.example.yanolja.main.post.BookResponse;
 import com.example.yanolja.main.post.FacilityResponse;
+import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.InfoResponse;
 import com.example.yanolja.main.post.MainRequest;
 import com.example.yanolja.main.post.MainResponse;
@@ -293,12 +294,40 @@ public class MainService {
 		mainMapper.updateReivewYn(bookid);
 	}
 
-	public void saveImage(int hotelid, int currentReviewid, String originalFileName, byte[] imageBytes) {
+	public void saveImage(int hotelid, int currentReviewid, String originalFileName, byte[] imageBytes, int userid) {
 		// TODO Auto-generated method stub
-		mainMapper.saveImage(hotelid,currentReviewid,originalFileName,imageBytes);
+		mainMapper.saveImage(hotelid,currentReviewid,originalFileName,imageBytes,userid);
 	}
 
 	public int lastReviewid() {
 		return mainMapper.lastReviewid();
+	}
+
+	public List<ImageResponse> reviewAllPhotos(Integer hotelid) {
+		// TODO Auto-generated method stub
+		return mainMapper.reviewAllPhotos(hotelid);
+	}
+
+	public void DeleteReviewById(int reviewid) {
+		mainMapper.DeleteReviewById(reviewid);
+	}
+	
+	public void DeletePhotoById(int reviewid) {
+		mainMapper.DeletePhotoById(reviewid);
+	}
+
+	public int selectRsByreview(int reviewid) {
+		// TODO Auto-generated method stub
+		return 	mainMapper.selectRsByreview(reviewid);
+	}
+
+	public ReviewResponse selectForReviewUpdate(int roomIdbyReview) {
+		// TODO Auto-generated method stub
+		return mainMapper.selectForReviewUpdate(roomIdbyReview);
+	}
+
+	public List<ImageResponse> ReviewInseredPhoto(Integer reviewid) {
+		// TODO Auto-generated method stub
+		return mainMapper.ReviewInseredPhoto(reviewid);
 	}
 }

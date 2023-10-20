@@ -6,6 +6,53 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="${path}/css/Review/MyReview.css" />
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		// "id='del'" 버튼을 클릭하면 모달을 표시합니다.
+		$('.del').click(function() {
+			$('#myModal').show();
+			// "data-reviewid" 속성에서 reviewid 값을 추출합니다.
+			var reviewId = $(this).data('reviewid');
+			// 모달 내의 숨김 필드에 reviewId 값을 설정합니다.
+			$('#reviewIdField').val(reviewId);
+		});
+
+		// 모달 내의 닫기 버튼을 클릭하면 모달을 숨깁니다.
+		$('.close').click(function() {
+			$('#myModal').hide();
+		});
+
+		// 모달 내의 "삭제" 버튼 클릭을 처리합니다.
+		$('.delete').click(function() {
+			// 모달 내의 숨김 필드에서 reviewId 값을 추출합니다.
+			var reviewId = $('#reviewIdField').val();
+
+			// 여기에서 AJAX POST 요청을 수행합니다.
+			$.ajax({
+				type : "POST",
+				url : "/DeleteReview.Do", // 실제 URL로 대체하세요
+				data : {
+					reviewid : reviewId
+				// 삭제할 후기의 실제 ID로 대체하세요
+				},
+				success : function(data) {
+					// 성공 처리, 예를 들어 모달을 숨기고 UI를 업데이트합니다.
+					$('#myModal').hide();
+					// 변경 사항을 반영하기 위해 페이지를 다시 로드하거나 새로 고칠 수 있습니다.
+					location.reload();
+					alert("삭제되었습니다.");
+				},
+				error : function(err) {
+					// 오류 처리
+					console.error("오류:", err);
+				}
+			});
+		});
+	});
+</script>
 </head>
 <body>
 	<header>
@@ -36,10 +83,25 @@
 							</div>
 							<div>${rev.kindhotel}</div>
 						</div>
-						<div>수정 / 삭제</div>
+						<div>
+							<c:choose>
+								<c:when test="${rev.daydiff == '수정'}">
+									<!-- '수정'인 경우 페이지 이동 -->
+									<a href="/writeReview?reviewid=${rev.reviewid}" class="upd">수정</a>
+								</c:when>
+								<c:when test="${rev.daydiff == '삭제'}">
+									<!-- '삭제'인 경우 모달 창 열기 -->
+									<div class="del" id="del" data-reviewid="${rev.reviewid}">삭제</div>
+								</c:when>
+								<c:otherwise>
+									<div class="del" id="del" data-reviewid="${rev.reviewid}">삭제</div>
+									<!-- <span>삭제 불가</span>
+								 -->
+								</c:otherwise>
+							</c:choose>
+						</div>
 					</div>
 					<div class="mrReview">
-						<div>뭐</div>
 						<div>
 							<div class="listrating">
 								<span class="star">
@@ -52,14 +114,43 @@
 						<div class="date">${rev.ratingdate2}</div>
 					</div>
 					<div>${rev.reviewcontent}</div>
-					<c:if test="${rev.base64Image != 'MA=='}">
-						<div class="listphoto">
-							<img src="data:image/png;base64,${rev.base64Image}" alt="이미지">
+					<script>
+						var mySwiper = new Swiper('.swiper-container', {
+							direction : 'horizontal',
+							loop : true,
+							pagination : {
+								el : '.swiper-pagination',
+							},
+						});
+					</script>
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							<c:forEach items="${img}" var="image">
+								<c:if test="${rev.reviewid == image.reviewid}">
+									<div class="swiper-slide">
+										<img src="data:image/png;base64,${image.base64Image}" alt="이미지">
+									</div>
+								</c:if>
+							</c:forEach>
 						</div>
-					</c:if>
+					</div>
 				</div>
 				<hr>
 			</c:forEach>
+		</div>
+	</div>
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<div class="modal_wrapper">
+				<b>정말 삭제하시겠어요?</b>
+				<p>삭제하신 후기는 복구할 수 없으며, 후기 작성으로 획득한 포인뜨 또는 코인은 회수될 수 있습니다.</p>
+				<!-- Add the hidden input field for reviewId -->
+				<input type="hidden" id="reviewIdField" name="reviewId" value="">
+				<div class="byn_choose">
+					<span class="close">아니요</span>
+					<span class="delete">삭제하기</span>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.security.core.userdetails.User;
 
+import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.ReviewResponse;
 import com.example.yanolja.user.CustomUserDetails;
 import com.example.yanolja.user.vo.UserVo;
@@ -23,5 +24,7 @@ public interface UserMapper {
 	public List<ReviewResponse> UserByreview(int userid);
 
 	public int UserByCnt(int userid);
+
+	public List<ImageResponse> reviewUserPhotos(int userid);
 
 }

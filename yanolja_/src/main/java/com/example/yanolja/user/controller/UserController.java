@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.yanolja.kakao.model.KakaoService;
+import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.ReviewResponse;
 import com.example.yanolja.user.CustomUserDetails;
 import com.example.yanolja.user.model.EmailService;
@@ -117,10 +118,12 @@ public class UserController {
 		// 내가 쓴 리뷰 목록 가져오는 코드 추가
 		int userid = (int) session.getAttribute("userid");
 		List<ReviewResponse> review = userService.UserByreview(userid);
+		List<ImageResponse> img = userService.reviewUserPhotos(userid);
 		int room_cnt = userService.UserByCnt(userid);
 
 		model.addAttribute("room_cnt", room_cnt);
 		model.addAttribute("review", review);
+		model.addAttribute("img", img);
 		return "User/UserOption/MyReview";
 	}
 

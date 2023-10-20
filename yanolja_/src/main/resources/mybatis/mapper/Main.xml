@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.yanolja.main.mapper.MainMapper">
-
 	<!-- hotel 테이블 전체 컬럼 -->
 	<sql id="postColumns">
 		hotel.hotelid,
@@ -538,15 +537,13 @@
 		user.userid = review.userid) as username,
 		(select roomname from room
 		where room.roomid = review.roomid) as
-		roomname,reviewcontent,ratingdate,
-		coalesce((select imgdata from image
-		where image.reviewid = review.reviewid) , 0) as
-		image ,userid <!-- 원래 reviewid 
-			대신 사진 들어가야 함 -->
+		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 
+			사진 들어가야 함 -->
 	</sql>
 	<select id="lastReviewid">
 		SELECT MAX(reviewid) AS lastreviewid FROM review;
 	</select>
+
 	<select id="review"
 		resultType="com.example.yanolja.main.post.ReviewResponse">
 		select
@@ -565,6 +562,11 @@
 		</if>
 		group by reviewid
 		ORDER BY #{orderby}
+	</select>
+
+	<select id="reviewAllPhotos">
+		select imgID , hotelid, reviewid, imgdata from image
+		where hotelid = #{hotelid}
 	</select>
 
 	<select id="reviewroom"
@@ -859,11 +861,50 @@
 		update book set reviewYN = true where bookid =
 		#{bookid};
 	</update>
-	
 	<insert id="saveImage">
 		INSERT INTO image (hotelid,
-		reviewid ,imgname,imgdata)
+		reviewid
+		,imgname,imgdata,Thumbnail , userid)
 		VALUE
-		(#{hotelid},#{currentReviewid},#{originalFileName},#{imageBytes})
+		(#{hotelid},#{currentReviewid},#{originalFileName},#{imageBytes} ,0
+		,#{userid})
 	</insert>
+	<delete id="DeleteReviewById">
+		delete from review where reviewid = #{reviewid}
+	</delete>
+	<delete id="DeletePhotoById">
+		delete from image where reviewid = #{reviewid}
+	</delete>
+	<select id="selectRsByreview">
+		select roomid from review where reviewid =
+		#{reviewid}
+	</select>
+	<select id="selectForReviewUpdate">
+		SELECT
+		h.hotelname,
+		r.rentalType,
+		ROUND((rv.Kindness + rv.cleanliness + rv.convenience + rv.Loc_satisfy) / 4, 1) AS
+		totalrating,
+		rv.Kindness,
+		rv.cleanliness,
+		rv.convenience,
+		rv.Loc_satisfy,
+		rm.roomname
+		FROM
+		hotel h
+		JOIN room r ON h.hotelid = r.hotelid
+		JOIN review rv ON r.roomid = rv.roomid
+		JOIN room rm ON r.roomid = rm.roomid
+		WHERE rv.reviewid =
+		#{reviewid}
+	</select>
+	<select id="ReviewInseredPhoto">
+		select imgID ,imgname, imgdata from image
+		where
+		reviewid =
+		#{reviewid}
+	</select>
+	<delete id="DelPhotoByimgid">
+		delete from image where imgid= #{imgid}
+	</delete>
 </mapper>

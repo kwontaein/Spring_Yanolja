@@ -1,11 +1,12 @@
 package com.example.yanolja.main.post;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
 import java.util.Locale;
 
 public class ReviewResponse {
+
 	private String hotelname;
 	private String kindhotel;
 	private String rentalType;
@@ -13,12 +14,15 @@ public class ReviewResponse {
 	private String roomname;
 
 	private String reviewcontent;
+
 	private LocalDateTime ratingdate;
+	private LocalDateTime current;
+	private String daydiff;
 	private String ratingdate2;
 
-	private byte[] image;
-	private String base64Image; // Base64로 인코딩
+	private int reviewid;
 	private int userid;
+	private int image;
 
 	private boolean shouldMaskUsername;
 
@@ -31,15 +35,14 @@ public class ReviewResponse {
 
 	// review
 	public ReviewResponse(float rating, String username, String roomname, String reviewcontent,
-			LocalDateTime ratingdate, byte[] image, int userid) {
+			LocalDateTime ratingdate, int reviewid, int userid) {
 		super();
 		this.rating = rating;
 		this.username = username;
 		this.roomname = roomname;
 		this.reviewcontent = reviewcontent;
 		this.ratingdate = ratingdate;
-		this.image = image;
-		this.userid = userid;
+		this.reviewid = reviewid;
 		this.shouldMaskUsername = true;
 	}
 
@@ -57,7 +60,7 @@ public class ReviewResponse {
 
 	// userbyreview
 	public ReviewResponse(float rating, String username, String hotelname, String kindhotel, String roomname,
-			String rentalType, String reviewcontent, LocalDateTime ratingdate, byte[] image) {
+			String rentalType, String reviewcontent, LocalDateTime ratingdate, int reviewid) {
 		super();
 		this.rating = rating;
 		this.username = username;
@@ -67,8 +70,25 @@ public class ReviewResponse {
 		this.rentalType = rentalType;
 		this.reviewcontent = reviewcontent;
 		this.ratingdate = ratingdate;
-		this.image = image;
+		this.reviewid = reviewid;
 		this.shouldMaskUsername = false;
+		this.current = LocalDateTime.now();
+	}
+	public ReviewResponse(String hotelname, String rentalType, float rating, float kindness, float cleanliness,
+			float convenience, float loc_satisfy, String roomname) {
+		super();
+		this.hotelname = hotelname;
+		this.rentalType = rentalType;
+		this.roomname = roomname;
+		this.rating = rating;
+		this.kindness = kindness;
+		this.convenience = convenience;
+		this.cleanliness = cleanliness;
+		this.loc_satisfy = loc_satisfy;
+	}
+
+	public int getReviewid() {
+		return reviewid;
 	}
 
 	public String getRentalType() {
@@ -92,13 +112,8 @@ public class ReviewResponse {
 		return username;
 	}
 
-	public String getBase64Image() {
-		base64Image = Base64.getEncoder().encodeToString(image);
-		return base64Image;
-	}
-
 	// 이미지 데이터를 바이트 배열로 반환
-	public byte[] getImage() {
+	public int getImage() {
 		return image;
 	}
 
@@ -142,6 +157,23 @@ public class ReviewResponse {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY.MM.dd", Locale.KOREAN);
 		String ratingdate2 = ratingdate.format(formatter);
 		return ratingdate2;
+	}
+
+	public String getDaydiff() {
+		daydiff = "수정";
+		if (ratingdate != null && current != null) {
+			Duration duration = Duration.between(ratingdate, current);
+			long daysDifference = duration.toDays();
+			if (daysDifference >= 30) {
+				daydiff = "삭제";
+			} else if (daysDifference < 2) {
+				daydiff = "수정";
+			} else {
+				daydiff = "삭제 불가";
+			}
+			return daydiff;
+		}
+		return daydiff;
 	}
 
 	@Override

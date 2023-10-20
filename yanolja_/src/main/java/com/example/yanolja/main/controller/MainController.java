@@ -30,6 +30,7 @@ import com.example.yanolja.main.model.MainService;
 import com.example.yanolja.main.post.BookResponse;
 import com.example.yanolja.main.post.Cartinfo;
 import com.example.yanolja.main.post.FacilityResponse;
+import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.InfoResponse;
 import com.example.yanolja.main.post.MainResponse;
 import com.example.yanolja.main.post.PolicyResponse;
@@ -210,6 +211,7 @@ public class MainController {
 	}
 
 // 스와이퍼 --------------------------------------------------------------------------------
+
 	@GetMapping("/eventrolling")
 	public String eventrolling() {
 		return "Main/eventrolling"; // Main/ex 템플릿을렌더링
@@ -311,16 +313,20 @@ public class MainController {
 		else
 			ob = orderby;
 		if (hotelid != null && roomid == null) {
-			List<ReviewResponse> review = mainService.review(hotelid, rn, orderby, onlyPhoto);
+			List<ReviewResponse> review = mainService.review(hotelid, rn, orderby, onlyPhoto); // 리뷰목록
+
+			List<ImageResponse> images = mainService.reviewAllPhotos(hotelid); // 사진
+
+			ReviewResponse review_detail = mainService.rating_detail(hotelid); // 평점
+
 			List<String> roomnameList = mainService.roomnameList(hotelid); // 새로운 리스트에 저장
-			ReviewResponse review_detail = mainService.rating_detail(hotelid);
 
 			model.addAttribute("selectedroomname", rn).addAttribute("selectedorderby", ob)
 					.addAttribute("review", review).addAttribute("review_detail", review_detail)
-					.addAttribute("roomnameList", roomnameList);
+					.addAttribute("roomnameList", roomnameList).addAttribute("images", images);
 		} else if (roomid != null) {
-			List<ReviewResponse> reviewroom = mainService.reviewroom(roomid, orderby, onlyPhoto);
-			int cnt = mainService.reviewroomcnt(roomid);
+			List<ReviewResponse> reviewroom = mainService.reviewroom(roomid, orderby, onlyPhoto); // 방 리뷰목록
+			int cnt = mainService.reviewroomcnt(roomid); // 방갯수
 			model.addAttribute("cnt", cnt).addAttribute("review", reviewroom);
 		}
 		return "places/infodetail/review";
@@ -622,22 +628,40 @@ public class MainController {
 //---------------------------------------------------------------------------------------------------------
 	// 후기작성
 	@GetMapping("/writeReview")
-	public String writeReview(@RequestParam(value = "roomid") int roomid, @RequestParam(value = "bookid") int bookid,
-			Model model) {
+	public String writeReview(@RequestParam(value = "roomid", required = false) Integer roomid,
+			@RequestParam(value = "bookid", required = false) Integer bookid,
+			@RequestParam(value = "reviewid", required = false) Integer reviewid, Model model) {
+
 		// 유저아이디, 해당 아이디와 룸아이디로 이루어진 예약정보가 없거나, 후기 갯수 < 해당 정보 라면 잘못된 접근입니다. 라는 문구 작성
+
 		// 호텔, 객실이름 및 사용자 이름 가져오기
-		ReserveResponse loadRs = mainService.selectForReview(roomid);
-		model.addAttribute("loadRs", loadRs);
-		model.addAttribute("bookid", bookid);
-		return "User/writeReview";
+		if (reviewid != null && roomid == null && bookid == null) {
+			// rating 정보랑 이미지 정보 불러와서 출력.
+			int roomIdbyReview = mainService.selectRsByreview(reviewid);
+			ReviewResponse loadRs = mainService.selectForReviewUpdate(roomIdbyReview);
+			List<ImageResponse> imgs = mainService.ReviewInseredPhoto(reviewid);
+			model.addAttribute("loadRs", loadRs);
+			model.addAttribute("roomid", roomIdbyReview);
+			model.addAttribute("imgs", imgs);
+			return "User/UpdateReview";
+		} else {
+			// 여긴 그냥 기본 정보만
+			ReserveResponse loadRs = mainService.selectForReview(roomid);
+			model.addAttribute("loadRs", loadRs);
+			model.addAttribute("roomid", roomid);
+			model.addAttribute("bookid", bookid);
+			return "User/writeReview";
+		}
 	}
 
+	// 후기 저장
 	@PostMapping("/writeReview.do")
 	@ResponseBody
 	public String insertReview(@RequestParam(value = "rating1") double rating1,
 			@RequestParam(value = "rating2") double rating2, @RequestParam(value = "rating3") double rating3,
 			@RequestParam(value = "rating4") double rating4, @RequestParam(value = "textData") String textData,
-			@RequestParam(value = "roomid") int roomid, @RequestParam(value = "bookid") int bookid,
+			@RequestParam(value = "roomid") int roomid,
+			@RequestParam(value = "bookid", required = false) Integer bookid,
 			@RequestParam(value = "article_file", required = false) MultipartFile[] multipartFiles,
 			HttpSession session) {
 
@@ -654,16 +678,40 @@ public class MainController {
 				String originalFileName = file.getOriginalFilename();
 				// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
 				System.out.println(originalFileName + " " + imageBytes);
-				mainService.saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes);
+				mainService.saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes, userid);// 이미지 파일 넣기
 			} catch (IOException e) {
 				e.printStackTrace();
 				break;
 			}
 		}
+		if (bookid != null)
+			mainService.updateReivewYn(bookid);
 
-		mainService.updateReivewYn(bookid);
-		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);
+		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);// 후기 정보 넣기
 
+		return "success";
+	}
+
+	// 후기 수정
+	@PostMapping("/UpdateReview.do")
+	@ResponseBody
+	public String UpdateReview(@RequestParam(value = "rating1") double rating1,
+			@RequestParam(value = "rating2") double rating2, @RequestParam(value = "rating3") double rating3,
+			@RequestParam(value = "rating4") double rating4, @RequestParam(value = "textData") String textData,
+			@RequestParam(value = "roomid") int roomid, HttpSession session) {
+		// 바뀐 별점 / 삭제할 이미지 목록 + 추가한 이미지 목록 등
+		System.out.println(roomid + "," + rating1 + "," + rating2 + "," + rating3 + "," + rating4);
+
+		return "success";
+	}
+
+	// 후기 삭제
+	@PostMapping("/DeleteReview.Do")
+	@ResponseBody
+	public String DeleteReview(@RequestParam(value = "reviewid") int reviewid) {
+		System.out.println(reviewid);
+		mainService.DeleteReviewById(reviewid);
+		mainService.DeletePhotoById(reviewid);
 		return "success";
 	}
 

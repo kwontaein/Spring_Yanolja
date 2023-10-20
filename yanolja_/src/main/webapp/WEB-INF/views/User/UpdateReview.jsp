@@ -9,130 +9,118 @@
 </head>
 <body>
 	<script>
-    $(document).ready(function() {
-    	$("#input_file").on("change", fileCheck);
-    	
-    	const urlParams = new URL(location.href).searchParams;
-
-    	const roomid = urlParams.get('roomid');
-    	
-		var star1;
-		var star2;
-		var star3;
-		var star4;
-		
-		var star1Value;
-	    var star2Value;
-	    var star3Value;
-	    var star4Value;
-	    var totalStar;
-	    var bookid = ${bookid}
+	$(document).ready(function() {
+	    $("#input_file").on("change", fileCheck);
+	    const roomid = ${roomid};
 	    
-        // 스타 1에 대한 설정
+	    // 스타 그래픽 그리는 함수
+	    const drawStar = (target, starClass) => {
+	        const selector = '.star.' + starClass + ' span';
+	        console.log(selector);
+	        $(selector).css('width', target.value * 10 + '%');
+	        $(selector).css('width', target * 10 + '%');
+	    };
+	    
+	    var starValues = [${loadRs.kindness}, ${loadRs.cleanliness}, ${loadRs.convenience}, ${loadRs.loc_satisfy}];
+	    var starNames = ["star1", "star2", "star3", "star4"];
+		var fitotal = 0;
+	    for (var i = 0; i < starValues.length; i++) {
+	        drawStar(starValues[i] * 2, starNames[i]);
+	        fitotal += starValues[i];
+	    }
+	    
+	    $('.totalstar2').css('width',fitotal * 5 + '%');
+	    
+	    let stars = [0, 0, 0, 0]; // 스타 등급을 배열로 저장
+
+	    // 스타 1에 대한 설정
         $('input.star1[type="range"]').on('input', function() {
-        	star1Value = +(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
-          	console.log(star1Value);
+        	starValues[0] = +(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
+        	stars[0] = starValues[0];
             drawStar(this, "star1");
         	updateTotalStar();
         });
 
         // 스타 2에 대한 설정
         $('input.star2[type="range"]').on('input', function() {
-        	star2Value = +(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
-          	console.log(star2Value);
+        	starValues[1] = +(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
+        	stars[1] = starValues[1];
             drawStar(this, "star2");
         	updateTotalStar();
         });
 
         // 스타 3에 대한 설정
         $('input.star3[type="range"]').on('input', function() {
-        	star3Value =+(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
-          	console.log(star3Value);
+        	starValues[2] =+(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
+        	stars[2] = starValues[2];
             drawStar(this, "star3");
         	updateTotalStar();
         });
 
         // 스타 4에 대한 설정
         $('input.star4[type="range"]').on('input', function() {
-        	star4Value = +(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
-          	console.log(star4Value);
+        	starValues[3] = +(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
+        	stars[3] = starValues[3];
             drawStar(this, "star4");
         	updateTotalStar();
         });
-    	  // JavaScript 코드
-          const drawStar = (target, starClass) => {
-        	   var selector = '.star.' + starClass + ' span';
-        	    $(selector).css('width', target.value * 10 + '%');
-			   }
-          
-          // 평균 스타 업데이트 함수
+	 
+	    // 평균 스타 업데이트 함수
         function updateTotalStar() {
-        	   totalStar = +(parseInt(star1Value + star2Value + star3Value + star4Value)/ 4 ).toFixed(2); // 스타 값의 평균 계산
-        	   	console.log("total : " + totalStar);
+        	   	totalStar = +(parseInt(starValues[0] + starValues[1] + starValues[2] + starValues[3])/ 4 ).toFixed(2); // 스타 값의 평균 계산
             	$('.totalstar2').css('width',totalStar * 20 + '%'); // 평균 값을 totalstar 입력란에 표시 (소수점 1자리까지)
-        		
           }
-     // 이벤트 핸들러: 버튼 클릭 또는 양식 제출 버튼 클릭
-        $("#savebtn").on("click", function(event) {
-            event.preventDefault(); // 기본 양식 제출 동작을 막음
-            // 스타 등급 값들
-            if (!star1Value || !star2Value || !star3Value || !star4Value || !totalStar) {
-                alert("평가를 완료해주세요.");
-                return; // 전송을 중단
-            }
-            
-            // textarea의 값을 가져옴
-            var textareaValue = $("#reviewcontent").val();
-            
-            // 리뷰 내용 유효성 검사
-            if (!textareaValue) {
-                alert("후기 내용을 입력해주세요.");
-                return; // 전송을 중단
-            }
+	    
+	    // 저장 버튼 이벤트 핸들러
+	    $("#savebtn").on("click", function(event) {
+	        event.preventDefault();
+	    	console.log("stars : " + stars);
+	        if (stars.includes(0) || !totalStar) {
+	            alert("평가를 완료해주세요.");
+	            return;
+	        }
 
-            
-        	var form = $("form")[0];
-			var formData = new FormData(form);
-			for (var x = 0; x < content_files.length; x++) {
-				// 삭제 안한것만 담아 준다. 
-				if (!content_files[x].is_delete) {
-					formData.append("article_file", content_files[x]);
-				}
-			}
+	        const textareaValue = $("#reviewcontent").val();
+
+	        if (!textareaValue) {
+	            alert("후기 내용을 입력해주세요.");
+	            return;
+	        }
+
+	        const form = $("form")[0];
+	        const formData = new FormData(form);
+
+	        // 여기에 추가적으로 폼 데이터를 첨부하는 코드를 넣어주세요...
 			formData.append("textData", textareaValue);
-			formData.append("rating1", star1Value);
-			formData.append("rating2", star2Value);
-			formData.append("rating3", star3Value);
-			formData.append("rating4", star4Value);
-			formData.append("roomid", roomid);
-			formData.append("bookid", bookid);
-			
-            // Ajax POST 요청을 생성
-           $.ajax({
-                type: "POST",
-                url: "/writeReview.do", // 서버 엔드포인트 URL
-                data:formData, // 전송할 데이터 및 데이터 이름
-                processData: false, // 필수: FormData의 프로세싱을 비활성화
-                contentType: false, // 필수: 컨텐츠 타입을 false로 설정
-                success: function(data) {
-                    // 성공 시 서버 응답 처리
-                    console.log(data);
-                   // window.location.href="/Reserve_history";
-                    
-                },
-                error: function(error) {
-                    // 오류 처리
-                    console.error(error);
-                }
-            });
-        }); 
-    });
+			formData.append("rating1", stars[0]);
+			formData.append("rating2", stars[1]);
+			formData.append("rating3", stars[2]);
+			formData.append("rating4", stars[3]);
+	        formData.append("roomid", roomid);
+	        for (var pair of formData.entries()) {
+	            console.log(pair[0] + ', ' + pair[1]);
+	        }
+	        $.ajax({
+	            type: "POST",
+	            url: "/UpdateReview.do",
+	            data: formData,
+	            processData: false,
+	            contentType: false,
+	            success: function(data) {
+	                console.log(data);
+	            },
+	            error: function(error) {
+	                console.error(error);
+	            }
+	        });
+	    });
+	});
 </script>
 	<header style="height: 48px;">
 		<div class="head">
 			<div class="top">
 				<span>&lt;</span>
-				<span>후기작성</span>
+				<span>후기수정</span>
 				<span></span>
 			</div>
 		</div>
@@ -224,7 +212,9 @@
 				</div>
 			</div>
 			<div class="photoupload">
-				<%@include file="./photoUpload.jsp"%>
+				<c:if test="${empty img}">
+					<%@include file="./photoUpload.jsp"%>
+				</c:if>
 			</div>
 			<hr>
 			<div class="save">

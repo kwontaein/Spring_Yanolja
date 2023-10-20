@@ -42,18 +42,18 @@
 		roomname,(select rentalType from room
 		where room.roomid =
 		review.roomid) as
-		rentalType,reviewcontent,ratingdate ,
-		coalesce((select imgdata from image
-		where image.reviewid =
-		review.reviewid) , 0)
-		as image
+		rentalType,reviewcontent,ratingdate,reviewid
 		from
 		review
 		where
 		userid = #{userid}
 		group by
 		reviewid
-		order by ratingdate
-		asc;
+		order by ratingdate desc
 	</select>
+		<select id="reviewUserPhotos">
+		select imgID , hotelid, reviewid, imgdata from image
+		where userid = #{userid}
+	</select>
+	
 </mapper>

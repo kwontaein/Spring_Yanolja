@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="${path}/css/places/review.css" />
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(
@@ -229,11 +231,26 @@
 										<span class="listroomname">${review.roomname}</span>
 									</div>
 									<div class="listrvcontent">${review.reviewcontent}</div>
-									<c:if test="${review.base64Image != 'MA=='}">
-										<div class="listphoto">
-											<img src="data:image/png;base64,${review.base64Image}" alt="이미지">
+									<script>
+										var mySwiper = new Swiper('.swiper-container', {
+											direction : 'horizontal',
+											loop : true,
+											pagination : {
+												el : '.swiper-pagination',
+											},
+										});
+									</script>
+									<div class="swiper-container">
+										<div class="swiper-wrapper">
+											<c:forEach items="${images}" var="image">
+												<c:if test="${review.reviewid == image.reviewid}">
+													<div class="swiper-slide">
+														<img src="data:image/png;base64,${image.base64Image}" alt="이미지">
+													</div>
+												</c:if>
+											</c:forEach>
 										</div>
-									</c:if>
+									</div>
 								</div>
 							</c:forEach>
 						</c:if>

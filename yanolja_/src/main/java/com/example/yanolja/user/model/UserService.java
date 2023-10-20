@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.ReviewResponse;
 import com.example.yanolja.user.mapper.UserMapper;
 import com.example.yanolja.user.vo.UserVo;
@@ -91,6 +92,11 @@ public class UserService implements UserDetailsService {
 	public int UserByCnt(int userid) {
 		// TODO Auto-generated method stub
 		return userMapper.UserByCnt(userid);
+	}
+
+	public List<ImageResponse> reviewUserPhotos(int userid) {
+		// TODO Auto-generated method stub
+		return userMapper.reviewUserPhotos(userid);
 	}
 
 }
