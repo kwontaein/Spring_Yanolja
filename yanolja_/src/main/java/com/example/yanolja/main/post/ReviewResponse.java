@@ -74,8 +74,9 @@ public class ReviewResponse {
 		this.shouldMaskUsername = false;
 		this.current = LocalDateTime.now();
 	}
+	
 	public ReviewResponse(String hotelname, String rentalType, float rating, float kindness, float cleanliness,
-			float convenience, float loc_satisfy, String roomname) {
+			float convenience, float loc_satisfy,String reviewcontent, String roomname) {
 		super();
 		this.hotelname = hotelname;
 		this.rentalType = rentalType;

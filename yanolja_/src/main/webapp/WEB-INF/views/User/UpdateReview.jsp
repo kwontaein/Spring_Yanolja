@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -208,11 +209,14 @@
 					<h4>후기 작성</h4>
 				</div>
 				<div style="display: flex; justify-content: center;">
-					<textarea id="reviewcontent" cols="90" rows="10" placeholder="'ㅋㅋㅋㅋ'와 같이 내용이 의미가 없는 후기는 보여지지 않을 수 있습니다"></textarea>
+					<textarea id="reviewcontent" cols="90" rows="10" placeholder="'ㅋㅋㅋㅋ'와 같이 내용이 의미가 없는 후기는 보여지지 않을 수 있습니다">${loadRs.reviewcontent}</textarea>
 				</div>
 			</div>
 			<div class="photoupload">
 				<c:if test="${empty img}">
+					<%@include file="./photoUpload.jsp"%>
+				</c:if>
+				<c:if test="${not empty img}">
 					<%@include file="./photoUpload.jsp"%>
 				</c:if>
 			</div>

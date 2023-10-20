@@ -883,18 +883,22 @@
 		SELECT
 		h.hotelname,
 		r.rentalType,
-		ROUND((rv.Kindness + rv.cleanliness + rv.convenience + rv.Loc_satisfy) / 4, 1) AS
+		ROUND((rv.Kindness +
+		rv.cleanliness + rv.convenience + rv.Loc_satisfy) / 4, 1) AS
 		totalrating,
 		rv.Kindness,
 		rv.cleanliness,
 		rv.convenience,
 		rv.Loc_satisfy,
+		rv.reviewcontent,
 		rm.roomname
 		FROM
 		hotel h
-		JOIN room r ON h.hotelid = r.hotelid
+		JOIN room r ON h.hotelid =
+		r.hotelid
 		JOIN review rv ON r.roomid = rv.roomid
-		JOIN room rm ON r.roomid = rm.roomid
+		JOIN room rm ON
+		r.roomid = rm.roomid
 		WHERE rv.reviewid =
 		#{reviewid}
 	</select>

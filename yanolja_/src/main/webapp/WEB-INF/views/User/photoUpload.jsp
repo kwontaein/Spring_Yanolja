@@ -9,6 +9,7 @@
 	<div class="container" style="border: 5px solid lightgray; border-style: dashed; outline: none; width: 647px; display: flex; justify-content: center;">
 		<form name="dataForm" id="dataForm">
 			<div style="text-align: center; margin: 10px;">
+				<p>${imgs[0].imgname}</p>
 				<input id="input_file" multiple="multiple" type="file" style="display: none;">
 				<p style="font-size: 10px; color: gray;">※첨부파일은 최대 5개까지 등록이 가능합니다.</p>
 				<p style="font-size: 10px; color: gray;">※파일 클릭시 첨부된 파일이 삭제됩니다.</p>
@@ -20,22 +21,18 @@
 			</div>
 		</form>
 	</div>
-	<!-- 파일 업로드 스크립트 -->
 	<script>
-		$(document).ready(function() {// input file 파일 첨부시 fileCheck 함수 실행
+		$(document).ready(function() {
+			// input file 파일 첨부시 fileCheck 함수 실행
 			$("#input_file").on("change", fileCheck);
 		});
-
-		/**
-		 * 첨부파일로직
-		 */
+		// 파일 첨부 로직
 		$(function() {
 			$('#btn-upload').click(function(e) {
 				e.preventDefault();
 				$('#input_file').click();
 			});
 		});
-
 		// 파일 현재 필드 숫자 totalCount랑 비교값
 		var fileCount = 0;
 		// 해당 숫자를 수정하여 전체 업로드 갯수를 정한다.
