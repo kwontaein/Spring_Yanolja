@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -309,11 +311,15 @@ public class MainController {
 			rn = roomname;
 
 		if (orderby == null)
-			ob = "ratingdate asc";
+			ob = "ratingdate desc";
 		else
 			ob = orderby;
+
+		System.out.println(ob);
+
 		if (hotelid != null && roomid == null) {
-			List<ReviewResponse> review = mainService.review(hotelid, rn, orderby, onlyPhoto); // 리뷰목록
+			System.out.println("실행 ! ");
+			List<ReviewResponse> review = mainService.review(hotelid, rn, ob, onlyPhoto); // 리뷰목록
 
 			List<ImageResponse> images = mainService.reviewAllPhotos(hotelid); // 사진
 
@@ -638,7 +644,7 @@ public class MainController {
 		if (reviewid != null && roomid == null && bookid == null) {
 			// rating 정보랑 이미지 정보 불러와서 출력.
 			int roomIdbyReview = mainService.selectRsByreview(reviewid);
-			ReviewResponse loadRs = mainService.selectForReviewUpdate(roomIdbyReview);
+			ReviewResponse loadRs = mainService.selectForReviewUpdate(reviewid);
 			List<ImageResponse> imgs = mainService.ReviewInseredPhoto(reviewid);
 			model.addAttribute("loadRs", loadRs);
 			model.addAttribute("roomid", roomIdbyReview);
@@ -670,24 +676,26 @@ public class MainController {
 		int userid = (int) session.getAttribute("userid");
 		int hotelid = mainService.findHotelId(roomid);
 
-		int CurrentReviewid = mainService.lastReviewid() + 1;
+		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);// 후기 정보 넣기
+
+		int CurrentReviewid = mainService.lastReviewid();
 		System.out.println("CurrentReviewid : " + CurrentReviewid);
-		for (MultipartFile file : multipartFiles) {
-			try {
-				byte[] imageBytes = file.getBytes();
-				String originalFileName = file.getOriginalFilename();
-				// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
-				System.out.println(originalFileName + " " + imageBytes);
-				mainService.saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes, userid);// 이미지 파일 넣기
-			} catch (IOException e) {
-				e.printStackTrace();
-				break;
+		if (multipartFiles != null) {
+			for (MultipartFile file : multipartFiles) {
+				try {
+					byte[] imageBytes = file.getBytes();
+					String originalFileName = file.getOriginalFilename();
+					// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
+					System.out.println(originalFileName + " " + imageBytes);
+					mainService.saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes, userid);// 이미지 파일 넣기
+				} catch (IOException e) {
+					e.printStackTrace();
+					break;
+				}
 			}
 		}
 		if (bookid != null)
 			mainService.updateReivewYn(bookid);
-
-		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);// 후기 정보 넣기
 
 		return "success";
 	}
@@ -698,10 +706,61 @@ public class MainController {
 	public String UpdateReview(@RequestParam(value = "rating1") double rating1,
 			@RequestParam(value = "rating2") double rating2, @RequestParam(value = "rating3") double rating3,
 			@RequestParam(value = "rating4") double rating4, @RequestParam(value = "textData") String textData,
-			@RequestParam(value = "roomid") int roomid, HttpSession session) {
+			@RequestParam(value = "roomid") int roomid, @RequestParam(value = "reviewid") int reviewid,
+			@RequestParam(value = "article_file", required = false) MultipartFile[] multipartFiles,
+			HttpSession session) {
 		// 바뀐 별점 / 삭제할 이미지 목록 + 추가한 이미지 목록 등
-		System.out.println(roomid + "," + rating1 + "," + rating2 + "," + rating3 + "," + rating4);
+		// 바뀐 이미지들 목록 받아와서 이전 정보와 비교 / 삭제 할 거 지우고 없던 거 추가 등 실행
+		// 배열 두개 생성 -> 반복문 돌면서 두 배열 비교 -> 바뀌지 않은 게 있으면 그대로 배열에 저장 후 나머지는 두번째 목록의 배열 값을
+		// 저장
+		int userid = (int) session.getAttribute("userid");
+		int hotelid = mainService.findHotelId(roomid);
 
+		List<ImageResponse> imgs = mainService.ReviewInseredPhoto(reviewid);
+
+		// 이미 불러온 이미지의 imgid 값을 저장하는 Set
+		Set<String> loadedImgIds = new HashSet<>();
+		// 이미지 아이디 목록 저장
+		for (ImageResponse img : imgs) {
+			loadedImgIds.add(img.getImgname());
+		}
+		System.out.println("loadedImgIds : " + loadedImgIds);
+
+		// 받아온 파일의 이름 목록 저장
+		Set<String> uploadedFileNames = new HashSet<>();
+		for (MultipartFile file : multipartFiles) {
+			uploadedFileNames.add(file.getOriginalFilename());
+		}
+		System.out.println("uploadedFileNames : " + uploadedFileNames);
+
+		// loadedImgIds에 있는 id 값과 uploadedFileNames의 id 값 비교 후 없을 시 삭제
+
+		for (ImageResponse img : imgs) {
+			String imgName = img.getImgname();
+			int imgId = img.getImgid();
+			if (!uploadedFileNames.contains(imgName)) { // 이미 불러온 이미지이지만 현재 업로드한 파일과 관련이 없는이미지 처리
+				System.out.println("삭제 : " + imgId);
+				mainService.DelPhotoByimgid(imgId); // 이미지 삭제
+			}
+		}
+		if (multipartFiles != null) {
+			for (MultipartFile file : multipartFiles) {
+				try {
+					byte[] imageBytes = file.getBytes();
+					String originalFileName = file.getOriginalFilename();
+					System.out.println(originalFileName + " " + imageBytes); // 이미 불러온 이미지인 경우와 새 이미지인 경우를 구분
+					if (loadedImgIds.contains(originalFileName)) { // 이미 불러온 이미지의 처리
+						System.out.println("스킵! : " + originalFileName);
+					} else { // 새이미지의 처리
+						mainService.saveImage(hotelid, reviewid, originalFileName, imageBytes, userid); // 이미지 파일 넣기
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					break;
+				}
+			}
+		}
+		mainService.updateReview(rating1, rating2, rating3, rating4, textData ,reviewid);// 후기 정보 넣기
 		return "success";
 	}
 

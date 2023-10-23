@@ -296,7 +296,15 @@ public class MainService {
 
 	public void saveImage(int hotelid, int currentReviewid, String originalFileName, byte[] imageBytes, int userid) {
 		// TODO Auto-generated method stub
-		mainMapper.saveImage(hotelid,currentReviewid,originalFileName,imageBytes,userid);
+		mainMapper.saveImage(hotelid, currentReviewid, originalFileName, imageBytes, userid);
+	}
+	public void DelPhotoByimgid(int imgid) {
+		// TODO Auto-generated method stub
+		mainMapper.DelPhotoByimgid(imgid);
+	}
+	public void updateImage(String originalFileName, byte[] imageBytes, int reviewid, int userid) {
+		// TODO Auto-generated method stub
+		mainMapper.updateImage(originalFileName, imageBytes, reviewid, userid);
 	}
 
 	public int lastReviewid() {
@@ -311,14 +319,14 @@ public class MainService {
 	public void DeleteReviewById(int reviewid) {
 		mainMapper.DeleteReviewById(reviewid);
 	}
-	
+
 	public void DeletePhotoById(int reviewid) {
 		mainMapper.DeletePhotoById(reviewid);
 	}
 
 	public int selectRsByreview(int reviewid) {
 		// TODO Auto-generated method stub
-		return 	mainMapper.selectRsByreview(reviewid);
+		return mainMapper.selectRsByreview(reviewid);
 	}
 
 	public ReviewResponse selectForReviewUpdate(int roomIdbyReview) {
@@ -329,5 +337,11 @@ public class MainService {
 	public List<ImageResponse> ReviewInseredPhoto(Integer reviewid) {
 		// TODO Auto-generated method stub
 		return mainMapper.ReviewInseredPhoto(reviewid);
+	}
+
+	public void updateReview(double rating1, double rating2, double rating3, double rating4, String textData,
+			int reviewid) {
+		mainMapper.updateReview(rating1,rating2,rating3,rating4,textData,reviewid);
+		
 	}
 }

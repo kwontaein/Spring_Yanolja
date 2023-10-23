@@ -247,4 +247,10 @@ public interface MainMapper {
 	ReviewResponse selectForReviewUpdate(int roomIdbyReview);
 
 	List<ImageResponse> ReviewInseredPhoto(Integer reviewid);
+
+	void updateImage(String originalFileName, byte[] imageBytes, int reviewid, int userid);
+
+	void DelPhotoByimgid(int imgid);
+
+	void updateReview(double rating1, double rating2, double rating3, double rating4, String textData, int reviewid);
 }

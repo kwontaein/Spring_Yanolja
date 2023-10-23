@@ -29,13 +29,13 @@
 
 				// 정렬 이름 설정
 				const orderNames = {
-					'ratingdate asc' : '최근작성순',
-					'rating asc' : '별점 높은 순',
-					'rating desc' : '별점 낮은 순'
+					'ratingdate desc' : '최근작성순',
+					'rating desc' : '별점 높은 순',
+					'rating asc' : '별점 낮은 순'
 				};
 
 				const initialOrderBy = localStorage.getItem('orderbyn')
-						|| 'ratingdate asc';
+						|| 'ratingdate desc';
 				const orderName = orderNames[initialOrderBy];
 				$('#orderbyname').text(orderName);
 
@@ -80,7 +80,7 @@
 	// 객실 선택 시 리뷰 필터링 및 표시
 	$('.rooms').on('click', function() {
 		const roomname = $(this).data('room');
-		const orderby = 'ratingdate asc';
+		const orderby = 'ratingdate desc';
 		const onlyPhoto = $('#onlyphoto').checked;
 		doajax(roomname, orderby, onlyPhoto);
 		document.getElementById('myModal').style.display = 'none';
@@ -232,15 +232,16 @@
 									</div>
 									<div class="listrvcontent">${review.reviewcontent}</div>
 									<script>
-										var mySwiper = new Swiper('.swiper-container', {
+										var mySwiper${review.reviewid} = new Swiper('.swiper-container${review.reviewid}', {
 											direction : 'horizontal',
-											loop : true,
+											slidesPerView: '3',
+											loop : false,
 											pagination : {
 												el : '.swiper-pagination',
 											},
 										});
 									</script>
-									<div class="swiper-container">
+									<div class="swiper-container${review.reviewid}" style="margin-top: 10px; overflow: hidden; width: 688px;">
 										<div class="swiper-wrapper">
 											<c:forEach items="${images}" var="image">
 												<c:if test="${review.reviewid == image.reviewid}">
@@ -286,9 +287,9 @@
 			<div class="order_modal_wrapper">
 				<span class="order_close">&times;</span>
 				<div class="order_lists">
-					<div class="order_by" data-order="ratingdate asc">최근작성순</div>
-					<div class="order_by" data-order="rating asc">별점 높은 순</div>
-					<div class="order_by" data-order="rating DESC">별점 낮은 순</div>
+					<div class="order_by" data-order="ratingdate desc">최근작성순</div>
+					<div class="order_by" data-order="rating desc">별점 높은 순</div>
+					<div class="order_by" data-order="rating asc">별점 낮은 순</div>
 				</div>
 			</div>
 		</div>

@@ -58,7 +58,7 @@ public class ReviewResponse {
 		this.loc_satisfy = loc_satisfy;
 	}
 
-	// userbyreview
+	// UserByreview
 	public ReviewResponse(float rating, String username, String hotelname, String kindhotel, String roomname,
 			String rentalType, String reviewcontent, LocalDateTime ratingdate, int reviewid) {
 		super();
@@ -74,11 +74,12 @@ public class ReviewResponse {
 		this.shouldMaskUsername = false;
 		this.current = LocalDateTime.now();
 	}
-	
-	public ReviewResponse(String hotelname, String rentalType, float rating, float kindness, float cleanliness,
-			float convenience, float loc_satisfy,String reviewcontent, String roomname) {
+
+	// selectForReviewUpdate
+	public ReviewResponse(String updatedHotelName, String rentalType, float rating, float kindness, float cleanliness,
+			float convenience, float loc_satisfy, String reviewcontent, String roomname, int userid) {
 		super();
-		this.hotelname = hotelname;
+		this.hotelname = updatedHotelName;
 		this.rentalType = rentalType;
 		this.roomname = roomname;
 		this.rating = rating;
@@ -86,6 +87,8 @@ public class ReviewResponse {
 		this.convenience = convenience;
 		this.cleanliness = cleanliness;
 		this.loc_satisfy = loc_satisfy;
+		this.reviewcontent = reviewcontent;
+		this.roomname = roomname;
 	}
 
 	public int getReviewid() {
@@ -175,12 +178,6 @@ public class ReviewResponse {
 			return daydiff;
 		}
 		return daydiff;
-	}
-
-	@Override
-	public String toString() {
-		return "ReviewResponse [username=" + username + ", roomname=" + roomname + ", reviewcontent=" + reviewcontent
-				+ ", ratingdate=" + ratingdate + ", ratingdate2=" + ratingdate2 + ", review_cnt=" + review_cnt + "]";
 	}
 
 }

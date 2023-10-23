@@ -135,7 +135,7 @@ $(document).ready(function() {
 			url: '/Review',
 			data: {
 				roomid: roomid,
-				orderby: 'ratingdate asc',
+				orderby: 'ratingdate desc',
 			},
 			success: function(data) {
 				$('.review').html(data);

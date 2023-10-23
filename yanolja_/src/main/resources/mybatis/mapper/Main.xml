@@ -556,7 +556,7 @@
 		,
 		roomid)
 		<if test="onlyPhoto == true">
-			and (select imgid from image where image.reviewid =
+			and (select MIN(imgid) from image where image.reviewid =
 			review.reviewid) is
 			not null
 		</if>
@@ -812,7 +812,7 @@
 		DATEDIFF(CURDATE(), reservedate) >= -#{period}
 		group by b.bookid ,
 		rs.user_name,rs.reservedate, rs.reserveEndDate
-		ORDER BY reservedate ASC
+		ORDER BY reservedate desc
 	</select>
 
 	<select id="selectForReview">
@@ -869,6 +869,14 @@
 		(#{hotelid},#{currentReviewid},#{originalFileName},#{imageBytes} ,0
 		,#{userid})
 	</insert>
+	<update id="updateImage">
+		INSERT INTO image (hotelid,
+		reviewid
+		,imgname,imgdata,Thumbnail , userid)
+		VALUE
+		(#{hotelid},#{currentReviewid},#{originalFileName},#{imageBytes} ,0
+		,#{userid})
+	</update>
 	<delete id="DeleteReviewById">
 		delete from review where reviewid = #{reviewid}
 	</delete>
@@ -891,16 +899,20 @@
 		rv.convenience,
 		rv.Loc_satisfy,
 		rv.reviewcontent,
-		rm.roomname
+		rm.roomname,
+		userid
 		FROM
 		hotel h
-		JOIN room r ON h.hotelid =
+		JOIN room r ON h.hotelid
+		=
 		r.hotelid
-		JOIN review rv ON r.roomid = rv.roomid
+		JOIN review rv ON
+		r.roomid = rv.roomid
 		JOIN room rm ON
 		r.roomid = rm.roomid
-		WHERE rv.reviewid =
-		#{reviewid}
+		WHERE
+		rv.reviewid =
+		#{roomIdbyReview}
 	</select>
 	<select id="ReviewInseredPhoto">
 		select imgID ,imgname, imgdata from image
@@ -911,4 +923,12 @@
 	<delete id="DelPhotoByimgid">
 		delete from image where imgid= #{imgid}
 	</delete>
+
+	<update id="updateReview">
+		Update review
+		set
+		reviewcontent = #{textData} ,
+		Kindness=#{rating1} ,cleanliness= #{rating2} , convenience=#{rating3}
+		, Loc_satisfy=#{rating4} where reviewid = #{reviewid}
+	</update>
 </mapper>

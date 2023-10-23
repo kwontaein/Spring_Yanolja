@@ -113,7 +113,10 @@
 				<%@ include file="../ads/ad1.jsp"%>
 			</div>
 			<div class="mypage1">
-				<h2>비회원 예약 내역</h2>
+				<h2>
+					<c:if test="${empty username}">비회원</c:if>
+					예약 내역
+				</h2>
 				<div class="booklist">
 					<div>
 						<a href="/Reserve_history">
@@ -131,7 +134,7 @@
 			</div>
 			<div class="ads">
 				<%@ include file="../ads/ad2.jsp"%>
-				</div>
+			</div>
 			<div class="mypage2">
 				<div class="event">
 					<div>

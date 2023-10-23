@@ -99,6 +99,7 @@
 					formData.append("article_file", content_files[x]);
 				}
 			}
+			
 			formData.append("textData", textareaValue);
 			formData.append("rating1", star1Value);
 			formData.append("rating2", star2Value);

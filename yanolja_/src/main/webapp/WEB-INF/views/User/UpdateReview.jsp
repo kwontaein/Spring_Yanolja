@@ -13,27 +13,34 @@
 	$(document).ready(function() {
 	    $("#input_file").on("change", fileCheck);
 	    const roomid = ${roomid};
-	    
+	  	
+    	const urlParams = new URL(location.href).searchParams;
+
+    	const reviewid = urlParams.get('reviewid');
+    	
+    	 let stars = [0, 0, 0, 0]; // 스타 등급을 배열로 저장
+
 	    // 스타 그래픽 그리는 함수
 	    const drawStar = (target, starClass) => {
 	        const selector = '.star.' + starClass + ' span';
-	        console.log(selector);
 	        $(selector).css('width', target.value * 10 + '%');
 	        $(selector).css('width', target * 10 + '%');
 	    };
 	    
+		var totalStar;
 	    var starValues = [${loadRs.kindness}, ${loadRs.cleanliness}, ${loadRs.convenience}, ${loadRs.loc_satisfy}];
 	    var starNames = ["star1", "star2", "star3", "star4"];
 		var fitotal = 0;
+		
 	    for (var i = 0; i < starValues.length; i++) {
 	        drawStar(starValues[i] * 2, starNames[i]);
 	        fitotal += starValues[i];
+	        stars[i] = starValues[i];
 	    }
 	    
 	    $('.totalstar2').css('width',fitotal * 5 + '%');
-	    
-	    let stars = [0, 0, 0, 0]; // 스타 등급을 배열로 저장
-
+	    updateTotalStar();
+	   
 	    // 스타 1에 대한 설정
         $('input.star1[type="range"]').on('input', function() {
         	starValues[0] = +(parseInt($(this).val()) / 2).toFixed(1); // 슬라이더 값 가져오기
@@ -75,7 +82,6 @@
 	    // 저장 버튼 이벤트 핸들러
 	    $("#savebtn").on("click", function(event) {
 	        event.preventDefault();
-	    	console.log("stars : " + stars);
 	        if (stars.includes(0) || !totalStar) {
 	            alert("평가를 완료해주세요.");
 	            return;
@@ -90,17 +96,25 @@
 
 	        const form = $("form")[0];
 	        const formData = new FormData(form);
-
+	    	for (var x = 0; x < content_files.length; x++) {
+				// 삭제 안한것만 담아 준다. 
+				if (!content_files[x].is_delete) {
+					formData.append("article_file", content_files[x]);
+				}
+			}
 	        // 여기에 추가적으로 폼 데이터를 첨부하는 코드를 넣어주세요...
 			formData.append("textData", textareaValue);
 			formData.append("rating1", stars[0]);
 			formData.append("rating2", stars[1]);
 			formData.append("rating3", stars[2]);
 			formData.append("rating4", stars[3]);
+			formData.append("reviewid", reviewid);
 	        formData.append("roomid", roomid);
+	        
 	        for (var pair of formData.entries()) {
 	            console.log(pair[0] + ', ' + pair[1]);
 	        }
+	        
 	        $.ajax({
 	            type: "POST",
 	            url: "/UpdateReview.do",
@@ -222,7 +236,7 @@
 			</div>
 			<hr>
 			<div class="save">
-				<button class="savebtn" id="savebtn">후기 저장하기</button>
+				<button class="savebtn" id="savebtn">후기 수정하기</button>
 			</div>
 		</div>
 	</div>

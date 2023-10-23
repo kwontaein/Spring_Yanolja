@@ -33,11 +33,15 @@
 		user.userid = review.userid) as
 		username,
 		(SELECT
-		hotelname from hotel where hotel.hotelid = review.hotelid),(SELECT
-		kindhotel from hotel where hotel.hotelid = review.hotelid),
+		hotelname from hotel where hotel.hotelid = review.hotelid) as
+		hotelname,
+		(SELECT
+		kindhotel from hotel where hotel.hotelid =
+		review.hotelid) as kindhotel,
 		(select
 		roomname from room
-		where room.roomid = review.roomid)
+		where
+		room.roomid = review.roomid)
 		as
 		roomname,(select rentalType from room
 		where room.roomid =
@@ -46,14 +50,15 @@
 		from
 		review
 		where
-		userid = #{userid}
+		userid =
+		#{userid}
 		group by
 		reviewid
 		order by ratingdate desc
 	</select>
-		<select id="reviewUserPhotos">
+	<select id="reviewUserPhotos">
 		select imgID , hotelid, reviewid, imgdata from image
 		where userid = #{userid}
 	</select>
-	
+
 </mapper>
