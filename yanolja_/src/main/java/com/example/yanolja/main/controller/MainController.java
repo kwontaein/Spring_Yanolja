@@ -176,11 +176,21 @@ public class MainController {
 
 	// 전체보기 호출
 	@GetMapping("/ViewAll")
-	public String ViewAll() {
+	public String ViewAll(@RequestParam("data") String data, Model model) {
+		model.addAttribute("data", data);
 		return "Main/SeeAllView";
 	}
 
 //리스트 --------------------------------------------------------------------------------
+	@GetMapping("/ResentRelated")
+	public String ResentRelated(HttpSession session, Model model) {
+		Long hotelid = (Long) session.getAttribute("resentViewHotelid");
+		String kindhotel = (String) session.getAttribute("resentViewKindHotel");
+		List<MainResponse> post = mainService.findPostById(hotelid, kindhotel);
+		model.addAttribute("post", post);
+		return "lists/ResentRelated";
+	}
+
 	@GetMapping("/Hotellist")
 	public String Hotellist(@RequestParam("regionid") int regionid, @RequestParam("kindhotel") String kindhotel,
 			Model model) {
@@ -202,13 +212,19 @@ public class MainController {
 	}
 
 	@GetMapping("/ViewHotels")
-	public String ViewHotels(@RequestParam("regionid") int regionid, @RequestParam("kindhotel") String kindhotel,
+	public String ViewHotels(@RequestParam("regionname") String regionname, @RequestParam("kindhotel") String kindhotel,
 			Model model) {
-
 		// MainResponse에 찾아오려는 값이 null이면 오류남
 		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		List<MainResponse> post = mainService.findAllFrom(regionid, kindhotel);
-		model.addAttribute("post", post);
+		List<String> findregionname = mainService.findRegionName();
+	
+		if (findregionname.contains(regionname)) { // region 테이블에 있으면
+			List<MainResponse> post = mainService.findAllFromRegion(regionname, kindhotel);
+			model.addAttribute("post", post);
+		} else {// 없으면
+			List<MainResponse> post = mainService.findAllFromRd(regionname, kindhotel);
+			model.addAttribute("post", post);
+		}
 		return "lists/ViewHotels"; // Main/Hotellist 템플릿을 렌더링
 	}
 
@@ -229,8 +245,21 @@ public class MainController {
 	// 내용 보기 (호텔 상세정보)
 	@GetMapping("/places/View.do")
 	public String openPlaceView(@RequestParam final Long hotelid, Model model, HttpSession session) {
-		MainResponse post = mainService.findPostById(hotelid);
-		session.setAttribute("resentViewHotelid", hotelid);// 최근 본 호텔아이디 세션에 저장해서 이 값이 있을 경우 보여줄 자료 출력
+		MainResponse post = mainService.findById(hotelid);
+		String kindhotel = post.getKindhotel();
+		String kind = "hotel";
+		if (kindhotel.equals("호텔")) {
+			kind = "hotel";
+		} else if (kindhotel.equals("모텔")) {
+			kind = "motel";
+		} else if (kindhotel.equals("펜션")) {
+			kind = "pension";
+		} else if (kindhotel.equals("게스트하우스")) {
+			kind = "guest";
+		}
+		session.setAttribute("resentViewHotelid", hotelid);
+		session.setAttribute("resentViewKindHotel", kindhotel);// 최근 본 호텔아이디 세션에 저장해서 이 값이 있을 경우 보여줄 자료 출력
+		session.setAttribute("rskindbykor", kind);
 		model.addAttribute("post", post);
 		return "places/Viewplace";
 	}
@@ -724,22 +753,18 @@ public class MainController {
 		for (ImageResponse img : imgs) {
 			loadedImgIds.add(img.getImgname());
 		}
-		System.out.println("loadedImgIds : " + loadedImgIds);
 
 		// 받아온 파일의 이름 목록 저장
 		Set<String> uploadedFileNames = new HashSet<>();
 		for (MultipartFile file : multipartFiles) {
 			uploadedFileNames.add(file.getOriginalFilename());
 		}
-		System.out.println("uploadedFileNames : " + uploadedFileNames);
-
 		// loadedImgIds에 있는 id 값과 uploadedFileNames의 id 값 비교 후 없을 시 삭제
 
 		for (ImageResponse img : imgs) {
 			String imgName = img.getImgname();
 			int imgId = img.getImgid();
 			if (!uploadedFileNames.contains(imgName)) { // 이미 불러온 이미지이지만 현재 업로드한 파일과 관련이 없는이미지 처리
-				System.out.println("삭제 : " + imgId);
 				mainService.DelPhotoByimgid(imgId); // 이미지 삭제
 			}
 		}
@@ -748,7 +773,6 @@ public class MainController {
 				try {
 					byte[] imageBytes = file.getBytes();
 					String originalFileName = file.getOriginalFilename();
-					System.out.println(originalFileName + " " + imageBytes); // 이미 불러온 이미지인 경우와 새 이미지인 경우를 구분
 					if (loadedImgIds.contains(originalFileName)) { // 이미 불러온 이미지의 처리
 						System.out.println("스킵! : " + originalFileName);
 					} else { // 새이미지의 처리
@@ -760,7 +784,7 @@ public class MainController {
 				}
 			}
 		}
-		mainService.updateReview(rating1, rating2, rating3, rating4, textData ,reviewid);// 후기 정보 넣기
+		mainService.updateReview(rating1, rating2, rating3, rating4, textData, reviewid);// 후기 정보 넣기
 		return "success";
 	}
 

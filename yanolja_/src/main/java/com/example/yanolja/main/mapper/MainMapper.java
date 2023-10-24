@@ -35,6 +35,8 @@ public interface MainMapper {
 	 */
 	MainResponse findById(Long hotelid);
 
+	List<MainResponse> findPostById(Long hotelid, String kindhotel);
+
 	/**
 	 * 게시글 수정
 	 * 
@@ -253,4 +255,10 @@ public interface MainMapper {
 	void DelPhotoByimgid(int imgid);
 
 	void updateReview(double rating1, double rating2, double rating3, double rating4, String textData, int reviewid);
+
+	List<String> findRegionName();
+
+	List<MainResponse> findAllFromRegion(String regionname, String kindhotel);
+
+	List<MainResponse> findAllFromRd(String regionname, String kindhotel);
 }

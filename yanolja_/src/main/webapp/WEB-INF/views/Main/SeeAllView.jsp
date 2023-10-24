@@ -11,6 +11,12 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 </head>
 <body>
+<script>
+  var jsonData = '${data}'; // JSON 데이터를 그대로 JavaScript 변수에 할당
+  // jsonData를 JavaScript 객체로 파싱
+  var data = JSON.parse(jsonData);
+</script>
+
 	<%@ include file="../../layout/Seeallheader.jsp"%>
 	<div class="wrap">
 		<div class="swiper-bottom">

@@ -17,7 +17,7 @@
 				<span>관심 지역 근처의 구매 많은 순 추천</span>
 			</div>
 			<div class="viewAll">
-				<a href="/ViewAll">전체보기</a>
+				<a id="Viewall">전체보기</a>
 			</div>
 		</div>
 		<div class="wrap">

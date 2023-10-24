@@ -23,6 +23,8 @@ $(document).ready(function() {
  });
 
 function changeHokContent(hokregionid) {
+	
+	console.log("4리스트 내용 콘솔")
 	// AJAX를 사용하여 내용을 동적으로 변경
 	$.ajax({
 		url: 'list', // 변경할 내용을 제공하는 JSP 페이지

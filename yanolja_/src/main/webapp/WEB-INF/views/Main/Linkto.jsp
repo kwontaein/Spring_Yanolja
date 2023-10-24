@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="${path}/css/Main/linkto.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<div class="linkto">
@@ -61,7 +63,27 @@
 				<img src="https://yaimg.yanolja.com/v5/2023/03/27/14/6421aea02596d8.59100852.png" alt="8월혜택모음">
 				<p>8월혜택모음</p>
 			</a>
-
+		</div>
+		<div>
+			<c:if test="${not empty resentViewHotelid}">
+				<div id="Resent"></div>
+				<script>
+					$(document).ready(function() {
+						// AJAX 요청을 만듭니다.
+						$.ajax({
+							url : "/ResentRelated",
+							type : "GET",
+							success : function(data) {
+								// AJAX 요청이 성공하면 응답을 받아서 Resent 요소에 추가합니다.
+								$("#Resent").html(data);
+							},
+							error : function() {
+								console.log("AJAX 요청 실패");
+							}
+						});
+					});
+				</script>
+			</c:if>
 		</div>
 	</div>
 </body>

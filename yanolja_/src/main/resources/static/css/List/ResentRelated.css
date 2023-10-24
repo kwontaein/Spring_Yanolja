@@ -1,0 +1,63 @@
+@charset "UTF-8";
+#hotel_Related{	
+	margin: 20px;
+}
+#Related_listbody{
+	margin: 20px;
+	width: 728px;
+	margin: 0 auto;
+	}
+
+#Related_ulbody{
+	text-align: center;	
+	width: 728px;
+	display: flex;
+	margin: 0;
+    padding: 0;
+	justify-content: space-between;
+}
+#Related_hotellist{
+	width: 140px;
+	text-align: center;
+	list-style: none;
+	margin:0;
+	padding: 0;
+	background-color: white;
+}
+#Related_hotellist>a{
+	width: 140px;
+	text-decoration-line: none;
+  	color: black;
+}
+
+.Related_hotelimg{
+	margin: 0px;		
+}
+.Related_hotelimg{
+	border-radius: 5px;
+	background-image:url(https://yaimg.yanolja.com/v5/2022/08/18/15/640/62fe54bbcc8385.54587766.jpg);
+	 background-size: 100px;
+	 width:140px; 
+	 height:140px;
+}
+
+.Related_content{
+	margin: 10px;	 
+	width: 120px;
+	font-size: 12px;
+}
+
+.info{
+	width: 100%;
+	text-align: left;	
+}
+#Related_hotellist>a>div>div>li>h3{
+	margin: 0;
+	font-size: 14px;
+}
+
+.Related_price{
+	text-align: right;
+	width: 120px;
+	font-size: 16px;
+}

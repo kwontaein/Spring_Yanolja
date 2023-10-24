@@ -10,55 +10,43 @@
 		hotel.hotelname,
 		hotel.hotelcall,
 		hotel.notification,
-		COALESCE((SELECT
-		FORMAT((AVG(Kindness) +
-		AVG(cleanliness) + AVG(convenience) + AVG(Loc_satisfy)) / 4, 1)
+		COALESCE((SELECT FORMAT((AVG(Kindness) +
+		AVG(cleanliness) + AVG(convenience) +
+		AVG(Loc_satisfy)) / 4, 1)
 		FROM
 		review
-		WHERE
-		review.hotelid = hotel.hotelid), 0) as rating,
+		WHERE review.hotelid = hotel.hotelid), 0) as rating,
 		(SELECT
 		COUNT(*)
-		FROM
-		review
-		WHERE
-		review.hotelid = hotel.hotelid) AS reviewcount,
+		FROM review
+		WHERE review.hotelid = hotel.hotelid) AS
+		reviewcount,
 		hotel.kindhotel,
 		hotel.hotelcreate,
 		hotel.hotelmodifed,
 		hotel.status,
-		(SELECT
-		MIN(room.price)
-		FROM
-		room
-		WHERE
-		room.hotelid = hotel.hotelid) AS
-		price,
+		(SELECT MIN(room.price)
+		FROM room
+		WHERE room.hotelid =
+		hotel.hotelid) AS price,
 		(select regionid
 		from region_detail
-		where region_detail_id =
-		(SELECT
-		location.region_detail_id
-		FROM
-		location
+		where
+		region_detail_id =
+		(SELECT location.region_detail_id
+		FROM location
 		WHERE
 		location.hotelid =
 		hotel.hotelid)) as regionid,
 		(SELECT
 		location.region_detail_id
-		FROM
-		location
-		WHERE
-		location.hotelid =
+		FROM location
+		WHERE location.hotelid =
 		hotel.hotelid) AS regiondetail,
-		(SELECT
-		location.roadloc
-		FROM
-		location
-		WHERE
-		location.hotelid =
-		hotel.hotelid) AS
-		roadloc
+		(SELECT location.roadloc
+		FROM location
+		WHERE location.hotelid =
+		hotel.hotelid) AS roadloc
 	</sql>
 	<sql id="GenerateDateRange">
 		DELIMITER $$
@@ -108,7 +96,9 @@
 		, #{status}
 		)
 	</insert>
-
+	<select id="findRegionName">
+		select regionName from region
+	</select>
 	<!--상세정보 조회 -->
 	<select id="findById" parameterType="long"
 		resultType="com.example.yanolja.main.post.MainResponse">
@@ -120,6 +110,20 @@
 		hotelid = #{value}
 	</select>
 
+	<select id="findPostById" parameterType="long"
+		resultType="com.example.yanolja.main.post.MainResponse">
+		SELECT
+		<include refid="postColumns" />
+		FROM
+		hotel
+		WHERE kindhotel = '${kindhotel}' and hotel.hotelid IN (SELECT
+		hotelid FROM location WHERE
+		region_detail_id =
+		(SELECT region_detail_id
+		FROM location WHERE hotelid = #{hotelid}))
+
+	</select>
+
 	<!--호텔아이디 조회 -->
 	<select id="findHotelId">
 		SELECT
@@ -129,6 +133,7 @@
 		WHERE
 		roomid = #{roomid}
 	</select>
+
 	<!--수정 -->
 	<update id="update"
 		parameterType="com.example.yanolja.main.post.MainRequest">
@@ -178,6 +183,49 @@
 		location
 		WHERE
 		location.hotelid = hotel.hotelid)) = #{regionid} and
+		kindhotel =
+		#{kindhotel}
+	</select>
+
+	<!-- 호텔 조회 -->
+	<select id="findAllFromRegion"
+		resultType="com.example.yanolja.main.post.MainResponse">
+		SELECT
+		<include refid="postColumns" />
+		FROM hotel where (select regionName from region where regionid =
+		(select regionid
+		from region_detail
+		where
+		region_detail_id = (SELECT
+		location.region_detail_id
+		FROM
+		location
+		WHERE
+		location.hotelid =
+		hotel.hotelid))) = #{regionname} and
+		kindhotel =
+		#{kindhotel}
+	</select>
+
+	<!-- 호텔 조회 -->
+	<select id="findAllFromRd"
+		resultType="com.example.yanolja.main.post.MainResponse">
+		SELECT
+		<include refid="postColumns" />
+		FROM hotel
+		where (select
+		region_detail_name
+		from region_detail
+		where
+		region_detail_id =
+		(SELECT
+		region_detail_id
+		FROM
+		location
+		WHERE
+		location.hotelid =
+		hotel.hotelid)) =
+		#{regionname} and
 		kindhotel =
 		#{kindhotel}
 	</select>

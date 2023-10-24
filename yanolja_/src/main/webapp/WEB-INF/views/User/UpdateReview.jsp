@@ -122,7 +122,8 @@
 	            processData: false,
 	            contentType: false,
 	            success: function(data) {
-	                console.log(data);
+	            	alert("수정완료");
+	                window.history.back();
 	            },
 	            error: function(error) {
 	                console.error(error);

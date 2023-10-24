@@ -28,6 +28,27 @@
 			</c:when>
 		</c:choose>
 		<%@ include file="../ads/ad3.jsp"%>
+		<div>
+			<c:if test="${not empty resentViewHotelid && rskindbykor eq kind}">
+				<div id="Resent"></div>
+				<script>
+					$(document).ready(function() {
+						// AJAX 요청을 만듭니다.
+						$.ajax({
+							url : "/ResentRelated",
+							type : "GET",
+							success : function(data) {
+								// AJAX 요청이 성공하면 응답을 받아서 Resent 요소에 추가합니다.
+								$("#Resent").html(data);
+							},
+							error : function() {
+								console.log("AJAX 요청 실패");
+							}
+						});
+					});
+				</script>
+			</c:if>
+		</div>
 		<%@ include file="./sub_slide.jsp"%>
 		<%@ include file="./list/4list.jsp"%>
 		<%@ include file="./list/4list2.jsp"%>

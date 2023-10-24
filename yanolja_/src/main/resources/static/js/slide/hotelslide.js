@@ -1,7 +1,12 @@
-/**
- * 
- */
-var text = ['서울 호텔', '경기도 호텔', '강원도 호텔', '인천 호텔'];
+var data = {
+	location: ['서울', '경기도', '강원도', '인천'],
+	kindhotels: ['호텔', '호텔', '호텔', '호텔']
+};
+var text = [];
+for (var i = 0; i < 4; i++) {
+	text[i] = [data.location[i] + " " + data.kindhotels[i]]
+};
+console.log(text);
 var bottomSwiper = new Swiper('.swiper-bottom', {
 	slidesPerView: '1',
 	autoHeight: true,
@@ -16,6 +21,21 @@ var bottomSwiper = new Swiper('.swiper-bottom', {
 		},
 	},
 });
+
+
+// JSON 문자열로 변환
+var jsonData = JSON.stringify(data);
+
+// encodeURIComponent를 사용하여 URL에 적합한 형태로 인코딩
+var encodedData = encodeURIComponent(jsonData);
+
+$('#Viewall').click(function() {
+	// location.href로 전송
+	console.log("encodedData" + encodedData);
+	debugger;
+	window.location.href = '/ViewAll?data=' + encodedData;
+	
+})
 
 // 초기 상태에서 슬라이드 내용 로드
 includeFile('Hotellist', 1, '호텔');

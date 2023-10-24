@@ -15,6 +15,7 @@ includeFile('Tophotellist2', 'includedContent2'); // 두 번째 슬라이드
 includeFile('Tophotellist3', 'includedContent3'); // 세 번째 슬라이드
 
 function includeFile(filePath, slideId) {
+	console.log("숙소구매 top 부분 콘솔")
 	$.ajax({
 		url: filePath,
 		method: "GET",

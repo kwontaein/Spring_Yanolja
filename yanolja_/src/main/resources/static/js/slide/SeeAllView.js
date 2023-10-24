@@ -32,7 +32,14 @@ $(document).ready(function() {  // 세션 값을 JavaScript 변수에 할당
 	calendarAjax();
 });
 
-var text = ['서울 호텔', '경기도 호텔', '강원도 호텔', '인천 호텔'];
+var text = [];
+
+for (var i = 0; i < data.location.length; i++) {
+	text[i] = [data.location[i] + " " + data.kindhotels[i]]
+	// 초기 상태에서 슬라이드 내용 로드
+	includeFile('ViewHotels', data.location[i], data.kindhotels[i], i); // i를 넘겨줍니다.
+};
+
 var bottomSwiper = new Swiper('.swiper-bottom', {
 	slidesPerView: '1',
 	autoHeight: true,
@@ -41,35 +48,27 @@ var bottomSwiper = new Swiper('.swiper-bottom', {
 		clickable: true,
 		bulletClass: "custom_bullet",
 		bulletActiveClass: "swiper-pagination-custom-bullet-active",
-		renderBullet: function(index, className) {
-			return '<div class="' + className + '"><span>'
-				+ (text[index]) + '</span></div>';
-		},
+		renderBullet:
+			function(index, className) {
+				if (text[index] != null && className != null)
+					return '<div class="' + className + '"><span>' + (text[index]) + '</span></div>';
+				else
+					return '';
+			},
 	},
 });
 
-// 초기 상태에서 슬라이드 내용 로드
-includeFile('ViewHotels', 1, '호텔');
-includeFile('ViewHotels', 2, '호텔');
-includeFile('ViewHotels', 3, '호텔');
-includeFile('ViewHotels', 4, '호텔');
 
-// 페이지 버튼 클릭 이벤트 처리
-$('.swiper-pagination-custom-bullet').click(function() {
-	var index = $(this).index() + 1; // 페이지 번호는 1부터 시작
-	includeFile('ViewHotels', index, '호텔');
-});
-
-function includeFile(filePath, regionid, kindhotel) {
+function includeFile(filePath, regionname, kindhotel, index) {
 	$.ajax({
 		url: filePath,
 		method: "GET",
 		data: {
-			regionid: regionid,
+			regionname: regionname,
 			kindhotel: kindhotel
 		},
 		success: function(response) {
-			var slideId = "#includedContent" + regionid;
+			var slideId = "#includedContent" + (index + 1);
 			$(slideId).html(response);
 		},
 		error: function() {
@@ -91,7 +90,7 @@ $('#datemodal').click(function() {
 	$('body').css({
 		'overflow': 'hidden'
 	});
-	
+
 	$('.wrap').css({
 		'z-index': '0'
 	});

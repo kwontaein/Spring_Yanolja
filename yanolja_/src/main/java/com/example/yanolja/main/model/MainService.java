@@ -46,8 +46,12 @@ public class MainService {
 	 * @param id - PK
 	 * @return 호텔 상세정보
 	 */
-	public MainResponse findPostById(final Long hotelid) {
+	public MainResponse findById(final Long hotelid) {
 		return mainMapper.findById(hotelid);
+	}
+
+	public List<MainResponse> findPostById(final Long hotelid, String kindhotel) {
+		return mainMapper.findPostById(hotelid, kindhotel);
 	}
 
 	/**
@@ -79,16 +83,34 @@ public class MainService {
 	 * @return 호텔 리스트
 	 */
 	public List<MainResponse> findAllFrom(int regionid, String kindhotel) {
-		return mainMapper.findAllFrom(regionid, kindhotel);
+		String kind = kind_name(kindhotel);
+		return mainMapper.findAllFrom(regionid, kind);
 	}
-
+	/**
+	 * 호텔 리스트 조회
+	 * 
+	 * @return 호텔 리스트
+	 */
+	public List<MainResponse> findAllFromRegion(String regionname, String kindhotel) {
+		String kind = kind_name(kindhotel);
+		return mainMapper.findAllFromRegion(regionname, kindhotel);
+	}	/**
+	 * 호텔 리스트 조회
+	 * 
+	 * @return 호텔 리스트
+	 */
+	public List<MainResponse> findAllFromRd(String regionname, String kindhotel) {
+		String kind = kind_name(kindhotel);
+		return mainMapper.findAllFromRd(regionname, kindhotel);
+	}
 	/**
 	 * 호텔 리스트 조회
 	 * 
 	 * @return 호텔 리스트
 	 */
 	public List<MainResponse> TofindByKind(String kindhotel) {
-		return mainMapper.TofindByKind(kindhotel);
+		String kind = kind_name(kindhotel);
+		return mainMapper.TofindByKind(kind);
 	}
 
 	/**
@@ -97,7 +119,23 @@ public class MainService {
 	 * @return 호텔 리스트
 	 */
 	public List<MainResponse> TofindByKindDesc(String kindhotel) {
-		return mainMapper.TofindByKindDesc(kindhotel);
+		String kind = kind_name(kindhotel);
+		return mainMapper.TofindByKindDesc(kind);
+	}
+
+	// 이름 반환 메소드
+	public String kind_name(String kindhotel) {
+		String kind = "호텔";
+		if (kindhotel.equals("hotel")) {
+			kind = "호텔";
+		} else if (kindhotel.equals("motel")) {
+			kind = "모텔";
+		} else if (kindhotel.equals("pension")) {
+			kind = "펜션";
+		} else if (kindhotel.equals("familly")) {
+			kind = "게스트하우스";
+		}
+		return kind;
 	}
 
 	/**
@@ -298,10 +336,12 @@ public class MainService {
 		// TODO Auto-generated method stub
 		mainMapper.saveImage(hotelid, currentReviewid, originalFileName, imageBytes, userid);
 	}
+
 	public void DelPhotoByimgid(int imgid) {
 		// TODO Auto-generated method stub
 		mainMapper.DelPhotoByimgid(imgid);
 	}
+
 	public void updateImage(String originalFileName, byte[] imageBytes, int reviewid, int userid) {
 		// TODO Auto-generated method stub
 		mainMapper.updateImage(originalFileName, imageBytes, reviewid, userid);
@@ -341,7 +381,13 @@ public class MainService {
 
 	public void updateReview(double rating1, double rating2, double rating3, double rating4, String textData,
 			int reviewid) {
-		mainMapper.updateReview(rating1,rating2,rating3,rating4,textData,reviewid);
-		
+		mainMapper.updateReview(rating1, rating2, rating3, rating4, textData, reviewid);
+
 	}
+
+	public List<String> findRegionName() {
+		// TODO Auto-generated method stub
+		return mainMapper.findRegionName();
+	}
+
 }

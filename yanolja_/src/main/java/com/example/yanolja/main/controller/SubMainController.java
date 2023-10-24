@@ -22,51 +22,16 @@ public class SubMainController {
 
 	String kindhotel;
 
-	@GetMapping("/motel")
-	public String motellist(Model model) {
-
-		// MainResponse에 찾아오려는 값이 null이면 오류남
-		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		kindhotel = "모텔";
-		List<MainResponse> post = mainService.TofindByKind(kindhotel);
+	@GetMapping("/{kind}")
+	public String List(@PathVariable String kind, Model model) {
+		// kind 변수는 요청 경로에서 추출된 호텔 종류입니다.
+		// 이를 사용하여 서비스 메서드를 호출하고 모델에 데이터를 추가합니다.
+		kindhotel = kind;
+		List<MainResponse> post = mainService.TofindByKind(kind);
 		model.addAttribute("post", post);
-		model.addAttribute("kind", "motel");
-		return "SubMain/sub_main"; // Main/Hotellist 템플릿을 렌더링
-	}
+		model.addAttribute("kind", kind);
 
-	@GetMapping("/hotel")
-	public String Hotellist(Model model) {
-
-		// MainResponse에 찾아오려는 값이 null이면 오류남
-		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		// 호텔 인기순으로 바꿀 예정
-		kindhotel = "호텔";
-		List<MainResponse> post = mainService.TofindByKind(kindhotel);
-		model.addAttribute("post", post);
-		model.addAttribute("kind", "hotel");
-		return "SubMain/sub_main"; // Main/Hotellist 템플릿을 렌더링
-	}
-
-	@GetMapping("/pension")
-	public String pensionlist(Model model) {
-
-		// MainResponse에 찾아오려는 값이 null이면 오류남
-		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		kindhotel = "펜션";
-		List<MainResponse> post = mainService.TofindByKind(kindhotel);
-		model.addAttribute("post", post);
-		model.addAttribute("kind", "pension");
-		return "SubMain/sub_main"; // Main/Hotellist 템플릿을 렌더링
-	}
-
-	@GetMapping("/familly")
-	public String famillylist(Model model) {
-		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		kindhotel = "게스트하우스";
-		List<MainResponse> post = mainService.TofindByKind(kindhotel);
-		model.addAttribute("post", post);
-		model.addAttribute("kind", "guest");
-		return "SubMain/sub_main"; // Main/Hotellist 템플릿을 렌더링
+		return "SubMain/sub_main";
 	}
 
 	@GetMapping("/list")
@@ -89,7 +54,8 @@ public class SubMainController {
 	}
 
 	@GetMapping("/selectlocation")
-	public String selectlocation(@RequestParam("selectedText") String selectedText) {
+	public String selectlocation(@RequestParam("selectedText") String selectedText, Model model) {
+		model.addAttribute("kind", kindhotel);
 		if (selectedText.equals("서울")) {
 			return "SubMain/locationlist/seoul";
 		} else if (selectedText.equals("부산")) {

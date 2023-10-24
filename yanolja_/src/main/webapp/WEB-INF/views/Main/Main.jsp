@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>다놀자</title>
+<title>다놀자 ${resentViewHotelid}</title>
 <link rel="stylesheet" href="${path}/css/Main/Main.css" />
 </head>
 <body>
