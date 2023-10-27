@@ -277,7 +277,8 @@
 						<div class="infotitle">이용자 정보*</div>
 						<div class="title_info">상품 이용 시 필요한 필수 정보입니다</div>
 						<div class="sameperson">
-							<input id="samePersonCheckbox" type="checkbox" onclick="handleCheckboxChange()">&nbsp;예약자 정보와 동일합니다
+							<input id="samePersonCheckbox" type="checkbox" onclick="handleCheckboxChange()">
+							&nbsp;예약자 정보와 동일합니다
 						</div>
 						<div class="name">
 							<div>성명</div>
@@ -294,6 +295,21 @@
 						<div class="relax">입력하신 번호는 안심번호로 변경되어 숙소에 전달됩니다. 단, 안심번호로 처리가 어려운 경우에 한해 제한적으로 개인정보 제공 동의에 근거하여 실제 휴대폰번호가 전달 될 수 있습니다.</div>
 					</div>
 					<div class="infoContatiner">
+						<div class="discount">
+							<div class="infotitle">할인</div>
+							<div class="selectdiscount" id="selectdiscount">
+								<span>
+									<input type="radio">
+									쿠폰 할인
+								</span>
+								<div>
+									<span>적용 가능한 할인 보기 </span>
+									<span>&gt; </span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="infoContatiner">
 						<div class="infotitle">결제 금액</div>
 						<div class="bill">
 							<span>상품 금액</span>
@@ -307,7 +323,7 @@
 										<span>로그인 후 사용 가능</span>
 									</c:when>
 									<c:otherwise>
-										<span>?원</span>
+										<span>0원</span>
 									</c:otherwise>
 								</c:choose>
 							</div>
@@ -318,7 +334,7 @@
 										<span>로그인 후 사용 가능</span>
 									</c:when>
 									<c:otherwise>
-										<span>?원</span>
+										<span>0원</span>
 									</c:otherwise>
 								</c:choose>
 							</div>
@@ -424,23 +440,29 @@
 						</ul>
 						<div>
 							<div class="agreetitle">
-								<input type="checkbox" name="agreedall" value='selectall' onclick='selectAll(this)'>필수 약관 전체 동의
+								<input type="checkbox" name="agreedall" value='selectall' onclick='selectAll(this)'>
+								필수 약관 전체 동의
 							</div>
 							<div class="agree">
-								<input type="checkbox" name="agreed" value="require1" onchange="checkAgreements()">[필수] 1
+								<input type="checkbox" name="agreed" value="require1" onchange="checkAgreements()">
+								[필수] 1
 							</div>
 							<div class="agree">
-								<input type="checkbox" name="agreed" value="require2" onchange="checkAgreements()">[필수] 2
+								<input type="checkbox" name="agreed" value="require2" onchange="checkAgreements()">
+								[필수] 2
 							</div>
 							<c:if test="${empty username}">
 								<div class="agree">
-									<input type="checkbox" name="agreed" value="require3" onchange="checkAgreements()">[필수] 3
+									<input type="checkbox" name="agreed" value="require3" onchange="checkAgreements()">
+									[필수] 3
 								</div>
-								<div class="selectagree">
-									<input type="checkbox" name="agreed" value="norequire4">[선택] 4
+								<div class="agree">
+									<input type="checkbox" name="agreed" value="norequire4">
+									[선택] 4
 								</div>
-								<div class="selectagree">
-									<input type="checkbox" name="agreed" value="norequire5">[선택] 5
+								<div class="agree">
+									<input type="checkbox" name="agreed" value="norequire5">
+									[선택] 5
 								</div>
 							</c:if>
 						</div>
@@ -459,7 +481,6 @@
 									var username = usernameInput.value;
 									var userPhone = userphoneInput.value;
 
-									
 									var roomData = {};
 
 									<c:choose>
@@ -500,6 +521,7 @@
 			</div>
 		</div>
 	</div>
+	<%@include file="./couponModal.jsp" %>
 	<div id="myModal" class="modal">
 		<div class="modal-content">
 			<div class="modalinfo">

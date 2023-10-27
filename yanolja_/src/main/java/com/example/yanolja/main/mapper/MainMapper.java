@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.yanolja.main.post.BookResponse;
+import com.example.yanolja.main.post.CouponResponse;
 import com.example.yanolja.main.post.FacilityResponse;
 import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.InfoResponse;
@@ -261,4 +262,14 @@ public interface MainMapper {
 	List<MainResponse> findAllFromRegion(String regionname, String kindhotel);
 
 	List<MainResponse> findAllFromRd(String regionname, String kindhotel);
+
+	void insertLike(int hotelid, int userid);
+
+	int selectLike(int hotelid, int userid);
+
+	void deleteLike(int hotelid, int userid);
+
+	List<MainResponse> Likehotels(int userid);
+
+	List<CouponResponse> selectcoupon(int userid);
 }

@@ -27,6 +27,7 @@ function toggleCheckboxes(checkbox) {
 	// totalPrice를 HTML 요소에 출력
 	document.getElementById('expected_price').textContent = totalPrice + "원"; //결과를 원하는 DOM 요소에 표시
 	document.getElementById('expected_price2').textContent = totalPrice + "원"; //결과를 원하는 DOM 요소에 표시
+	document.getElementById('final_price').textContent = totalPrice + "원"; //결과를 원하는 DOM 요소에 표시
 
 	// 'reserve' ID를 가진 요소에 스타일을 변경
 	var reserveElement = document.getElementById('reserve');

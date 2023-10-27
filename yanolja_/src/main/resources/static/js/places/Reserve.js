@@ -68,6 +68,57 @@ function closeModal() {
 	modal.style.display = "none";
 }
 
+// 모달 열기
+function openCModal() {
+	var modal = document.getElementById("couponModal");
+	modal.style.display = "block";
+	document.body.style.overflow = "hidden";
+}
+
+// 모달 닫기
+function closeCModal() {
+	var modal = document.getElementById("couponModal");
+	modal.style.display = "none";
+	document.body.style.overflow = "auto";
+}
+
+// 모달 열기
+function openCcModal() {
+	var modal = document.getElementById("couponchild");
+	modal.style.display = "block";
+}
+
+// 모달 닫기
+function closeCcModal() {
+	var modal = document.getElementById("couponchild");
+	modal.style.display = "none";
+}
+
+//라디오 체크 값에 따라 다르게
+function showSelectedValue(radio) {
+	var useCoupon = document.getElementById("choose_coupon");
+	if (radio.value == 'select') {
+		useCoupon.style.display = "flex";
+	} else {
+		useCoupon.style.display = "none";
+	}
+	useCoupon.addEventListener('click', function() {
+		openCcModal();
+	});
+}
+
+function showSelectedValues(radio, index) {
+	var useCoupon = document.getElementById("choose_coupon" + index);
+	if (radio.value == 'select' + index) {
+		useCoupon.style.display = "flex";
+	} else {
+		useCoupon.style.display = "none";
+	}
+	useCoupon.addEventListener('click', function() {
+		openCcModal();
+	});
+}
+
 // 결제 성공 메시지 표시 및 모달 열기
 function displayPaymentSuccessMessage() {
 	openModal(); // 모달 열기
@@ -109,6 +160,14 @@ function payAgree() {
 
 $(document).ready(
 	function() {
+
+		const coupon = document.getElementById('selectdiscount');
+
+		// 클릭 이벤트를 추가
+		coupon.addEventListener('click', function() {
+			openCModal();
+		});
+
 		checkAgreements();
 		// 체크박스 요소 가져오기
 		const samePersonCheckbox = document.getElementById('samePersonCheckbox');

@@ -73,6 +73,7 @@ body{
 }
 .hotelcontent{
 	padding: 20px 0;
+	min-width: 340px;
 }
 .hotelname{
 	font-weight: bold;
@@ -413,4 +414,113 @@ body{
 	width: 100%;
 }.cancel{
 	color: black;
+}
+.selectdiscount{
+	display: flex;
+	justify-content: space-between;
+	background-color: #f2f2f2;
+	padding: 20px;
+	border: #919191 1px solid; 
+	border-radius: 5px;
+}
+
+/* 모달 스타일 */
+.couponModal {
+  display: none; /* 초기에는 숨김 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.couponModal-content {
+  width: 100%;
+  height: 100%;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.coupon_header{
+	background-color: white;
+	display: flex;
+	justify-content: center;
+}
+.coupon_header2{
+	height: 48px;
+	width: 768px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.coupon_container{
+	display: flex;
+	justify-content: center;
+	height: 100%;
+}
+.coupon_wrapper{
+	padding: 20px;
+	background-color: white;
+	width: 728px;
+}
+.coupon_hotel{
+	width: 686px;
+	height: 188px;
+	padding: 20px;
+	border: 1px solid black;
+	display: flex;
+}
+.select_coupon{
+	display:flex;	width: 320px;
+	padding-left: 20px;
+}
+.select_coupon>div>div{
+	margin-top: 10px;
+}
+.coupon_selected{width: 320px;
+	display: flex;
+	justify-content: space-between;	
+}
+.choose_coupon{
+	border: 1px solid black;
+	background-color: #f2f2f2;
+	padding: 10px;
+	display: none;
+	justify-content: space-between;
+}
+
+
+.coupon_child_modal {
+  display: none; /* 초기에는 숨김 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.coupon_child_content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.cc_wrapper{
+	width: 688px;
+	padding: 20px;	display: grid;
+	grid : 'a b' 
+			'c d'
+			'e f' /1fr 1fr;	
+}
+.close{
+	font-size: 40px;
+}
+.cc_info{
+
 }

@@ -36,10 +36,17 @@
 							</a>
 						</c:otherwise>
 					</c:choose>
-					<a href="/Mybenefit" class="Mybenefit">
-						<div class="myevent">
-							<span>MY 혜택</span>
-						</div>
+					<c:choose>
+						<c:when test="${empty username}">
+							<a href="/tologin" class="Mybenefit">
+						</c:when>
+						<c:otherwise>
+							<a href="/Mybenefit" class="Mybenefit">
+						</c:otherwise>
+					</c:choose>
+					<div class="myevent">
+						<span>MY 혜택</span>
+					</div>
 					</a>
 				</div>
 
@@ -58,7 +65,7 @@
 								<c:set var="urlPrefix2" value="/Coin" />
 								<c:set var="urlPrefix3" value="/coupon" />
 								<c:set var="urlPrefix4" value="/myreview" />
-								<c:set var="urlPrefix5" value="/like" />
+								<c:set var="urlPrefix5" value="/Like_hotel" />
 							</c:otherwise>
 						</c:choose>
 						<li class="a"><a href="${urlPrefix1}">

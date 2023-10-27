@@ -8,9 +8,37 @@
 <link rel="stylesheet" href="${path}/css/places/Viewplace.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=k0qbrv0plh&submodules=geocoder"></script>
-
 </head>
 <body>
+	<script type="text/javascript">
+	$(document).ready(
+			function() {
+				const like=document.getElementById('like');
+				like.addEventListener('click',function(){
+					if(${userid} !== null){
+						$.ajax({
+							url: '/Like_hotel.do', // 서버의 엔드포인트 URL
+							method: 'post',     // HTTP GET 요청
+							data:{
+								hotelid : ${post.hotelid},
+								userid : ${userid}
+							},
+							success: function(data) {
+								// 서버로부터 받은 데이터를 화면에 표시
+								alert(data);
+							},
+							error: function() {
+								// 에러 처리
+								alert("에러");
+							}
+						});
+					}else{
+						windows.loaction.href="/tologin"
+					}
+					
+				});
+	});
+</script>
 	<c:set var="isViewplace" value="${pageName == 'Viewplace'}" />
 	<%@include file="../../layout/placeHeader.jsp"%>
 	<div class="ViewplaceContainer">
@@ -24,7 +52,7 @@
 							<b>${post.hotelname}</b>
 						</div>
 						<div class="interact">
-							<div>찜</div>
+							<div id="like">찜</div>
 							<div>공유</div>
 						</div>
 					</div>

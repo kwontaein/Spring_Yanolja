@@ -44,25 +44,48 @@ public class UserController {
 	private String emailForVerification; // email 값을 저장할 변수
 	private String receivedPassword; // 비밀번호를 저장할 변수
 
+//마이페이지 관련 --------------------------------------------------------------------------	
+	@RequestMapping("/mypage")
+	public String myPage() {
+		return "User/Mypage";
+	}
+
+	// 내 리뷰목록
+	@GetMapping("/myreview")
+	public String Myreview(HttpSession session, Model model) {
+		// username 세션에서 가져와서 검색
+		// 내가 쓴 리뷰 목록 가져오는 코드 추가
+		int userid = (int) session.getAttribute("userid");
+		List<ReviewResponse> review = userService.UserByreview(userid);
+		List<ImageResponse> img = userService.reviewUserPhotos(userid);
+		int room_cnt = userService.UserByCnt(userid);
+
+		model.addAttribute("room_cnt", room_cnt);
+		model.addAttribute("review", review);
+		model.addAttribute("img", img);
+		return "User/UserOption/MyReview";
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "/";
+	}
+
+	@GetMapping("/Mybenefit")
+	public String Mybenefit(HttpSession session) {
+		session.invalidate();
+		return "User/UserOption/Mybenefit";
+	}
+	
+	
+	// 로그인 방법 선택
 	@GetMapping("/tologin")
 	public String tologin(Model model) {
 		model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
 		return "User/tologin";
 	}
-
-	// 목록 조회 (호텔 조회)
-	// 이메일 인증
-	@GetMapping("/mailCheck")
-	@ResponseBody
-	public String mailCheck(@RequestParam String email) {
-		System.out.println("이메일 인증 요청이 들어옴!");
-		System.out.println("이메일 인증 이메일 : " + email);
-		// email 값을 클래스 레벨 변수에 저장
-		this.emailForVerification = email;
-
-		return mailService.joinEmail(email);
-	}
-
+//로그인----------------------------------------------------------------------------------------------------------
 	// 로그인 폼
 	@GetMapping("/login")
 	public String login(Model model, @RequestParam(value = "error", required = false) String error,
@@ -91,41 +114,7 @@ public class UserController {
 		return "redirect:/";
 	}
 
-	// 아이디 중복 확인
-	@RequestMapping("/emailCheck")
-	// value값을 주지 않으면 하위 메소드에 getmapping,postmapping등의 어노테이션을 써서 표현 가능
-	@ResponseBody // ajax 값을 jsp로 바로 보내기위해 사용
-	public String emaildupcheck(@RequestParam("email") String email) throws Exception {
-		String result = "N";
-		// 기본값 n
-		int flag = userService.emaildupcheck(email);
-		System.out.println(email);
-		// 이메일 검사
-		if (flag == 1)
-			result = "Y";
-		// 아이디가 있을시 Y 없을시 N 으로 jsp view 에 값을 보냄
-		return result;
-	}
-
-	@RequestMapping("/mypage")
-	public String myPage() {
-		return "User/Mypage";
-	}
-
-	@GetMapping("/myreview")
-	public String Myreview(HttpSession session, Model model) {
-		// username 세션에서 가져와서 검색
-		// 내가 쓴 리뷰 목록 가져오는 코드 추가
-		int userid = (int) session.getAttribute("userid");
-		List<ReviewResponse> review = userService.UserByreview(userid);
-		List<ImageResponse> img = userService.reviewUserPhotos(userid);
-		int room_cnt = userService.UserByCnt(userid);
-
-		model.addAttribute("room_cnt", room_cnt);
-		model.addAttribute("review", review);
-		model.addAttribute("img", img);
-		return "User/UserOption/MyReview";
-	}
+//회원가입 ----------------------------------------------------------------------------
 
 	// 회원가입 폼
 	@GetMapping("/register")
@@ -148,6 +137,34 @@ public class UserController {
 		return "redirect:/login";
 	}
 
+	// 이메일 인증
+	@GetMapping("/mailCheck")
+	@ResponseBody
+	public String mailCheck(@RequestParam String email) {
+		System.out.println("이메일 인증 요청이 들어옴!");
+		System.out.println("이메일 인증 이메일 : " + email);
+		// email 값을 클래스 레벨 변수에 저장
+		this.emailForVerification = email;
+
+		return mailService.joinEmail(email);
+	}
+
+	// 아이디 중복 확인
+	@RequestMapping("/emailCheck")
+	// value값을 주지 않으면 하위 메소드에 getmapping,postmapping등의 어노테이션을 써서 표현 가능
+	@ResponseBody // ajax 값을 jsp로 바로 보내기위해 사용
+	public String emaildupcheck(@RequestParam("email") String email) throws Exception {
+		String result = "N";
+		// 기본값 n
+		int flag = userService.emaildupcheck(email);
+		System.out.println(email);
+		// 이메일 검사
+		if (flag == 1)
+			result = "Y";
+		// 아이디가 있을시 Y 없을시 N 으로 jsp view 에 값을 보냄
+		return result;
+	}
+
 	// 회원가입 폼2
 	@GetMapping("/register2")
 	public String registerForm2() {
@@ -168,9 +185,5 @@ public class UserController {
 		return "User/UserOption/Setting";
 	}
 
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "/";
-	}
+	
 }

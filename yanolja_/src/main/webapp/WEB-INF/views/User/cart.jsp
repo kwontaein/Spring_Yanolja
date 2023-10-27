@@ -30,7 +30,8 @@
 				</div>
 				<div class="btm">
 					<div>
-						<input type="checkbox" id="selectAll" onclick='toggleCheckboxes(this)'>전체 선택 (
+						<input type="checkbox" id="selectAll" onclick='toggleCheckboxes(this)'>
+						전체 선택 (
 						<span id="choice_cnt">0</span>
 						/
 						<span id="cnt_cart"></span>
@@ -178,27 +179,27 @@
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<c:if test="${Cartroom != null}">
 
-			</c:if>
 		</div>
 	</div>
-	<footer class="footer">
-		<div class="footcontent">
-			<div class="footerprice">
-				<div>
-					총
-					<span id="cnt_pay"></span>
-					건
+	<c:if test="${Cartroom != null}">
+		<footer class="footer">
+			<div class="footcontent">
+				<div class="footerprice">
+					<div>
+						총
+						<span id="cnt_pay"></span>
+						건
+					</div>
+					<div class="final_pay">
+						<span>결제 예상 금액®&nbsp;</span>
+						<div style="font-size: 20px;" id="final_price"></div>
+					</div>
 				</div>
-				<div class="final_pay">
-					<span>결제 예상 금액®&nbsp;</span>
-					<div style="font-size: 20px;">0원</div>
-				</div>
+				<div class="reserve" id="reserve">예약하기</div>
+				<div class="more" id="seebottom">(주)야놀자는 통신판매중개업자로서, 통신판매의 당사자가 아니라는 사실을 고지하며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.</div>
 			</div>
-			<div class="reserve" id="reserve">예약하기</div>
-			<div class="more" id="seebottom">(주)야놀자는 통신판매중개업자로서, 통신판매의 당사자가 아니라는 사실을 고지하며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.</div>
-		</div>
-	</footer>
+		</footer>
+	</c:if>
 </body>
 </html>

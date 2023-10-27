@@ -1,6 +1,5 @@
 package com.example.yanolja.main.model;
 
-import java.awt.Image;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.yanolja.main.mapper.MainMapper;
 import com.example.yanolja.main.post.BookResponse;
+import com.example.yanolja.main.post.CouponResponse;
 import com.example.yanolja.main.post.FacilityResponse;
 import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.InfoResponse;
@@ -28,24 +28,12 @@ public class MainService {
 	@Autowired
 	private final MainMapper mainMapper = null;
 
-	/**
-	 * 호텔 저장
-	 * 
-	 * @param params - 호텔 정보
-	 * @return Generated PK
-	 */
 	@Transactional
 	public Long savePost(final MainRequest params) {
 		mainMapper.save(params);
 		return params.getHotelid();
 	}
 
-	/**
-	 * 호텔 상세정보 조회
-	 * 
-	 * @param id - PK
-	 * @return 호텔 상세정보
-	 */
 	public MainResponse findById(final Long hotelid) {
 		return mainMapper.findById(hotelid);
 	}
@@ -54,70 +42,37 @@ public class MainService {
 		return mainMapper.findPostById(hotelid, kindhotel);
 	}
 
-	/**
-	 * 호텔 수정
-	 * 
-	 * @param params - 호텔 정보
-	 * @return PK
-	 */
 	@Transactional
 	public Long updatePost(final MainRequest params) {
 		mainMapper.update(params);
 		return params.getHotelid();
 	}
 
-	/**
-	 * 호텔 삭제
-	 * 
-	 * @param id - PK
-	 * @return PK
-	 */
 	public Long deletePost(final Long hotelid) {
 		mainMapper.deleteById(hotelid);
 		return hotelid;
 	}
 
-	/**
-	 * 호텔 리스트 조회
-	 * 
-	 * @return 호텔 리스트
-	 */
 	public List<MainResponse> findAllFrom(int regionid, String kindhotel) {
 		String kind = kind_name(kindhotel);
 		return mainMapper.findAllFrom(regionid, kind);
 	}
-	/**
-	 * 호텔 리스트 조회
-	 * 
-	 * @return 호텔 리스트
-	 */
+
 	public List<MainResponse> findAllFromRegion(String regionname, String kindhotel) {
 		String kind = kind_name(kindhotel);
 		return mainMapper.findAllFromRegion(regionname, kindhotel);
-	}	/**
-	 * 호텔 리스트 조회
-	 * 
-	 * @return 호텔 리스트
-	 */
+	}
+
 	public List<MainResponse> findAllFromRd(String regionname, String kindhotel) {
 		String kind = kind_name(kindhotel);
 		return mainMapper.findAllFromRd(regionname, kindhotel);
 	}
-	/**
-	 * 호텔 리스트 조회
-	 * 
-	 * @return 호텔 리스트
-	 */
+
 	public List<MainResponse> TofindByKind(String kindhotel) {
 		String kind = kind_name(kindhotel);
 		return mainMapper.TofindByKind(kind);
 	}
 
-	/**
-	 * 호텔 리스트 조회
-	 * 
-	 * @return 호텔 리스트
-	 */
 	public List<MainResponse> TofindByKindDesc(String kindhotel) {
 		String kind = kind_name(kindhotel);
 		return mainMapper.TofindByKindDesc(kind);
@@ -138,47 +93,22 @@ public class MainService {
 		return kind;
 	}
 
-	/**
-	 * 호텔 리스트 조회
-	 * 
-	 * @return 호텔 리스트
-	 */
 	public List<MainResponse> findAllHotel() {
 		return mainMapper.findAll();
 	}
 
-	/**
-	 * 풀빌라 리스트 조회
-	 * 
-	 * @return 풀빌라 리스트
-	 */
 	public List<MainResponse> findPool() {
 		return mainMapper.findPool();
 	}
 
-	/**
-	 * 방 리스트 조회
-	 * 
-	 * @return 방 리스트
-	 */
 	public List<RoomResponse> findRoom(final int hotelid) {
 		return mainMapper.findRoom(hotelid);
 	}
 
-	/**
-	 * 방 리스트 조회
-	 * 
-	 * @return 방 리스트
-	 */
 	public List<RoomResponse> findRoomByDate(final int hotelid, String StratDate) {
 		return mainMapper.findRoomByDate(hotelid, StratDate);
 	}
 
-	/**
-	 * 방 리스트 조회
-	 * 
-	 * @return 방 리스트
-	 */
 	public RoomResponse findRoomDetail(final int roomid, String StratDate) {
 		return mainMapper.findRoomDetail(roomid, StratDate);
 	}
@@ -195,20 +125,10 @@ public class MainService {
 		return mainMapper.selectForReview(roomid);
 	}
 
-	/**
-	 * 방 리스트 조회
-	 * 
-	 * @return 방 리스트
-	 */
 	public List<InfoResponse> hotelinfo(final int hotelid) {
 		return mainMapper.hotelinfo(hotelid);
 	}
 
-	/**
-	 * 방 리스트 조회
-	 * 
-	 * @return 방 리스트
-	 */
 	public List<PolicyResponse> hotelpolicy(final int hotelid) {
 		return mainMapper.hotelpolicy(hotelid);
 	}
@@ -217,20 +137,10 @@ public class MainService {
 		return mainMapper.findHotelId(roomid);
 	}
 
-	/**
-	 * 방 리스트 조회
-	 * 
-	 * @return 방 리스트
-	 */
 	public String hotelintro(final int hotelid) {
 		return mainMapper.hotelintro(hotelid);
 	}
 
-	/**
-	 * 도로명주소 조회
-	 * 
-	 * @return 도로명주소
-	 */
 	public String hotelLocationex(final int hotelid) {
 		return mainMapper.hotelLocationex(hotelid);
 	}
@@ -268,11 +178,6 @@ public class MainService {
 		return mainMapper.hotelLocation(hotelid);
 	}
 
-	/**
-	 * 풀빌라 리스트 조회
-	 * 
-	 * @return 풀빌라 리스트
-	 */
 	public List<MainResponse> findLocateBy(final int regionid) {
 		return mainMapper.findlocateby(regionid);
 	}
@@ -388,6 +293,31 @@ public class MainService {
 	public List<String> findRegionName() {
 		// TODO Auto-generated method stub
 		return mainMapper.findRegionName();
+	}
+
+	public int selectLike(int hotelid, int userid) {
+		// TODO Auto-generated method stub
+		return mainMapper.selectLike(hotelid, userid);
+	}
+
+	public void deleteLike(int hotelid, int userid) {
+		// TODO Auto-generated method stub
+		mainMapper.deleteLike(hotelid, userid);
+	}
+
+	public void insertLike(int hotelid, int userid) {
+		// TODO Auto-generated method stub
+		mainMapper.insertLike(hotelid, userid);
+	}
+
+	public List<MainResponse> Likehotels(int userid) {
+		// TODO Auto-generated method stub
+		return mainMapper.Likehotels(userid);
+	}
+
+	public List<CouponResponse> selectcoupon(int userid) {
+		// TODO Auto-generated method stub
+		return mainMapper.selectcoupon(userid);
 	}
 
 }

@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yanolja.main.model.MainService;
 import com.example.yanolja.main.post.BookResponse;
 import com.example.yanolja.main.post.Cartinfo;
+import com.example.yanolja.main.post.CouponResponse;
 import com.example.yanolja.main.post.FacilityResponse;
 import com.example.yanolja.main.post.ImageResponse;
 import com.example.yanolja.main.post.InfoResponse;
@@ -217,7 +218,7 @@ public class MainController {
 		// MainResponse에 찾아오려는 값이 null이면 오류남
 		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
 		List<String> findregionname = mainService.findRegionName();
-	
+
 		if (findregionname.contains(regionname)) { // region 테이블에 있으면
 			List<MainResponse> post = mainService.findAllFromRegion(regionname, kindhotel);
 			model.addAttribute("post", post);
@@ -262,6 +263,30 @@ public class MainController {
 		session.setAttribute("rskindbykor", kind);
 		model.addAttribute("post", post);
 		return "places/Viewplace";
+	}
+
+	@PostMapping("/Like_hotel.do")
+	@ResponseBody
+	public String likehotel(@RequestParam int hotelid, @RequestParam final int userid) {
+		int cnt = mainService.selectLike(hotelid, userid);
+
+		if (cnt == 1) {
+			// 있으면 삭제
+			mainService.deleteLike(hotelid, userid);
+			return "찜 목록에서 삭제되었습니다.";
+		} else {
+			// DB에 없으면 추가
+			mainService.insertLike(hotelid, userid);
+			return "찜 목록에 추가되었습니다.";
+		}
+	}
+
+	@GetMapping("/Like_hotel")
+	public String Getlikehotel(Model model,HttpSession session) {
+		int userid = (int) session.getAttribute("userid");
+		List<MainResponse> post = mainService.Likehotels(userid);
+		model.addAttribute("post", post);
+		return "User/UserOption/Like_hotel";
 	}
 
 // 호텔 하위 세부 정보 --------------------------------------------------------------------------------
@@ -344,10 +369,8 @@ public class MainController {
 		else
 			ob = orderby;
 
-		System.out.println(ob);
 
 		if (hotelid != null && roomid == null) {
-			System.out.println("실행 ! ");
 			List<ReviewResponse> review = mainService.review(hotelid, rn, ob, onlyPhoto); // 리뷰목록
 
 			List<ImageResponse> images = mainService.reviewAllPhotos(hotelid); // 사진
@@ -466,10 +489,14 @@ public class MainController {
 		Object uname = session.getAttribute("username");
 		if (uname != null) {
 			String phone = mainService.findUPhone(uname.toString());
+			int userid = (int) session.getAttribute("userid");
+			List<CouponResponse> coupon = mainService.selectcoupon(userid);
+			model.addAttribute("coupon", coupon);
 			if (phone != null) {
 				model.addAttribute("phone", phone);
 			}
 		}
+		
 		return "Search/Reserve/Reserve";
 	}
 
@@ -546,7 +573,6 @@ public class MainController {
 		// System.out.println(ordernumber);
 		if (ordernumber != null) {
 			List<ReserveResponse> reserve = mainService.selectReserve_order(ordernumber);
-			System.out.println(reserve.toString());
 			model.addAttribute("reserve", reserve);
 			model.addAttribute("ordernumber", ordernumber);
 			return "Search/Reserve/Reserve_By_OrderNumber";
@@ -660,7 +686,7 @@ public class MainController {
 		return "redirect:cart";
 	}
 
-//---------------------------------------------------------------------------------------------------------
+//후기 관련---------------------------------------------------------------------------------------------------------
 	// 후기작성
 	@GetMapping("/writeReview")
 	public String writeReview(@RequestParam(value = "roomid", required = false) Integer roomid,
@@ -708,14 +734,12 @@ public class MainController {
 		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);// 후기 정보 넣기
 
 		int CurrentReviewid = mainService.lastReviewid();
-		System.out.println("CurrentReviewid : " + CurrentReviewid);
 		if (multipartFiles != null) {
 			for (MultipartFile file : multipartFiles) {
 				try {
 					byte[] imageBytes = file.getBytes();
 					String originalFileName = file.getOriginalFilename();
 					// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
-					System.out.println(originalFileName + " " + imageBytes);
 					mainService.saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes, userid);// 이미지 파일 넣기
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -774,7 +798,6 @@ public class MainController {
 					byte[] imageBytes = file.getBytes();
 					String originalFileName = file.getOriginalFilename();
 					if (loadedImgIds.contains(originalFileName)) { // 이미 불러온 이미지의 처리
-						System.out.println("스킵! : " + originalFileName);
 					} else { // 새이미지의 처리
 						mainService.saveImage(hotelid, reviewid, originalFileName, imageBytes, userid); // 이미지 파일 넣기
 					}
@@ -792,7 +815,6 @@ public class MainController {
 	@PostMapping("/DeleteReview.Do")
 	@ResponseBody
 	public String DeleteReview(@RequestParam(value = "reviewid") int reviewid) {
-		System.out.println(reviewid);
 		mainService.DeleteReviewById(reviewid);
 		mainService.DeletePhotoById(reviewid);
 		return "success";
@@ -871,26 +893,4 @@ public class MainController {
 	}
 
 //--------------------------------------------------------------------------------------------------------
-	// 게시글 작성 페이지
-	/*
-	 * @GetMapping("/Main/write") public String openPostWrite(@RequestParam(value =
-	 * "id", required = false) final Long hotelid, Model model) { // 수정 시 실행, 호텔의 상세
-	 * 정보를 조회하고 "post" 모델 속성에 추가 if (hotelid != null) { MainResponse post =
-	 * mainService.findPostById(hotelid); model.addAttribute("post", post); } return
-	 * "Main/write"; // Main/write 템플릿을 렌더링 }
-	 * 
-	 * // 게시글 생성 (숙소 등록)
-	 * 
-	 * @PostMapping("/Main/write.do") public String savePost(final MainRequest
-	 * params) { System.out.println("write실행"); // 숙소 정보를 저장하고 숙소 목록 페이지로 리다이렉션
-	 * mainService.savePost(params); System.out.println(params); return
-	 * "redirect:/Main/list.do"; }
-	 * 
-	 * // 수정하기 (등록글 수정)
-	 * 
-	 * @PostMapping("/Main/update.do") public String updatePost(final MainRequest
-	 * params) { System.out.println("update실행"); // 숙소 정보를 수정하고 숙소 목록 페이지로 리다이렉션
-	 * mainService.updatePost(params); return "redirect:/Main/list.do"; }
-	 */
-
 }

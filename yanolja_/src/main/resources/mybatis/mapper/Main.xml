@@ -99,6 +99,18 @@
 	<select id="findRegionName">
 		select regionName from region
 	</select>
+	<select id="selectcoupon">
+		SELECT
+		counponid,
+		userid,
+		DATE_FORMAT(createdate, '%Y. %m. %d'),
+		DATE_FORMAT(deletedate, '%Y. %m. %d'),
+		reduceprice,
+		content,
+		status
+		FROM
+		coupon;
+	</select>
 	<!--상세정보 조회 -->
 	<select id="findById" parameterType="long"
 		resultType="com.example.yanolja.main.post.MainResponse">
@@ -109,6 +121,20 @@
 		WHERE
 		hotelid = #{value}
 	</select>
+
+	<select id="Likehotels"
+		resultType="com.example.yanolja.main.post.MainResponse">
+		SELECT
+		<include refid="postColumns" />
+		FROM
+		hotel
+		WHERE
+		hotelid in (select hotelid from Like_hotel where userid
+		= #{userid})
+	</select>
+
+
+
 
 	<select id="findPostById" parameterType="long"
 		resultType="com.example.yanolja.main.post.MainResponse">
@@ -979,4 +1005,16 @@
 		Kindness=#{rating1} ,cleanliness= #{rating2} , convenience=#{rating3}
 		, Loc_satisfy=#{rating4} where reviewid = #{reviewid}
 	</update>
+	<select id="selectLike">
+		select count(*) from Like_hotel where userid =
+		#{userid} and hotelid = #{hotelid}
+	</select>
+	<delete id="deleteLike">
+		delete from Like_hotel where userid = #{userid} and
+		hotelid = #{hotelid}
+	</delete>
+	<insert id="insertLike">
+		insert into Like_hotel values(#{userid},#{hotelid})
+	</insert>
+
 </mapper>
