@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ReserveResponse {
-	
+
 	private int roomid;
+	private int user_phone;
 	private String hotelname;
 	private String rentalType;
 	private String roomname;
@@ -32,7 +33,7 @@ public class ReserveResponse {
 		this.hasRoom = reserveCnt > compareValue;
 	}
 
-//select_p_Reserve
+	// select_p_Reserve
 	public ReserveResponse(String hotelname, String roomname, LocalDateTime reserveDate, LocalDateTime reserveEndDate,
 			String order_number) {
 		super();
@@ -43,8 +44,9 @@ public class ReserveResponse {
 		this.order_number = order_number;
 	}
 
-	//selectReserve_order
-	public ReserveResponse(int roomid , String hotelname, String roomname, LocalDateTime reserveDate, String user_name) {
+	// selectReserve_order
+	public ReserveResponse(int roomid, String hotelname, String roomname, LocalDateTime reserveDate, String user_name,
+			int user_phone) {
 		super();
 		this.roomid = roomid;
 		this.hotelname = hotelname;
@@ -61,8 +63,7 @@ public class ReserveResponse {
 		this.roomname = roomname;
 		this.reserveDate = reserveDate;
 	}
-	
-	
+
 	public int getRoomid() {
 		return roomid;
 	}

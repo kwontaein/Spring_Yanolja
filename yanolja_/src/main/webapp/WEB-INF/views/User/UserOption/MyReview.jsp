@@ -58,7 +58,7 @@
 	<header>
 		<div class="mrheader">
 			<div class="mrhcontainer">
-				<span>&lt;</span>
+				<span onclick="window.history.back();">&lt;</span>
 				<span>나의 후기(${room_cnt})</span>
 				<span> </span>
 			</div>
@@ -117,7 +117,7 @@
 					<script>
 						var mySwiper = new Swiper('.swiper-container', {
 							direction : 'horizontal',
-							loop : true,
+							slidesPerView : 3,
 							pagination : {
 								el : '.swiper-pagination',
 							},

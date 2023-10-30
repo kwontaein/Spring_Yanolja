@@ -39,7 +39,7 @@
          				${style}
          			>
 						<div class="roomimg">
-							<div>이미지 슬라이드</div>
+							<img src="data:image/png;base64,${room.base64Image}" alt="이미지">
 						</div>
 						<a href="/places/roomView?roomid=${room.roomid}">
 							<div class="roomtitle">
@@ -74,7 +74,7 @@
 										// 이 부분에 해야 forEach문의 각각 부분에 출력 가능
 										var totalDate = sessionStorage
 												.getItem('totalDate');
-										if(totalDate == null){
+										if (totalDate == null) {
 											totalDate = 1;
 										}
 										var roomPrice = '${room.price}'; // room.price는 서버 측에서 가져오는 값

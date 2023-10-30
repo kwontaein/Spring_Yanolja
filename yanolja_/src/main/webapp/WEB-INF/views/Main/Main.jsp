@@ -17,7 +17,6 @@
 		<%@ include file="./saleEvent.jsp"%>
 		<%@ include file="./season.jsp"%>
 		<%@ include file="./Now_hot.jsp"%>
-		<%@ include file="./pointhotel.jsp"%>
 		<%@ include file="./hokangs.jsp"%>
 	</div>
 	<%@ include file="../../layout/footer.jsp"%>

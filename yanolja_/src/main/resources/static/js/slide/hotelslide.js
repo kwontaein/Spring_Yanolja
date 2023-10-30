@@ -3,10 +3,12 @@ var data = {
 	kindhotels: ['호텔', '호텔', '호텔', '호텔']
 };
 var text = [];
+
 for (var i = 0; i < 4; i++) {
 	text[i] = [data.location[i] + " " + data.kindhotels[i]]
+	includeFile('Hotellist', data.location[i], data.kindhotels[i], i);
 };
-console.log(text);
+
 var bottomSwiper = new Swiper('.swiper-bottom', {
 	slidesPerView: '1',
 	autoHeight: true,
@@ -34,31 +36,23 @@ $('#Viewall').click(function() {
 	console.log("encodedData" + encodedData);
 	debugger;
 	window.location.href = '/ViewAll?data=' + encodedData;
-	
+
 })
 
 // 초기 상태에서 슬라이드 내용 로드
-includeFile('Hotellist', 1, '호텔');
-includeFile('Hotellist', 2, '호텔');
-includeFile('Hotellist', 3, '호텔');
-includeFile('Hotellist', 4, '호텔');
 
-// 페이지 버튼 클릭 이벤트 처리
-$('.swiper-pagination-custom-bullet').click(function() {
-	var index = $(this).index() + 1; // 페이지 번호는 1부터 시작
-	includeFile('Hotellist', index, '호텔');
-});
 
-function includeFile(filePath, regionid, kindhotel) {
+
+function includeFile(filePath, regionname, kindhotel, index) {
 	$.ajax({
 		url: filePath,
 		method: "GET",
 		data: {
-			regionid: regionid,
+			regionname: regionname,
 			kindhotel: kindhotel
 		},
 		success: function(response) {
-			var slideId = "#includedContent" + regionid;
+			var slideId = "#includedContent" + (index + 1);
 			$(slideId).html(response);
 		},
 		error: function() {

@@ -56,13 +56,15 @@ public class UserController {
 		// username 세션에서 가져와서 검색
 		// 내가 쓴 리뷰 목록 가져오는 코드 추가
 		int userid = (int) session.getAttribute("userid");
-		List<ReviewResponse> review = userService.UserByreview(userid);
-		List<ImageResponse> img = userService.reviewUserPhotos(userid);
-		int room_cnt = userService.UserByCnt(userid);
+		if(session.getAttribute("userid") != null) {
+			List<ReviewResponse> review = userService.UserByreview(userid);
+			List<ImageResponse> img = userService.reviewUserPhotos(userid);
+			int room_cnt = userService.UserByCnt(userid);
 
-		model.addAttribute("room_cnt", room_cnt);
-		model.addAttribute("review", review);
-		model.addAttribute("img", img);
+			model.addAttribute("room_cnt", room_cnt);
+			model.addAttribute("review", review);
+			model.addAttribute("img", img);
+		}
 		return "User/UserOption/MyReview";
 	}
 

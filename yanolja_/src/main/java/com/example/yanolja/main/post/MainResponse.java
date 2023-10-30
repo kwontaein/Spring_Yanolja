@@ -2,6 +2,7 @@ package com.example.yanolja.main.post;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 
 public class MainResponse {
 	private Long hotelid;
@@ -20,9 +21,13 @@ public class MainResponse {
 	private int regiondetail;
 	private String roadloc;
 
+//이미지 받기
+	private byte[] image;
+	private String base64Image; // Base64로 인코딩
+
 	public MainResponse(Long hotelid, String hotelname, String hotelcall, String notification, float rating,
 			int reviewcount, String kindhotel, LocalDateTime hotelcreate, LocalDateTime hotelmodified, String status,
-			int price, int regionid, int regiondetail, String roadloc) {
+			int price, int regionid, int regiondetail, String roadloc, byte[] image) {
 		super();
 		this.hotelid = hotelid;
 		this.hotelname = hotelname;
@@ -38,6 +43,16 @@ public class MainResponse {
 		this.regionid = regionid;
 		this.regiondetail = regiondetail;
 		this.roadloc = roadloc;
+		this.image = image;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public String getBase64Image() {
+		base64Image = Base64.getEncoder().encodeToString(image);
+		return base64Image;
 	}
 
 	public Long getHotelid() {

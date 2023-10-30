@@ -82,7 +82,7 @@
 			<c:choose>
 				<c:when test="${not empty username}">
 					<div class="top">
-						<span>&lt;</span>
+						<span onclick="window.history.back();">&lt;</span>
 						<span>국내여행 예약내역</span>
 						<span></span>
 					</div>
@@ -99,7 +99,7 @@
 				</c:when>
 				<c:otherwise>
 					<div class="top">
-						<span>&lt;</span>
+						<span onclick="window.history.back();">&lt;</span>
 						<span>비회원 국내여행 예약내역</span>
 						<span>검색 / 집</span>
 					</div>

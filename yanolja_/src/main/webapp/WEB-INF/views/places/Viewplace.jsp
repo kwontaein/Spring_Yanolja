@@ -11,40 +11,43 @@
 </head>
 <body>
 	<script type="text/javascript">
-	$(document).ready(
-			function() {
-				const like=document.getElementById('like');
-				like.addEventListener('click',function(){
-					if(${userid} !== null){
-						$.ajax({
-							url: '/Like_hotel.do', // 서버의 엔드포인트 URL
-							method: 'post',     // HTTP GET 요청
-							data:{
-								hotelid : ${post.hotelid},
-								userid : ${userid}
-							},
-							success: function(data) {
-								// 서버로부터 받은 데이터를 화면에 표시
-								alert(data);
-							},
-							error: function() {
-								// 에러 처리
-								alert("에러");
-							}
-						});
-					}else{
-						windows.loaction.href="/tologin"
-					}
-					
-				});
-	});
+    $(document).ready(function() {
+        const like = document.getElementById('like');
+        like.addEventListener('click', function() {
+            <c:choose>
+                <c:when test="${not empty userid}">
+                    $.ajax({
+                        url: '/Like_hotel.do', // 서버의 엔드포인트 URL
+                        method: 'post',
+                        data: {
+                            hotelid: ${post.hotelid},
+                            userid: ${userid}
+                        },
+                        success: function(data) {
+                            // 서버로부터 받은 데이터를 화면에 표시
+                            alert(data);
+                        },
+                        error: function() {
+                            // 에러 처리
+                            alert("에러");
+                        }
+                    });
+                </c:when>
+                <c:otherwise>
+                    window.location.href = "/tologin";
+                </c:otherwise>
+            </c:choose>
+        });
+    });
 </script>
 	<c:set var="isViewplace" value="${pageName == 'Viewplace'}" />
 	<%@include file="../../layout/placeHeader.jsp"%>
 	<div class="ViewplaceContainer">
 		<div class="ViewPlaceWrapper">
 			<div class="ViewPlace">
-				<div class="hotelimg"></div>
+				<div class="hotelimg">
+					<img class="viewhotelimg" src="data:image/png;base64,${post.base64Image}" alt="이미지">
+				</div>
 				<div class="hoteltitle">
 					<div class="hotel_g">호텔 종류</div>
 					<div class="hotel_n">

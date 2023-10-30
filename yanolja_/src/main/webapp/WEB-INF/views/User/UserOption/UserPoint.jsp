@@ -9,7 +9,7 @@
 	<header>
 		<div>
 			<div>
-				<span>&lt;</span>
+				<span  onclick="window.history.back();">&lt;</span>
 				<span>포인트</span>
 				<span>i</span>
 			</div>

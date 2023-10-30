@@ -1,5 +1,8 @@
 package com.example.yanolja.main.post;
 
+import java.util.Arrays;
+import java.util.Base64;
+
 public class RoomResponse {
 	private String hotelname;
 	private int hotelid;
@@ -32,6 +35,9 @@ public class RoomResponse {
 
 	private String loc;
 
+	private byte[] image;
+	private String base64Image; // Base64로 인코딩
+
 	// findRoomDetail
 	public RoomResponse(String hotelname, int roomid, int MaxManCnt, String roomname, int price, String roominfo,
 			int somke, String booknoti, String roomserve, int defaultmancnt, String bed, int bedcnt, String rentalType,
@@ -59,7 +65,7 @@ public class RoomResponse {
 	// findRoomBydate
 	public RoomResponse(int roomid, int MaxManCnt, String roomname, int price, String roominfo, int somke,
 			String booknoti, String roomserve, int defaultmancnt, String bed, int bedcnt, String checkIn, int roomcnt,
-			String rentalType) {
+			String rentalType, byte[] image) {
 		super();
 		this.roomid = roomid;
 		this.maxManCnt = MaxManCnt;
@@ -75,6 +81,7 @@ public class RoomResponse {
 		this.checkIn = checkIn;
 		this.roomcnt = roomcnt;
 		this.rentalType = rentalType;
+		this.image = image;
 	}
 
 	// 카트 정보
@@ -92,6 +99,15 @@ public class RoomResponse {
 		this.defaultmancnt = defaultmancnt;
 		this.checkIn = checkIn;
 		this.checkout = checkout;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public String getBase64Image() {
+		base64Image = Base64.getEncoder().encodeToString(image);
+		return base64Image;
 	}
 
 	public RoomResponse() {
@@ -259,11 +275,6 @@ public class RoomResponse {
 
 	public void setRentalType(String rentalType) {
 		this.rentalType = rentalType;
-	}
-
-	@Override
-	public String toString() {
-		return "RoomResponse [hotelname=" + hotelname + ", roomname=" + roomname + "]";
 	}
 
 }

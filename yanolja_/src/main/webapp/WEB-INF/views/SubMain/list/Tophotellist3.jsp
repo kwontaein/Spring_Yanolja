@@ -17,6 +17,8 @@
 							<div class="hotelimg">
 								<li><div>
 										<span>${loop.index + 1}</span>
+										<img class="top_hotel_img" src="data:image/png;base64,${hotel.base64Image}" alt="이미지">
+
 									</div></li>
 							</div>
 							<div class="htcontent">

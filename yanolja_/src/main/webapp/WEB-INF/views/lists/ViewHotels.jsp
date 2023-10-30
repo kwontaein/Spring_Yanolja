@@ -19,6 +19,7 @@ request.setCharacterEncoding("UTF-8");
 						<a href="/places/View.do?hotelid=${hotel.hotelid}">
 							<div class="hotelimg">
 								<li><div>
+										<img class="resent_hotelimg_img" src="data:image/png;base64,${hotel.base64Image}" alt="이미지">
 										<span>${loop.index + 1}</span>
 									</div></li>
 							</div>

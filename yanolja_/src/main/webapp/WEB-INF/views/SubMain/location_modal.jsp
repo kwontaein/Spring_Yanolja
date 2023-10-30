@@ -43,7 +43,7 @@ $.ajax({
 	<div>
 		<header class="headerloc">
 			<div class="lochead">
-				<div>X</div>
+				<div id="close_loc_modal">X</div>
 				<div>
 					<b>지역 선택</b>
 				</div>

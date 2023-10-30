@@ -35,12 +35,15 @@
 }
 .Related_hotelimg{
 	border-radius: 5px;
-	background-image:url(https://yaimg.yanolja.com/v5/2022/08/18/15/640/62fe54bbcc8385.54587766.jpg);
 	 background-size: 100px;
 	 width:140px; 
 	 height:140px;
 }
-
+.Related_hotelimg_img{
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+}
 .Related_content{
 	margin: 10px;	 
 	width: 120px;

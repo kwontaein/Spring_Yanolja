@@ -132,7 +132,7 @@
 	<header style="height: 48px;">
 		<div class="head">
 			<div class="top">
-				<span>&lt;</span>
+				<span onclick="window.history.back();">&lt;</span>
 				<span>후기작성</span>
 				<span></span>
 			</div>

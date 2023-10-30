@@ -31,7 +31,9 @@ request.setCharacterEncoding("UTF-8");
 				<c:forEach items="${post}" var="hotel" varStatus="loop" begin="0" end="20">
 					<ul id="Related_hotellist" class="swiper-slide" style="width: 140px;">
 						<a href="/places/View.do?hotelid=${hotel.hotelid}">
-							<div class="Related_hotelimg"></div>
+							<div class="Related_hotelimg">
+								<img class="Related_hotelimg_img" src="data:image/png;base64,${hotel.base64Image}" alt="이미지">
+							</div>
 							<div class="Related_content">
 								<div class="info">
 									<li>

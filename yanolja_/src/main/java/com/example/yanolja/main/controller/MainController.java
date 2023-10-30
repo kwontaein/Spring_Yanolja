@@ -78,6 +78,7 @@ public class MainController {
 		return "test/test3"; // User/test 템플릿을 렌더링
 	}
 
+	// 이미지 업로드 테스트
 	@ResponseBody
 	@PostMapping("/file-upload")
 	public String testfileUpload(@RequestParam("article_file") MultipartFile[] multipartFiles) {
@@ -89,6 +90,10 @@ public class MainController {
 				String originalFileName = file.getOriginalFilename();
 				// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
 				System.out.println(originalFileName + " " + imageBytes);
+				for (int i = 2; i < 97; i+=2) {
+				mainService.saveImageTest(originalFileName, imageBytes,i);
+				System.out.println(i+"번째 실행");
+				}
 				// mainService.saveImage(originalFileName, imageBytes);
 				strResult = "{ \"result\":\"OK\" }";
 			} catch (IOException e) {
@@ -193,21 +198,19 @@ public class MainController {
 	}
 
 	@GetMapping("/Hotellist")
-	public String Hotellist(@RequestParam("regionid") int regionid, @RequestParam("kindhotel") String kindhotel,
+	public String Hotellist(@RequestParam("regionname") String regionname, @RequestParam("kindhotel") String kindhotel,
 			Model model) {
 		// MainResponse에 찾아오려는 값이 null이면 오류남
-		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		List<MainResponse> post = mainService.findAllFrom(regionid, kindhotel);
+		List<MainResponse> post = posts(regionname, kindhotel);
 		model.addAttribute("post", post);
 		return "lists/Hotellist"; // Main/Hotellist 템플릿을 렌더링
 	}
 
 	@GetMapping("/Nonslidelist")
-	public String Nonslidelist(@RequestParam("regionid") int regionid, @RequestParam("kindhotel") String kindhotel,
-			Model model) {
+	public String Nonslidelist(@RequestParam("regionname") String regionname,
+			@RequestParam("kindhotel") String kindhotel, Model model) {
 		// MainResponse에 찾아오려는 값이 null이면 오류남
-		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		List<MainResponse> post = mainService.findAllFrom(regionid, kindhotel);
+		List<MainResponse> post = posts(regionname, kindhotel);
 		model.addAttribute("post", post);
 		return "lists/Nonslidelist"; // Main/Hotellist 템플릿을 렌더링
 	}
@@ -216,17 +219,20 @@ public class MainController {
 	public String ViewHotels(@RequestParam("regionname") String regionname, @RequestParam("kindhotel") String kindhotel,
 			Model model) {
 		// MainResponse에 찾아오려는 값이 null이면 오류남
-		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		List<String> findregionname = mainService.findRegionName();
-
-		if (findregionname.contains(regionname)) { // region 테이블에 있으면
-			List<MainResponse> post = mainService.findAllFromRegion(regionname, kindhotel);
-			model.addAttribute("post", post);
-		} else {// 없으면
-			List<MainResponse> post = mainService.findAllFromRd(regionname, kindhotel);
-			model.addAttribute("post", post);
-		}
+		List<MainResponse> post = posts(regionname, kindhotel);
+		model.addAttribute("post", post);
 		return "lists/ViewHotels"; // Main/Hotellist 템플릿을 렌더링
+	}
+
+	public List<MainResponse> posts(String regionname, String kindhotel) {
+		// region 테이블에서 지역 명 가져오기
+		List<MainResponse> post = mainService.findAllFromRegion(regionname, kindhotel);
+		if (post.isEmpty()) {
+			List<MainResponse> post2 = mainService.findAllFromRd(regionname, kindhotel);
+			return post2;
+		} else {
+			return post;
+		}
 	}
 
 // 스와이퍼 --------------------------------------------------------------------------------
@@ -282,7 +288,7 @@ public class MainController {
 	}
 
 	@GetMapping("/Like_hotel")
-	public String Getlikehotel(Model model,HttpSession session) {
+	public String Getlikehotel(Model model, HttpSession session) {
 		int userid = (int) session.getAttribute("userid");
 		List<MainResponse> post = mainService.Likehotels(userid);
 		model.addAttribute("post", post);
@@ -369,7 +375,6 @@ public class MainController {
 		else
 			ob = orderby;
 
-
 		if (hotelid != null && roomid == null) {
 			List<ReviewResponse> review = mainService.review(hotelid, rn, ob, onlyPhoto); // 리뷰목록
 
@@ -446,7 +451,7 @@ public class MainController {
 
 	// ajax 페이지 구분
 	@GetMapping("/Searchdetail")
-	public String koreahotel(@RequestParam String category) {
+	public String Searchdetail(@RequestParam String category) {
 		if (category.equals("국내숙소")) {
 			return "Search/koreahotel";
 		} else if (category.equals("레저/티켓")) {
@@ -496,7 +501,7 @@ public class MainController {
 				model.addAttribute("phone", phone);
 			}
 		}
-		
+
 		return "Search/Reserve/Reserve";
 	}
 
@@ -601,10 +606,13 @@ public class MainController {
 			@RequestParam(value = "phone", required = true) String phone,
 			@RequestParam(value = "order_number", required = true) String order_number, Model model) {
 		List<ReserveResponse> pesonal_reserve = mainService.select_p_Reserve(name, phone, order_number);
+		System.out.println(name + "|" + phone + "|" + order_number);
 		if (pesonal_reserve == null) {
 			System.out.println("값이 없습니다");
+		} else {
+			model.addAttribute("pesonal_reserve", pesonal_reserve);
 		}
-		model.addAttribute("pesonal_reserve", pesonal_reserve);
+		System.out.println(pesonal_reserve);
 		// 주문번호 이름 전화번호로 일치하는 정보 찾아서 반환
 		return "Search/Reserve/Reserve_history_NotUser";
 	}

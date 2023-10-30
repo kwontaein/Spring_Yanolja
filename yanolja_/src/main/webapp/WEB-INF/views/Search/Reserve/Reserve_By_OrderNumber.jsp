@@ -11,7 +11,7 @@
 	<header style="height: 48px;">
 		<div class="head">
 			<div class="top">
-				<span>&lt;</span>
+				<span onclick="window.history.back();">&lt;</span>
 				<span>예약내역</span>
 				<span></span>
 			</div>

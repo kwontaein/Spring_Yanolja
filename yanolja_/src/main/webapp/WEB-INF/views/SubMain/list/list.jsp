@@ -17,7 +17,9 @@ request.setCharacterEncoding("UTF-8");
 				<c:forEach items="${post}" var="hotel" varStatus="loop" begin="0" end="3">
 					<ul id="season_hotellist">
 						<a href="/places/View.do?hotelid=${hotel.hotelid}">
-							<div class="season_hotelimg"></div>
+							<div class="season_hotelimg">
+								<img class="season_hotelimg_img" src="data:image/png;base64,${hotel.base64Image}" alt="이미지">
+							</div>
 							<div class="season_content">
 								<div class="info">
 									<li>

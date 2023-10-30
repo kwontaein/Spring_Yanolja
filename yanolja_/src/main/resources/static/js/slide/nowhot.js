@@ -1,11 +1,11 @@
 $(document).ready(function() {
 	 // 페이지 로드 시 기본 내용 표시 (예: 서울)
-	 changeNhContent(1, '서울'); // regionid를 숫자로 전달
+	 changeNhContent('서울', '호텔'); // regionid를 숫자로 전달
 	 // 동적으로 li 요소 생성
-	 createnhLi(1, '서울', '호텔');
-	 createnhLi(2, '제주', '호텔');
-	 createnhLi(3, '강원', '호텔');
-	 createnhLi(4, '전라', '호텔');
+	 createnhLi('서울', '호텔');
+	 createnhLi('제주', '호텔');
+	 createnhLi('강원', '호텔');
+	 createnhLi('전라', '호텔');
 
 	 // 처음 로드 시 서울 li를 활성화 상태로 표시
 	 $("#nhListnh li:first-child").addClass("active");
@@ -16,20 +16,16 @@ $(document).ready(function() {
 		 $("#nhListnh li").removeClass("active");
 		 // 클릭한 li에 활성화 클래스 추가
 		 $(this).addClass("active");
-		 // 선택한 지역으로 내용 변경
-		 var nhregionid = $(this).data("regionid"); // data-regionid 속성 사용
-		 var nhkindhotel = '호텔';
-		 changeNhContent(nhregionid, nhkindhotel);
 	 });
  });
 
-function changeNhContent(nhregionid, nhkindhotel) {
+function changeNhContent(nhregionname, nhkindhotel) {
 	// AJAX를 사용하여 내용을 동적으로 변경
 	$.ajax({
 		url: 'Nonslidelist', // 변경할 내용을 제공하는 JSP 페이지
 		method: "GET",
 		data: {
-			regionid: nhregionid,
+			regionname: nhregionname,
 			kindhotel: '호텔',
 			// 숫자로 된 regionid를 전달
 		},
@@ -42,9 +38,9 @@ function changeNhContent(nhregionid, nhkindhotel) {
 	});
 }
 
-function createnhLi(nhregionid, nhregion, nhkindhotel) {
+function createnhLi(nhregion, nhkindhotel) {
 	// 동적으로 li 요소 생성
-	var liElement = '<li data-regionid="' + nhregionid + '" onclick="changenhContent(' + nhregionid +
-		', \'' + nhkindhotel + '\')">' + nhregion + '</li>';
+	var liElement = '<li data-regionid="' + nhregion + '" onclick="changeNhContent(\'' + nhregion +
+		'\', \'' + nhkindhotel + '\')">' + nhregion + '</li>';
 	$("#nhListnh").append(liElement);
 }

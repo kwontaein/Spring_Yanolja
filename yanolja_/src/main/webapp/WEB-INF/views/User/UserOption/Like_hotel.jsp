@@ -10,7 +10,7 @@
 <body>
 	<header style="display: flex; justify-content: center; background-color: white;">
 		<div style="width: 768px; display: flex; justify-content: space-between; align-items: center; height: 48px;">
-			<span>&lt;</span>
+			<span onclick="window.history.back();">&lt;</span>
 			<span>찜</span>
 			<span></span>
 		</div>

@@ -31,23 +31,26 @@
 	text-decoration-line: none;
   	color: black;
 }
-
-
 .hotelimg{
 	margin: 10px;		
 }
 .hotelimg>li>div{
 	border-radius: 5px;
-	background-image:url(https://yaimg.yanolja.com/v5/2022/08/18/15/640/62fe54bbcc8385.54587766.jpg);
-	 background-size: 100px;
+	background-size: 100px;
 	 width:100px; 
 	 height:100px;
 }
+.hotel_img{
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+}
 .hotelimg>li>div>span{
+	position: absolute;
 	float: left;
 	width: 25px;
-	text-align: center;
 	background-color: black;
+	border-radius: 5px;
 	color: white;
 }
 
