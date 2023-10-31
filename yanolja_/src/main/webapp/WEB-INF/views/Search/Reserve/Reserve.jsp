@@ -454,7 +454,6 @@
 								        };
 								    </c:otherwise>
 								</c:choose>
-
 									var roomDataJson = JSON.stringify(roomData);
 									var roomDataUrlEncoded = encodeURIComponent(roomDataJson);
 									var paymentPageUrl = 'KakaoPayPage?roomData='
