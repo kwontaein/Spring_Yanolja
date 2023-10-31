@@ -54,8 +54,12 @@ public class KakaoPayController {
 			String username = jsonNode.get("username").asText();
 			String userPhone = jsonNode.get("userPhone").asText();
 
+			//DB 저장하는 코드 추가해야함
+			int point = Integer.parseInt(price) / 200;
+
+			System.out.println("point : " + point);
 			// 여기에 kakaoPayService.kakaoPayReady 호출 코드 추가
-			return "redirect:" + kakaoPayService.kakaoPayReady(hotelname, roomname, roomid, price, username ,userPhone);
+			return "redirect:" + kakaoPayService.kakaoPayReady(hotelname, roomname, roomid, price, username, userPhone);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// 예외 처리 필요
@@ -68,7 +72,8 @@ public class KakaoPayController {
 	 * 결제 성공
 	 */
 	@GetMapping("/kakaoPaySuccess")
-	public void afterPayRequest(@RequestParam("pg_token") String pgToken, HttpServletResponse response, HttpSession session) {
+	public void afterPayRequest(@RequestParam("pg_token") String pgToken, HttpServletResponse response,
+			HttpSession session) {
 
 		KakaoApproveResponse kakaoApprove = kakaoPayService.ApproveResponse(pgToken);
 		System.out.println("kakaoPaySuccess pg_token : " + pgToken);

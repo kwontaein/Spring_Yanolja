@@ -1,17 +1,17 @@
 
 // 체크박스 상태가 변경될 때 호출되는 함수
 function handleCheckboxChange() {
-	const nameInput = document.getElementById('nameinput');
-	const nameInput2 = document.getElementById('nameinput2');
+	const nameInput = $('#nameinput');
+	const nameInput2 = $('#nameinput2');
 
-	const phoneInput = document.getElementById('phoneinput');
-	const phoneInput2 = document.getElementById('phoneinput2');
+	const phoneInput = $('#phoneinput');
+	const phoneInput2 = $('#phoneinput2');
 
 	// 체크박스가 선택되면 nameinput2의 값을 nameinput과 동일하게 설정
 	if (samePersonCheckbox.checked) {
-		nameInput2.value = nameInput.value;
+		nameInput2.val(nameInput.val());
 		if (phoneInput) { //phoneInput이 존재할 경우에 실행
-			phoneInput2.value = phoneInput.value
+			phoneInput2.val(phoneInput.val());
 		}
 	} else {
 		// 체크박스가 선택 해제되면 nameinput2를 초기화
@@ -19,106 +19,87 @@ function handleCheckboxChange() {
 		phoneInput2.value = '';
 	}
 }
+
 function checkAgreements() {
-	// 모든 필수 약관 체크박스를 가져옵니다.
-	var requiredCheckboxes = document.querySelectorAll('input[name="agreed"][value^="require"]');
+	// 모든 필수 약관 체크박스를 선택합니다.
+	var requiredCheckboxes = $('input[name="agreed"][value^="require"]');
 	var allRequiredChecked = true;
 
 	// 모든 필수 약관이 선택되었는지 확인합니다.
-	for (var i = 0; i < requiredCheckboxes.length; i++) {
-		if (!requiredCheckboxes[i].checked) {
+	requiredCheckboxes.each(function() {
+		if (!$(this).prop('checked')) {
 			allRequiredChecked = false;
-			break;
+			return false; // break the loop
 		}
-	}
-	// 결제 버튼을 가져옵니다.
-	var paymentButton = document.querySelector('.payment');
+	});
+
+	// 결제 버튼을 선택합니다.
+	var paymentButton = $('.payment');
 
 	// 모든 필수 약관이 선택되었으면 버튼을 활성화하고, 그렇지 않으면 비활성화합니다.
 	if (allRequiredChecked) {
-		paymentButton.disabled = false;
-		paymentButton.style.backgroundColor = 'deeppink'; // 버튼의 배경색을 변경합니다.
+		paymentButton.prop('disabled', false);
+		paymentButton.css('background-color', 'deeppink');
 	} else {
-		paymentButton.disabled = true;
-		paymentButton.style.backgroundColor = '#cccccc'; // 버튼의 배경색을 변경합니다.
+		paymentButton.prop('disabled', true);
+		paymentButton.css('background-color', '#cccccc');
 	}
 }
 
 function selectAll(checkbox) {
 	// 전체 동의 체크박스의 상태에 따라 모든 약관 체크박스를 선택 또는 해제합니다.
 	var isChecked = checkbox.checked;
-	var allAgreementCheckboxes = document.querySelectorAll('input[name="agreed"]');
-	for (var i = 0; i < allAgreementCheckboxes.length; i++) {
-		allAgreementCheckboxes[i].checked = isChecked;
-	}
+	$('input[name="agreed"]').prop('checked', isChecked);
 
 	// 체크 상태 변경 후, 약관 체크 상태를 확인하여 결제 버튼을 업데이트합니다.
 	checkAgreements();
 }
-
 // 모달 열기
 function openModal() {
-	var modal = document.getElementById("myModal");
-	modal.style.display = "block";
+	$("#myModal").css("display", "block");
 }
 
 // 모달 닫기
 function closeModal() {
-	var modal = document.getElementById("myModal");
-	modal.style.display = "none";
+	$("#myModal").css("display", "none");
 }
 
 // 모달 열기
 function openCModal() {
-	var modal = document.getElementById("couponModal");
-	modal.style.display = "block";
-	document.body.style.overflow = "hidden";
+	$("#couponModal").css("display", "block");
+	$("body").css("overflow", "hidden");
 }
 
 // 모달 닫기
 function closeCModal() {
-	var modal = document.getElementById("couponModal");
-	modal.style.display = "none";
-	document.body.style.overflow = "auto";
+	$("#couponModal").css("display", "none");
+	$("body").css("overflow", "auto");
 }
 
-// 모달 열기
-function openCcModal() {
-	var modal = document.getElementById("couponchild");
-	modal.style.display = "block";
-}
-
-// 모달 닫기
-function closeCcModal() {
-	var modal = document.getElementById("couponchild");
-	modal.style.display = "none";
-}
-
-//라디오 체크 값에 따라 다르게
+// 라디오 체크 값에 따라 다르게
 function showSelectedValue(radio) {
-	var useCoupon = document.getElementById("choose_coupon");
+	var useCoupon = $("#choose_coupon");
 	if (radio.value == 'select') {
-		useCoupon.style.display = "flex";
+		useCoupon.css("display", "flex");
 	} else {
-		useCoupon.style.display = "none";
+		useCoupon.css("display", "none");
 	}
-	useCoupon.addEventListener('click', function() {
+	useCoupon.click(function() {
 		openCcModal();
 	});
 }
 
 function showSelectedValues(radio, index) {
-	var useCoupon = document.getElementById("choose_coupon" + index);
+	var useCoupon = $("#choose_coupon" + index);
 	if (radio.value == 'select' + index) {
-		useCoupon.style.display = "flex";
+		useCoupon.css("display", "flex");
 	} else {
-		useCoupon.style.display = "none";
+		useCoupon.css("display", "none");
 	}
-	useCoupon.addEventListener('click', function() {
-		openCcModal();
+	useCoupon.click(function() {
+		openCcModal(index);
 	});
 }
-
 // 결제 성공 메시지 표시 및 모달 열기
 function displayPaymentSuccessMessage() {
 	openModal(); // 모달 열기
@@ -211,25 +192,26 @@ $(document).ready(
 		const formattedEndDate2 = selectedEndDate
 			.toLocaleDateString("ko-KR", options2);
 
-		const intime = document.getElementById("intime");
-		const outtime = document.getElementById("outtime");
+		const intime = $("#intime");
+		const outtime = $("#outtime");
 
-		const indate = document.getElementById("indate");
-		const outdate = document.getElementById("outdate");
+		const indate = $("#indate");
+		const outdate = $("#outdate");
 
-		const date = document.getElementById("date");
+		const date = $("#date");
 
-		const totalpricea = document.getElementById("totalpricea");
-		const totalprice = document.getElementById("totalprice");
-		const totalprice3 = document.getElementById("totalprice3");
+		const totalpricea = $("#totalpricea");
+		const totalprice = $("#totalprice");
+		const totalprice3 = $("#totalprice3");
 
-		const paymentprice = document.getElementById("paymentprice");
+		const paymentprice = $("#paymentprice");
 
-		const discount = document.getElementById("discount");
-		const discount2 = document.getElementById("discount2");
-		const discount3 = document.getElementById("discount3");
+		const discount = $("#discount");
+		const discount2 = $("#discount2");
+		const discount3 = $("#discount3");
+		const reducePrice = $("#reducePrice");
 
-		if (intime != null && outtime != null) {
+		if (intime != null && outtime != null & roomPrice != 0) {
 			const timeDifference = selectedEndDate.getTime()
 				- selectedStartDate.getTime();
 			const daysDifference = Math.floor(timeDifference
@@ -246,7 +228,7 @@ $(document).ready(
 
 			date.textContent = `${daysDifference}박`;
 
-			totalpricea.textContent = `${price}`;
+			totalpricea.textContent = `${price}원`;
 			totalprice.textContent = `${price}원`;
 			totalprice3.textContent = `${price}원`;
 
@@ -256,7 +238,6 @@ $(document).ready(
 
 			paymentprice.textContent = `${price}원 `;
 		}
-
 
 		var seemore = document.getElementById("seemore");
 		var moreContent = document.querySelector(".more-content");

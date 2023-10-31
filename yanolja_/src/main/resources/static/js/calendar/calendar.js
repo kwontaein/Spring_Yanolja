@@ -47,6 +47,7 @@ $(document).ready(function(data) {
 	let selectedStartDate = savedStartDate ? new Date(savedStartDate) : new Date();
 	let selectedEndDate = savedEndDate ? new Date(savedEndDate) : new Date();
 
+
 	if (selectedStartDate.getTime() === selectedEndDate.getTime()) {
 		selectedEndDate.setDate(selectedStartDate.getDate() + 1); // 종료 날짜를 내일로 설정
 	}
@@ -67,11 +68,21 @@ $(document).ready(function(data) {
 	const maxSelectableDate = new Date();
 	maxSelectableDate.setMonth(maxSelectableDate.getMonth() + 6);
 
-	// 오늘 날짜에 해당하는 요소를 찾아서 스타일을 적용합니다.
-	const todayElement = $(`[data-date="${selectedStartDate.toISOString().split('T')[0]}"]`);
-	todayElement.addClass('selected-start'); // 오늘은 시작 날짜로만 표시
-	let endDateElement = $(`[data-date="${selectedEndDate.toISOString().split('T')[0]}"]`);
-	endDateElement.addClass('selected-end'); // 오늘은 시작 날짜로만 표시
+
+	var newDate = selectedStartDate;
+	newDate.setDate(newDate.getDate() + 1);
+
+	var newEndDate = selectedEndDate;
+	newEndDate.setDate(newEndDate.getDate() + 1);
+
+	var todayElement = $(`[data-date="${newDate.toISOString().split('T')[0]}"]`);
+	todayElement.addClass('selected-start');
+
+	var endDateElement = $(`[data-date="${newEndDate.toISOString().split('T')[0]}"]`);
+	endDateElement.addClass('selected-end');
+
+	newDate.setDate(newDate.getDate() - 1);
+	newEndDate.setDate(newEndDate.getDate() - 1);
 
 	updateDateRangeButtonText(selectedStartDate, selectedEndDate);
 
@@ -178,15 +189,21 @@ $(document).ready(function(data) {
 
 	if (storedStartDate) {
 		selectedStartDate = new Date(storedStartDate);
-		// 시작 날짜 스타일 적용
-		const startElement = $(`[data-date="${selectedStartDate.toISOString().split('T')[0]}"]`);
-		startElement.addClass('selected-start');
+		var newDate = selectedStartDate;
+		newDate.setDate(newDate.getDate() + 1);
 
+		// 시작 날짜 스타일 적용
+		const startElement = $(`[data-date="${newDate.toISOString().split('T')[0]}"]`);
+		startElement.addClass('selected-start'); 
+		newDate.setDate(newDate.getDate() - 1);
 		if (storedEndDate) {
 			selectedEndDate = new Date(storedEndDate);
+			var newEndDate = selectedEndDate;
+			newEndDate.setDate(newEndDate.getDate() + 1);
 			// 종료 날짜 스타일 적용
-			const endElement = $(`[data-date="${selectedEndDate.toISOString().split('T')[0]}"]`);
+			const endElement = $(`[data-date="${newEndDate.toISOString().split('T')[0]}"]`);
 			endElement.addClass('selected-end');
+			newEndDate.setDate(newEndDate.getDate() - 1);
 		}
 
 		// 선택된 기간 버튼 업데이트
@@ -197,9 +214,9 @@ $(document).ready(function(data) {
 		saveDateToSession(selectedStartDate, selectedEndDate);
 	}
 	// 종료 날짜에 selected-end 클래스를 추가합니다.
-	if (endDateElement.length > 0) {
-		endDateElement.addClass('selected-end');
-	}
+	/*	if (endDateElement.length > 0) {
+			endDateElement.addClass('selected-end');
+		}*/
 
 	// 선택된 기간을 버튼에 표시합니다.
 	updateDateRangeButtonText(selectedStartDate, selectedEndDate);
@@ -208,7 +225,7 @@ $(document).ready(function(data) {
 		sessionStorage.setItem('selectedStartDate', startDate.toLocaleDateString("ko-KR", options));
 
 		if (endDate) {
-			sessionStorage.setItem('selectedEndDate', endDate.toLocaleDateString("ko-KR", options));	
+			sessionStorage.setItem('selectedEndDate', endDate.toLocaleDateString("ko-KR", options));
 			// 기간을 계산합니다.
 			const timeDifference = endDate.getTime() - startDate.getTime();
 			const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -217,7 +234,7 @@ $(document).ready(function(data) {
 		} else {
 			sessionStorage.removeItem('selectedEndDate');
 		}
-	}
+	};
 
 	// 선택된 기간을 버튼에 표시하는 함수
 	function updateDateRangeButtonText(startDate, endDate) {
@@ -237,7 +254,7 @@ $(document).ready(function(data) {
 			dateRangeButton.text(`${formattedStartDate} 체크인 검색`);
 		}
 		saveDateToSession(selectedStartDate, selectedEndDate);
-	}
+	};
 
 	let removeToast;
 
@@ -246,7 +263,7 @@ $(document).ready(function(data) {
 
 		toast.classList.add("reveal");
 		toast.innerText = string;
-	}
+	};
 
 	function hideToast() {
 		const toast = document.getElementById("toast");

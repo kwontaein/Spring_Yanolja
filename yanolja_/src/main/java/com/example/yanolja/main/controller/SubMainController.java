@@ -20,6 +20,8 @@ public class SubMainController {
 	@Autowired
 	MainService mainService;
 
+// 전역변수의 경우 javascript 경우에 선언해주는 게 제일 Best!
+// Controller 의 경우 어노테이션 및 데이터 반환 처리,  service 넘겨주는 구조 -> mvc구조 선언 해주는 역할이기 때문
 	String kindhotel;
 
 	@GetMapping("/{kind}")

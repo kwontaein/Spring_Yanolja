@@ -11,7 +11,7 @@
 <script src="${path}/js/places/Reserve.js"></script>
 <script>
 	var totalPrice = 0; // 전체 가격을 저장할 변수
-
+	var roomPrice = 0;
 	var date1Array = []; // 배열 생성
 	var date2Array = []; // 배열 생성
 </script>
@@ -67,112 +67,59 @@
 								<c:forEach items="${room2}" var="room" varStatus="loop">
 									<div class="hotelcontent">
 										<script>
-											$(document)
-													.ready(
-															function() {
-																var price = '${room.price}';
-																var date1Str = '${room.date1}';
-																var date2Str = '${room.date2}';
+										$(document).ready(function() {
+										    var price = '${room.price}';
+										    var date1Str = '${room.date1}';
+										    var date2Str = '${room.date2}';
 
-																var dateParts1 = date1Str
-																		.split('.'); // 날짜를 구성하는 부분 분리
-																var dateParts2 = date2Str
-																		.split('.'); // 날짜를 구성하는 부분 분리
+										    var dateParts1 = date1Str.split('.'); // 날짜를 구성하는 부분 분리
+										    var dateParts2 = date2Str.split('.'); // 날짜를 구성하는 부분 분리
 
-																// 날짜를 YYYY-MM-DD 형식으로 변환
-																var date1Formatted = dateParts1[0]
-																		+ '-'
-																		+ dateParts1[1]
-																		+ '-'
-																		+ dateParts1[2];
-																var date2Formatted = dateParts2[0]
-																		+ '-'
-																		+ dateParts2[1]
-																		+ '-'
-																		+ dateParts2[2];
+										    // 날짜를 YYYY-MM-DD 형식으로 변환
+										    var date1Formatted = dateParts1[0] + '-' + dateParts1[1] + '-' + dateParts1[2];
+										    var date2Formatted = dateParts2[0] + '-' + dateParts2[1] + '-' + dateParts2[2];
 
-																var date1 = new Date(
-																		date1Formatted);
-																var date2 = new Date(
-																		date2Formatted);
+										    var date1 = new Date(date1Formatted);
+										    var date2 = new Date(date2Formatted);
 
-																date1Array
-																		.push(date1);
-																date2Array
-																		.push(date2);
+										    date1Array.push(date1);
+										    date2Array.push(date2);
 
-																var smallestDate1 = new Date(
-																		Math.min
-																				.apply(
-																						null,
-																						date1Array));
-																var lastestDate2 = new Date(
-																		Math.max
-																				.apply(
-																						null,
-																						date2Array));
+										    var smallestDate1 = new Date(Math.min.apply(null, date1Array));
+										    var lastestDate2 = new Date(Math.max.apply(null, date2Array));
 
-																// 옵션 설정
-																const options = {
-																	month : '2-digit',
-																	day : '2-digit',
-																	weekday : 'short'
-																};
+										    // 옵션 설정
+										    const options = {
+										        month: '2-digit',
+										        day: '2-digit',
+										        weekday: 'short'
+										    };
 
-																// 날짜 포맷팅
-																const smallestDate1Formatted = smallestDate1
-																		.toLocaleDateString(
-																				"ko-KR",
-																				options);
-																const lastestDate2Formatted = lastestDate2
-																		.toLocaleDateString(
-																				"ko-KR",
-																				options);
+										    // 날짜 포맷팅
+										    const smallestDate1Formatted = smallestDate1.toLocaleDateString("ko-KR", options);
+										    const lastestDate2Formatted = lastestDate2.toLocaleDateString("ko-KR", options);
 
-																document
-																		.getElementById('smallestDate1').textContent = smallestDate1Formatted;
-																document
-																		.getElementById('lastestDate2').textContent = lastestDate2Formatted;
+										    $('#smallestDate1').text(smallestDate1Formatted);
+										    $('#lastestDate2').text(lastestDate2Formatted);
 
-																// Date 객체로 변환
-																var date1 = new Date(
-																		date1Str);
-																var date2 = new Date(
-																		date2Str);
-																var timeDifference = date2
-																		- date1;
+										    // Date 객체로 변환
+										    var date1 = new Date(date1Str);
+										    var date2 = new Date(date2Str);
+										    var timeDifference = date2 - date1;
 
-																var daysDifference = timeDifference
-																		/ (1000 * 60 * 60 * 24);
+										    var daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-																var totalPriceForRoom = daysDifference
-																		* price;
-																totalPrice += totalPriceForRoom;
-
-																document
-																		.getElementById('date${loop.index}').textContent = daysDifference
-																		+ '박'; // 결과를 원하는 DOM 요소에 표시
-																document
-																		.getElementById('totalpricea${loop.index}').textContent = daysDifference
-																		* price; // 결과를 원하는 DOM 요소에 표시
-																document
-																		.getElementById('totalprice').textContent = totalPrice; // 결과를 원하는 DOM 요소에 표시
-
-																document
-																		.getElementById("totalprice3").textContent = totalPrice
-																		+ '원';
-
-																document
-																		.getElementById("discount").textContent = totalPrice / 200;
-																document
-																		.getElementById("discount2").textContent = totalPrice / 200;
-																document
-																		.getElementById("discount3").textContent = totalPrice / 200;
-
-																document
-																		.getElementById("paymentprice").textContent = totalPrice
-																		+ '원';
-															});
+										    var totalPriceForRoom = daysDifference * price;
+										    totalPrice += totalPriceForRoom;
+										    $('#date${loop.index}').text(daysDifference + '박');
+										    $('#totalpricea${loop.index}').text(daysDifference * price);
+										    $('#totalprice').text(totalPrice + '원');
+										    $('#totalprice3').text(totalPrice  + '원');
+										    $('#discount').text(totalPrice / 200);
+										    $('#discount2').text(totalPrice / 200);
+										    $('#discount3').text(totalPrice / 200);
+										    $('#paymentprice').text(totalPrice + '원');
+										});
 										</script>
 										<div class="hotelandroom">
 											<c:if test="${prevHotelName ne room.hotelname}">
@@ -212,7 +159,7 @@
 								<div class="hotelcontent">
 									<script>
 										var roomPrice = '${room.price}';
-										var price = '${room.price}';
+										//var price = '${room.price}';
 									</script>
 									<div class="hotelandroom">
 										<div class="hotelname">${room.hotelname}</div>
@@ -295,7 +242,7 @@
 						<div class="relax">입력하신 번호는 안심번호로 변경되어 숙소에 전달됩니다. 단, 안심번호로 처리가 어려운 경우에 한해 제한적으로 개인정보 제공 동의에 근거하여 실제 휴대폰번호가 전달 될 수 있습니다.</div>
 					</div>
 					<div class="infoContatiner">
-						<div class="discount">
+						<div class="cdiscount">
 							<div class="infotitle">할인</div>
 							<div class="selectdiscount" id="selectdiscount">
 								<span>
@@ -323,7 +270,7 @@
 										<span>로그인 후 사용 가능</span>
 									</c:when>
 									<c:otherwise>
-										<span>0원</span>
+										<span id="reducePrice">0원</span>
 									</c:otherwise>
 								</c:choose>
 							</div>
@@ -334,7 +281,7 @@
 										<span>로그인 후 사용 가능</span>
 									</c:when>
 									<c:otherwise>
-										<span>0원</span>
+										<span id="pointPrice">0원</span>
 									</c:otherwise>
 								</c:choose>
 							</div>
@@ -484,28 +431,29 @@
 									var roomData = {};
 
 									<c:choose>
-									<c:when test="${room2 == null}">
-									roomData = {
-										hotelname : '${room.hotelname}',
-										roomname : '${room.roomname}',
-										roomid : '${room.roomid}',
-										price : price,
-										username : username,
-										userphone : userPhone
-									};
-									</c:when>
-									<c:otherwise>
-									roomData = {
-										hotelname : '${room2[0].hotelname}',
-										roomname : '${room2[0].roomname}' + '외'
-												+ '건',
-										roomid : '${room2[0].roomid}',
-										price : totalPrice,
-										username : username,
-										userphone : userPhone
-									};
-									</c:otherwise>
-									</c:choose>
+								    <c:when test="${room2 == null}">
+							        var roomDataPrice =(reducedPrice == 0 ? totalPrice : reducedPrice);
+							        var roomData = {
+								            hotelname : '${room.hotelname}',
+								            roomname : '${room.roomname}',
+								            roomid : '${room.roomid}',
+								            price : roomDataPrice,
+								            username : username,
+								            userphone : userPhone
+								        };
+								    </c:when>
+								    <c:otherwise>
+								        var roomDataPrice =(reducedPrice == 0 ? totalPrice : reducedPrice);
+								        var roomData = {
+								            hotelname : '${room2[0].hotelname}',
+								            roomname : '${room2[0].roomname}' + '외' + '건',
+								            roomid : '${room2[0].roomid}',
+								            price : roomDataPrice,
+								            username : username,
+								            userphone : userPhone
+								        };
+								    </c:otherwise>
+								</c:choose>
 
 									var roomDataJson = JSON.stringify(roomData);
 									var roomDataUrlEncoded = encodeURIComponent(roomDataJson);

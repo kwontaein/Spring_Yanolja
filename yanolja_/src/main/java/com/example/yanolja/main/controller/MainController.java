@@ -58,26 +58,6 @@ public class MainController {
 	String sessionDate2;
 
 // 테스트 호출--------------------------------------------------------------------------------
-	@GetMapping("/test")
-	public String test() {
-		// 모든 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		return "Main/test"; // User/test 템플릿을 렌더링
-	}
-
-	// 테스트 호출
-	@GetMapping("/test2")
-	public String test2() {
-		// 모든 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		return "test/test2"; // User/test 템플릿을 렌더링
-	}
-
-	// 테스트 호출
-	@GetMapping("/test3")
-	public String test3() {
-		// 모든 호텔 목록을 조회하고 "post" 모델 속성에 추가
-		return "test/test3"; // User/test 템플릿을 렌더링
-	}
-
 	// 이미지 업로드 테스트
 	@ResponseBody
 	@PostMapping("/file-upload")
@@ -90,9 +70,9 @@ public class MainController {
 				String originalFileName = file.getOriginalFilename();
 				// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
 				System.out.println(originalFileName + " " + imageBytes);
-				for (int i = 2; i < 97; i+=2) {
-				mainService.saveImageTest(originalFileName, imageBytes,i);
-				System.out.println(i+"번째 실행");
+				for (int i = 2; i < 97; i += 2) {
+					mainService.saveImageTest(originalFileName, imageBytes, i);
+					System.out.println(i + "번째 실행");
 				}
 				// mainService.saveImage(originalFileName, imageBytes);
 				strResult = "{ \"result\":\"OK\" }";
@@ -105,13 +85,13 @@ public class MainController {
 		return strResult;
 	}
 
-//카카오 페이 결제 페이지--------------------------------------------------------------------------------
+//kakao카카오 페이 결제 페이지--------------------------------------------------------------------------------
 	@GetMapping("/KakaoPayPage")
 	public String kakaopay() {
 		return "KakaoPay/KaKaoPay";
 	}
 
-//달력 호출 --------------------------------------------------------------------------------
+//Main달력 호출 --------------------------------------------------------------------------------
 	@GetMapping("/calendar")
 	public String showCalendar(Model model, HttpSession session,
 			@RequestParam(value = "selectedStartDate", required = false) String selectedStartDate,
@@ -166,7 +146,7 @@ public class MainController {
 		return "calendar/calendar";
 	}
 
-// 메인페이지 호출--------------------------------------------------------------------------------
+//Main메인페이지 호출--------------------------------------------------------------------------------
 	@GetMapping("/")
 	public String openMain() {
 		if (sessionDate1 == null && sessionDate2 == null) {
@@ -187,7 +167,7 @@ public class MainController {
 		return "Main/SeeAllView";
 	}
 
-//리스트 --------------------------------------------------------------------------------
+//Main리스트 --------------------------------------------------------------------------------
 	@GetMapping("/ResentRelated")
 	public String ResentRelated(HttpSession session, Model model) {
 		Long hotelid = (Long) session.getAttribute("resentViewHotelid");
@@ -248,7 +228,34 @@ public class MainController {
 		return "Main/hotelslide"; // Main/Main 템플릿을 렌더링
 	}
 
-//--------------------------------------------------------------------------------
+//user--------------------------------------------------------------------------------
+	// 찜
+	@PostMapping("/Like_hotel.do")
+	@ResponseBody
+	public String likehotel(@RequestParam int hotelid, @RequestParam final int userid) {
+		int cnt = mainService.selectLike(hotelid, userid);
+
+		if (cnt == 1) {
+			// 있으면 삭제
+			mainService.deleteLike(hotelid, userid);
+			return "찜 목록에서 삭제되었습니다.";
+		} else {
+			// DB에 없으면 추가
+			mainService.insertLike(hotelid, userid);
+			return "찜 목록에 추가되었습니다.";
+		}
+	}
+
+	// 찜목록
+	@GetMapping("/Like_hotel")
+	public String Getlikehotel(Model model, HttpSession session) {
+		int userid = (int) session.getAttribute("userid");
+		List<MainResponse> post = mainService.Likehotels(userid);
+		model.addAttribute("post", post);
+		return "User/UserOption/Like_hotel";
+	}
+
+// 호텔 하위 세부 정보 --------------------------------------------------------------------------------
 	// 내용 보기 (호텔 상세정보)
 	@GetMapping("/places/View.do")
 	public String openPlaceView(@RequestParam final Long hotelid, Model model, HttpSession session) {
@@ -271,31 +278,6 @@ public class MainController {
 		return "places/Viewplace";
 	}
 
-	@PostMapping("/Like_hotel.do")
-	@ResponseBody
-	public String likehotel(@RequestParam int hotelid, @RequestParam final int userid) {
-		int cnt = mainService.selectLike(hotelid, userid);
-
-		if (cnt == 1) {
-			// 있으면 삭제
-			mainService.deleteLike(hotelid, userid);
-			return "찜 목록에서 삭제되었습니다.";
-		} else {
-			// DB에 없으면 추가
-			mainService.insertLike(hotelid, userid);
-			return "찜 목록에 추가되었습니다.";
-		}
-	}
-
-	@GetMapping("/Like_hotel")
-	public String Getlikehotel(Model model, HttpSession session) {
-		int userid = (int) session.getAttribute("userid");
-		List<MainResponse> post = mainService.Likehotels(userid);
-		model.addAttribute("post", post);
-		return "User/UserOption/Like_hotel";
-	}
-
-// 호텔 하위 세부 정보 --------------------------------------------------------------------------------
 	// 객실 목록 불러오기
 	@GetMapping("/roomlist")
 	public String roomlist(@RequestParam final int hotelid, Model model, HttpSession session) {
@@ -395,7 +377,7 @@ public class MainController {
 		return "places/infodetail/review";
 	}
 
-	// 후기 무한스크롤 추가
+	// 후기 무한스크롤 추가(아직 안함)
 	@PostMapping("/Review.Do")
 	@ResponseBody
 	public Object ReviewDo(@RequestParam(required = false) String roomname, Model model) {
@@ -443,7 +425,7 @@ public class MainController {
 		return "places/infodetail/Roomdetail";
 	}
 
-//검색 기능 --------------------------------------------------------------------------------------	
+//Main검색 기능 --------------------------------------------------------------------------------------	
 	@GetMapping("/Search")
 	public String search() {
 		return "Search/search";
@@ -465,7 +447,7 @@ public class MainController {
 		}
 	}
 
-//예약 기능 --------------------------------------------------------------------------------------	
+//reserveController예약 기능 --------------------------------------------------------------------------------------	
 	// 예약 페이지
 	@GetMapping("/Reserve")
 	public String reserve(@RequestParam(value = "roomid", required = false) Integer roomid,
@@ -587,6 +569,7 @@ public class MainController {
 		}
 	}
 
+	// 예약 내역 보는 페이지
 	@GetMapping("Reserve_List")
 	public String postReserveHistory(HttpSession session, Model model,
 			@RequestParam(value = "period", required = false) int period) {
@@ -617,7 +600,7 @@ public class MainController {
 		return "Search/Reserve/Reserve_history_NotUser";
 	}
 
-//장바구니 기능 --------------------------------------------------------------------------------------	
+//reserveController장바구니 기능 --------------------------------------------------------------------------------------	
 	// 장바구니 페이지
 	@GetMapping("/cart")
 	public String cart(HttpSession session, Model model) {
