@@ -14,6 +14,7 @@
 	var roomPrice = 0;
 	var date1Array = []; // 배열 생성
 	var date2Array = []; // 배열 생성
+
 </script>
 </head>
 <body>

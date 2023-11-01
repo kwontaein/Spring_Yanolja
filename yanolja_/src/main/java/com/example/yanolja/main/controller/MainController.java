@@ -58,6 +58,17 @@ public class MainController {
 	String sessionDate2;
 
 // 테스트 호출--------------------------------------------------------------------------------
+	@PostMapping("/test")
+	@ResponseBody
+	public boolean test() {
+		Integer a = 0;
+		return a != null;
+	}
+	
+	@GetMapping("/test2")
+	public String test2() {
+		return "test/test";
+	}
 	// 이미지 업로드 테스트
 	@ResponseBody
 	@PostMapping("/file-upload")
