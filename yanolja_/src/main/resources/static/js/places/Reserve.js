@@ -192,25 +192,6 @@ $(document).ready(
 		const formattedEndDate2 = selectedEndDate
 			.toLocaleDateString("ko-KR", options2);
 
-		const intime = $("#intime");
-		const outtime = $("#outtime");
-
-		const indate = $("#indate");
-		const outdate = $("#outdate");
-
-		const date = $("#date");
-
-		const totalpricea = $("#totalpricea");
-		const totalprice = $("#totalprice");
-		const totalprice3 = $("#totalprice3");
-
-		const paymentprice = $("#paymentprice");
-
-		const discount = $("#discount");
-		const discount2 = $("#discount2");
-		const discount3 = $("#discount3");
-		const reducePrice = $("#reducePrice");
-
 		if (intime != null && outtime != null & roomPrice != 0) {
 			const timeDifference = selectedEndDate.getTime()
 				- selectedStartDate.getTime();
@@ -218,25 +199,23 @@ $(document).ready(
 				/ (1000 * 60 * 60 * 24));
 			price = roomPrice * daysDifference;
 			console.log(price);
+			$("#intime").text(formattedStartDate2);
+			$("#outtime").text(formattedEndDate2);
 
+			$("#indate").text(formattedStartDate);
+			$("#outdate").text(formattedEndDate);
 
-			intime.textContent = `${formattedStartDate2}`;
-			outtime.textContent = ` ${formattedEndDate2} `;
+			$("#date").text(daysDifference + '박');
 
-			indate.textContent = `${formattedStartDate}`;
-			outdate.textContent = ` ${formattedEndDate} `;
+			$("#totalpricea").text(daysDifference * price);
+			$("#totalprice").text(price + '원');
+			$("#totalprice3").text(price + '원');
 
-			date.textContent = `${daysDifference}박`;
+			$("#discount").text(price / 200);
+			$("#discount2").text(price / 200);
+			$("#discount3").text(price / 200);
 
-			totalpricea.textContent = `${price}원`;
-			totalprice.textContent = `${price}원`;
-			totalprice3.textContent = `${price}원`;
-
-			discount.textContent = `${(price) / 200}`;
-			discount2.textContent = `${(price) / 200}`;
-			discount3.textContent = `${(price) / 200}`;
-
-			paymentprice.textContent = `${price}원 `;
+			$("#paymentprice").text(reducedPrice + '원');
 		}
 
 		var seemore = document.getElementById("seemore");

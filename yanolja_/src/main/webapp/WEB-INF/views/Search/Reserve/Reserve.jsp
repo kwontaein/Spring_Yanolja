@@ -160,7 +160,6 @@
 								<div class="hotelcontent">
 									<script>
 										var roomPrice = '${room.price}';
-										//var price = '${room.price}';
 									</script>
 									<div class="hotelandroom">
 										<div class="hotelname">${room.hotelname}</div>

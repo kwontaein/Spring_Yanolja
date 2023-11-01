@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.yanolja.grobal.MainResponse;
 import com.example.yanolja.main.model.MainService;
-import com.example.yanolja.main.post.MainResponse;
 
 @Controller
 @RequestMapping(value = "/sub_main")
@@ -54,7 +54,7 @@ public class SubMainController {
 		model.addAttribute("post", post);
 		return "SubMain/list/Tophotellist" + number; // Main/Hotellist 템플릿을 렌더링
 	}
-
+	//위치 기반 선택 (수정필요)
 	@GetMapping("/selectlocation")
 	public String selectlocation(@RequestParam("selectedText") String selectedText, Model model) {
 		model.addAttribute("kind", kindhotel);

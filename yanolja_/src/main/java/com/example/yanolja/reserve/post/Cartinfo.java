@@ -1,4 +1,4 @@
-package com.example.yanolja.main.post;
+package com.example.yanolja.reserve.post;
 
 public class Cartinfo {
 	// 장바구니 정보 담을 변수

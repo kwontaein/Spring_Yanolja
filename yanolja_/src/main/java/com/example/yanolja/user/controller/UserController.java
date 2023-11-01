@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.yanolja.grobal.ImageResponse;
+import com.example.yanolja.grobal.MainResponse;
+import com.example.yanolja.grobal.ReviewResponse;
 import com.example.yanolja.kakao.model.KakaoService;
-import com.example.yanolja.main.post.ImageResponse;
-import com.example.yanolja.main.post.ReviewResponse;
 import com.example.yanolja.user.CustomUserDetails;
 import com.example.yanolja.user.model.EmailService;
 import com.example.yanolja.user.model.UserService;
@@ -56,7 +57,7 @@ public class UserController {
 		// username 세션에서 가져와서 검색
 		// 내가 쓴 리뷰 목록 가져오는 코드 추가
 		int userid = (int) session.getAttribute("userid");
-		if(session.getAttribute("userid") != null) {
+		if (session.getAttribute("userid") != null) {
 			List<ReviewResponse> review = userService.UserByreview(userid);
 			List<ImageResponse> img = userService.reviewUserPhotos(userid);
 			int room_cnt = userService.UserByCnt(userid);
@@ -79,14 +80,14 @@ public class UserController {
 		session.invalidate();
 		return "User/UserOption/Mybenefit";
 	}
-	
-	
+
 	// 로그인 방법 선택
 	@GetMapping("/tologin")
 	public String tologin(Model model) {
 		model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
 		return "User/tologin";
 	}
+
 //로그인----------------------------------------------------------------------------------------------------------
 	// 로그인 폼
 	@GetMapping("/login")
@@ -187,5 +188,31 @@ public class UserController {
 		return "User/UserOption/Setting";
 	}
 
-	
+	// user--------------------------------------------------------------------------------
+	// 찜
+	@PostMapping("/Like_hotel.do")
+	@ResponseBody
+	public String likehotel(@RequestParam int hotelid, @RequestParam final int userid) {
+		int cnt = userService.selectLike(hotelid, userid);
+
+		if (cnt == 1) {
+			// 있으면 삭제
+			userService.deleteLike(hotelid, userid);
+			return "찜 목록에서 삭제되었습니다.";
+		} else {
+			// DB에 없으면 추가
+			userService.insertLike(hotelid, userid);
+			return "찜 목록에 추가되었습니다.";
+		}
+	}
+
+	// 찜목록
+	@GetMapping("/Like_hotel")
+	public String Getlikehotel(Model model, HttpSession session) {
+		int userid = (int) session.getAttribute("userid");
+		List<MainResponse> post = userService.Likehotels(userid);
+		model.addAttribute("post", post);
+		return "User/UserOption/Like_hotel";
+	}
+
 }

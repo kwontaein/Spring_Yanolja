@@ -21,7 +21,11 @@ function closeCcModal() {
 	// 부모 문서에서 #paymentprice 요소를 찾아 내용 변경
 
 	reducePrice.textContent = totalSelectedCouponPrice +'원';
-	reducedPrice = totalPrice - totalSelectedCouponPrice;
+	if(totalPrice == 0){
+		reducedPrice = price - totalSelectedCouponPrice;
+	}else{
+		reducedPrice = totalPrice - totalSelectedCouponPrice;
+	}
 	$('#totalprice3').text((reducedPrice) + '원');
     $('#paymentprice').text((reducedPrice)+ '원');
 	modal.hide();
@@ -150,12 +154,12 @@ function openCcModal(index) {
 							<div class="select_coupon">
 								<div>
 									<div class="no_coupon">
-										<input type="radio" checked="checked" name="selectcoupon" value="no_select" onclick="showSelectedValue(this)">
+										<input type="radio" checked="checked" name="selectcoupon0" value="no_select0" onclick="showSelectedValues(this,0)">
 										적용 안함
 									</div>
 									<div class="coupon_selected">
 										<span>
-											<input type="radio" name="selectcoupon" value="select" onclick="showSelectedValue(this)">
+											<input type="radio" name="selectcoupon0" value="select0" onclick="showSelectedValues(this,0)">
 											쿠폰
 										</span>
 										<span>

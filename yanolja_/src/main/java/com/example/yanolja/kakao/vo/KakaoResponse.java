@@ -1,4 +1,4 @@
-package com.example.yanolja.kakaoPay.vo;
+package com.example.yanolja.kakao.vo;
 
 public class KakaoResponse {
 	private String tid; // 결제 고유 번호

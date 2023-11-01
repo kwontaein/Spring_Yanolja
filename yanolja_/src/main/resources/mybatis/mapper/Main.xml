@@ -47,8 +47,11 @@
 		FROM location
 		WHERE location.hotelid =
 		hotel.hotelid) AS roadloc,
-		(select imgdata from image where image.hotelid = hotel.hotelid and Thumbnail = 1) as imgdata
+		(select imgdata from
+		image where image.hotelid = hotel.hotelid and Thumbnail = 1) as
+		imgdata
 	</sql>
+
 	<sql id="GenerateDateRange">
 		DELIMITER $$
 		CREATE FUNCTION GenerateDateRange(startDate
@@ -76,48 +79,23 @@
 
 		DELIMITER ;
 	</sql>
-	
+
+	<sql id="reviewColums">
+		FORMAT((AVG(Kindness) + AVG(cleanliness) + AVG(convenience) +
+		AVG(Loc_satisfy)) / 4, 1) AS rating,
+		(select name from user where
+		user.userid = review.userid) as username,
+		(select roomname from room
+		where room.roomid = review.roomid) as
+		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 
+			사진 들어가야 함 -->
+	</sql>
+
 	<select id="findRegionName">
 		select regionName from region
 	</select>
 
-	<select id="selectcoupon">
-		SELECT
-		counponid,
-		userid,
-		DATE_FORMAT(createdate, '%Y.
-		%m. %d'),
-		DATE_FORMAT(deletedate, '%Y. %m. %d'),
-		reduceprice,
-		content,
-		status
-		FROM
-		coupon;
-	</select>
-	<!--상세정보 조회 -->
-	<select id="findById" parameterType="long"
-		resultType="com.example.yanolja.main.post.MainResponse">
-		SELECT
-		<include refid="postColumns" />
-		FROM
-		hotel
-		WHERE
-		hotelid = #{value}
-	</select>
-
-	<select id="Likehotels"
-		resultType="com.example.yanolja.main.post.MainResponse">
-		SELECT
-		<include refid="postColumns" />
-		FROM
-		hotel
-		WHERE
-		hotelid in (select hotelid from Like_hotel where userid
-		= #{userid})
-	</select>
-
-	<select id="findPostById" parameterType="long"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="findPostById">
 		SELECT
 		<include refid="postColumns" />
 		FROM
@@ -127,7 +105,6 @@
 		region_detail_id =
 		(SELECT region_detail_id
 		FROM location WHERE hotelid = #{hotelid}))
-
 	</select>
 
 	<!--호텔아이디 조회 -->
@@ -141,18 +118,15 @@
 	</select>
 
 	<!-- 호텔 조회 -->
-	<select id="findAll"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="findAll">
 		SELECT
 		<include refid="postColumns" />
 		FROM
 		hotel
 	</select>
 
-
 	<!-- 호텔 조회 -->
-	<select id="findAllFrom" parameterType="map"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="findAllFrom">
 		SELECT
 		<include refid="postColumns" />
 		FROM hotel where (select regionid
@@ -169,8 +143,7 @@
 	</select>
 
 	<!-- 호텔 조회 -->
-	<select id="findAllFromRegion"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="findAllFromRegion">
 		SELECT
 		<include refid="postColumns" />
 		FROM hotel where (select regionName from region where regionid =
@@ -189,8 +162,7 @@
 	</select>
 
 	<!-- 호텔 조회 -->
-	<select id="findAllFromRd"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="findAllFromRd">
 		SELECT
 		<include refid="postColumns" />
 		FROM hotel
@@ -212,8 +184,7 @@
 	</select>
 
 	<!-- 호텔 조회 -->
-	<select id="TofindByKind" parameterType="map"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="TofindByKind">
 		SELECT
 		<include refid="postColumns" />
 		FROM hotel where
@@ -221,357 +192,22 @@
 	</select>
 
 	<!-- 호텔 조회 -->
-	<select id="TofindByKindDesc" parameterType="map"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="TofindByKindDesc">
 		SELECT
 		<include refid="postColumns" />
 		FROM hotel where
 		kindhotel = #{kindhotel}
 		ORDER BY rating desc
 	</select>
+
 	<!-- 방 조회 -->
-	<select id="findRoomDetail"
-		resultType="com.example.yanolja.main.post.RoomResponse">
-		SELECT
-		(SELECT hotelname FROM hotel WHERE hotel.hotelid =
-		room.hotelid) AS
-		hotelname,
-		roomid,
-		MaxManCnt,
-		roomname,
-		price,
-		roominfo,
-		somke,
-		booknoti,
-		roomserve,
-		defaultmancnt,
-		bed,
-		bedcnt,
-		rentalType,
-		Checkin,
-		Checkout,
-		IFNULL(
-		(roomnumber - (
-		SELECT COUNT(Reservations.reservedate)
-		AS cnt
-		FROM (
-		SELECT DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) AS
-		reservedate
-		FROM (
-		SELECT a.N + b.N * 10 + c.N * 100 AS n
-		FROM (
-		SELECT 0
-		AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
-		ALL SELECT 4 UNION ALL
-		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7
-		UNION ALL SELECT 8 UNION ALL
-		SELECT 9
-		) AS a
-		CROSS JOIN (
-		SELECT 0 AS N
-		UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
-		ALL
-		SELECT 4 UNION ALL
-		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION
-		ALL SELECT 8 UNION ALL
-		SELECT 9
-		) AS b
-		CROSS JOIN (
-		SELECT 0 AS N UNION
-		ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION
-		ALL SELECT 4
-		UNION ALL
-		SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
-		SELECT 8 UNION ALL
-		SELECT 9
-		) AS c
-		) AS numbers
-		WHERE
-		DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) = #{StartDate}
-		) AS DateList
-		LEFT JOIN reserve AS Reservations
-		ON DateList.reservedate BETWEEN
-		Reservations.reservedate AND
-		Reservations.reserveEndDate
-		WHERE
-		Reservations.roomid = room.roomid OR Reservations.roomid IS NULL
-		GROUP
-		BY DateList.reservedate
-		)),
-		roomnumber
-		) AS roomcnt,
-		defaultinfo,
-		(SELECT
-		reserveinfo FROM hotel WHERE hotel.hotelid = room.hotelid) AS
-		reserveinfo
-		FROM room
-		WHERE roomid = #{roomid};
-	</select>
-	<!-- 방 조회 -->
-	<select id="findRoomByDate"
-		resultType="com.example.yanolja.main.post.RoomResponse">
-		SELECT
-    roomid,
-    MaxManCnt,
-    roomname,
-    price,
-    roominfo,
-    somke,
-    booknoti,
-    roomserve,
-    defaultmancnt,
-    bed,
-    bedcnt,
-    Checkin,
-    IFNULL(
-        (roomnumber - (
-            SELECT COUNT(Reservations.reservedate) AS cnt
-            FROM (
-                SELECT DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) AS reservedate
-                FROM (
-                    SELECT a.N + b.N * 10 + c.N * 100 AS n
-                    FROM (
-                        SELECT 0 AS N UNION ALL SELECT 1
-                        UNION ALL SELECT 2 UNION ALL SELECT 3
-                        UNION ALL SELECT 4 UNION ALL SELECT 5
-                        UNION ALL SELECT 6 UNION ALL SELECT 7
-                        UNION ALL SELECT 8 UNION ALL SELECT 9
-                    ) AS a
-                    CROSS JOIN (
-                        SELECT 0 AS N UNION ALL SELECT 1
-                        UNION ALL SELECT 2 UNION ALL SELECT 3
-                        UNION ALL SELECT 4 UNION ALL SELECT 5
-                        UNION ALL SELECT 6 UNION ALL SELECT 7
-                        UNION ALL SELECT 8 UNION ALL SELECT 9
-                    ) AS b
-                    CROSS JOIN (
-                        SELECT 0 AS N UNION ALL SELECT 1
-                        UNION ALL SELECT 2 UNION ALL SELECT 3
-                        UNION ALL SELECT 4 UNION ALL SELECT 5
-                        UNION ALL SELECT 6 UNION ALL SELECT 7
-                        UNION ALL SELECT 8 UNION ALL SELECT 9
-                    ) AS c
-                ) AS numbers
-                WHERE DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) = #{StartDate}
-            ) AS DateList
-            LEFT JOIN reserve AS Reservations
-            ON DateList.reservedate BETWEEN Reservations.reservedate AND Reservations.reserveEndDate
-            WHERE Reservations.roomid = room.roomid OR Reservations.roomid IS NULL
-            GROUP BY DateList.reservedate
-        )),
-    roomnumber) AS roomcnt,
-    rentalType, (Select imgdata from image where image.roomid = room.roomid) as image
-FROM room
-WHERE hotelid = #{hotelid}
-AND roomnumber >= (
-    IFNULL(
-        (roomnumber - (
-            SELECT COUNT(Reservations.reservedate) AS cnt
-            FROM (
-                SELECT DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) AS reservedate
-                FROM (
-                    SELECT a.N + b.N * 10 + c.N * 100 AS n
-                    FROM (
-                        SELECT 0 AS N UNION ALL SELECT 1
-                        UNION ALL SELECT 2 UNION ALL SELECT 3
-                        UNION ALL SELECT 4 UNION ALL SELECT 5
-                        UNION ALL SELECT 6 UNION ALL SELECT 7
-                        UNION ALL SELECT 8 UNION ALL SELECT 9
-                    ) AS a
-                    CROSS JOIN (
-                        SELECT 0 AS N UNION ALL SELECT 1
-                        UNION ALL SELECT 2 UNION ALL SELECT 3
-                        UNION ALL SELECT 4 UNION ALL SELECT 5
-                        UNION ALL SELECT 6 UNION ALL SELECT 7
-                        UNION ALL SELECT 8 UNION ALL SELECT 9
-                    ) AS b
-                    CROSS JOIN (
-                        SELECT 0 AS N UNION ALL SELECT 1
-                        UNION ALL SELECT 2 UNION ALL SELECT 3
-                        UNION ALL SELECT 4 UNION ALL SELECT 5
-                        UNION ALL SELECT 6 UNION ALL SELECT 7
-                        UNION ALL SELECT 8 UNION ALL SELECT 9
-                    ) AS c
-                ) AS numbers
-                WHERE DATE_ADD(#{StartDate}, INTERVAL (n-1) DAY) = #{StartDate}
-            ) AS DateList
-            LEFT JOIN reserve AS Reservations
-            ON DateList.reservedate BETWEEN Reservations.reservedate AND Reservations.reserveEndDate
-            WHERE Reservations.roomid = room.roomid OR Reservations.roomid IS NULL
-            GROUP BY DateList.reservedate
-        )),
-    roomnumber
-    )
-)
-	</select>
 
-	<select id="reserve_possible"
-		resultType="com.example.yanolja.main.post.ReserveResponse">
-		SELECT
-		DATE_FORMAT(reservedate, "%Y-%m-%d") AS date,
-		count(*) AS cnt
-		FROM
-		reserve
-		where
-		DATE(reservedate) >= DATE_SUB(NOW(),
-		INTERVAL 365 DAY) and hotelid =#{hotelid}
-		GROUP
-		BY
-		DATE_FORMAT(reservedate, "%Y-%m-%d")
-		ORDER
-		BY date DESC
-	</select>
-
-	<select id="hotelLocation"
-		resultType="com.example.yanolja.main.post.TrafficResponse">
-		SELECT
-		roadloc,roadinfo,parking
-		FROM
-		location
-		WHERE
-		hotelid =
-		#{hotelid}
-	</select>
-
-
-	<select id="hotelintro" resultType="String">
-		Select
-		hotelintro
-		from
-		hotel
-		where
-		hotelid = #{hotelid}
-	</select>
-
-	<select id="hotelpolicy"
-		resultType="com.example.yanolja.main.post.PolicyResponse">
-		Select
-		policyname,policycontent
-		FROM
-		policy
-		where
-		hotelid =
-		#{hotelid}
-	</select>
-
-	<select id="hotelinfo"
-		resultType="com.example.yanolja.main.post.InfoResponse">
-		Select
-		infoName, infoDetail
-		FROM
-		hotel_info
-		where
-		hotelid =
-		#{hotelid}
-	</select>
-
-	<select id="roomcnt" resultType="int">
-		select
-		sum(roomnumber) as
-		roomcount
-		from
-		room
-		where
-		hotelid = #{hotelid}
-	</select>
-	<select id="roomnameList">
-		select
-		roomname
-		from
-		room
-		where
-		hotelid = #{hotelid}
-	</select>
-
-	<sql id="reviewColums">
-		FORMAT((AVG(Kindness) + AVG(cleanliness) + AVG(convenience) +
-		AVG(Loc_satisfy)) / 4, 1) AS rating,
-		(select name from user where
-		user.userid = review.userid) as username,
-		(select roomname from room
-		where room.roomid = review.roomid) as
-		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 
-			사진 들어가야 함 -->
-	</sql>
 	<select id="lastReviewid">
 		SELECT MAX(reviewid) AS lastreviewid FROM review;
 	</select>
 
-	<select id="review"
-		resultType="com.example.yanolja.main.post.ReviewResponse">
-		select
-		<include refid="reviewColums" />
-		from review
-		where hotelid = #{hotelid} and roomid =
-		coalesce((select
-		roomid
-		from room where roomname = #{roomname} and hotelid = #{hotelid})
-		,
-		roomid)
-		<if test="onlyPhoto == true">
-			and (select MIN(imgid) from image where image.reviewid =
-			review.reviewid) is
-			not null
-		</if>
-		group by reviewid
-		ORDER BY #{orderby}
-	</select>
-
-	<select id="reviewAllPhotos">
-		select imgID , hotelid, reviewid, imgdata from image
-		where hotelid = #{hotelid} and reviewid IS not null
-	</select>
-
-	<select id="reviewroom"
-		resultType="com.example.yanolja.main.post.ReviewResponse">
-		select
-		<include refid="reviewColums" />
-		from
-		review
-		where
-		roomid= #{roomid}
-		<if test="onlyPhoto == true">
-			and (select imgid from image where image.reviewid =
-			review.reviewid) is
-			not null
-		</if>
-		group by reviewid
-		ORDER BY #{orderby}
-	</select>
-
-	<select id="reviewroomcnt" resultType="int">
-		select
-		count(*) as
-		reviewcnt
-		from
-		review
-		where
-		roomid = #{roomid}
-	</select>
-
-	<select id="rating_detail"
-		resultType="com.example.yanolja.main.post.ReviewResponse">
-		SELECT
-		COUNT(*) AS reviewcnt,
-		COALESCE(
-		(SELECT
-		FORMAT((AVG(Kindness) + AVG(cleanliness) + AVG(convenience) +
-		AVG(Loc_satisfy)) / 4, 1)
-		FROM review
-		WHERE hotelid = #{hotelid}), 0) AS
-		rating,
-		COALESCE(FORMAT(AVG(Kindness), 1), '0') AS Kindness,
-		COALESCE(FORMAT(AVG(cleanliness), 1), '0') AS cleanliness,
-		COALESCE(FORMAT(AVG(convenience), 1), '0') AS convenience,
-		COALESCE(FORMAT(AVG(Loc_satisfy), 1), '0') AS Loc_satisfy
-		FROM
-		review
-		WHERE
-		hotelid = #{hotelid};
-	</select>
 	<!-- 지역별 리스트 조회 -->
-	<select id="findlocateby" parameterType="int"
-		resultType="com.example.yanolja.main.post.MainResponse">
+	<select id="findlocateby">
 		SELECT
 		<include refid="postColumns" />
 		FROM
@@ -589,50 +225,7 @@ AND roomnumber >= (
 		hotel.hotelid)) = #{regionid}
 	</select>
 
-	<select id="facility"
-		resultType="com.example.yanolja.main.post.FacilityResponse">
-		Select
-		roomStructure, roomCompose, bedCompose, washTool,
-		etx, internet, TV, drink,
-		roomfacility
-		from
-		facility
-		where
-		roomid
-		=#{roomid};
-	</select>
-
-	<select id="findUPhone" resultType="String">
-		Select phone
-		from
-		user
-		where
-		name=#{uname}
-	</select>
-
-	<select id="cartlist"
-		resultType="com.example.yanolja.main.post.RoomResponse">
-		<foreach collection="list" item="roomid"
-			open="select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS hotelname,hotelid,rentalType,
-(select roadloc from location where location.hotelid = room.hotelid) as loc, roomid, MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout from room where roomid in ("
-			separator="," close=")">
-			#{roomid}
-		</foreach>
-	</select>
-	<select id="cartlist2"
-		resultType="com.example.yanolja.main.post.RoomResponse">
-		select (SELECT hotelname FROM hotel WHERE hotel.hotelid =
-		room.hotelid) AS
-		hotelname,hotelid,rentalType,
-		(select roadloc from
-		location where location.hotelid = room.hotelid) as loc,
-		roomid,
-		MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout
-		from room
-		where roomid = #{roomid}
-	</select>
-	<select id="reserve_possible2"
-		resultType="com.example.yanolja.main.post.ReserveResponse">
+	<select id="reserve_possible2">
 		SELECT DateList.reservedate,
 		IFNULL(COUNT(Reservations.reservedate), 0) AS
 		cnt
@@ -680,94 +273,6 @@ AND roomnumber >= (
 		#{hotelid}
 		GROUP BY DateList.reservedate;
 	</select>
-	<select id="findHRids" resultType="Map">
-		select hotelid, roomid from
-		room where roomname = #{roomname}
-		and hotelid = (select hotelid from
-		hotel where hotel.hotelname = #{hotelname});
-	</select>
-
-	<insert id="insertReserve">
-		INSERT INTO Reserve (hotelid,roomid, reservedate, reserveEndDate,
-		user_name,
-		user_phone,order_number)
-		VALUES
-		<foreach item="dataMap" collection="parameterMap"
-			separator=",">
-			(#{dataMap.hotelId}, #{dataMap.roomid}, #{dataMap.date1},
-			#{dataMap.date2}, #{user_name}, #{user_phone}, #{order_number})
-		</foreach>
-	</insert>
-
-	<insert id="insertReserveOne">
-		INSERT INTO Reserve (hotelid,roomid, reservedate,
-		reserveEndDate,
-		user_name,
-		user_phone,order_number)
-		VALUES
-		(#{hotelid},#{roomid},
-		#{date1List},
-		#{date2List},
-		#{user_name},
-		#{user_phone},#{order_number})
-	</insert>
-
-	<insert id="insertBook">
-		INSERT INTO book (userid , roomid , bookdate)
-		VALUE
-		(#{userid} , #{roomid}, #{bookdate})
-	</insert>
-	<insert id="insertBookList">
-		INSERT INTO book (userid , roomid , bookdate)
-		VALUE
-		<foreach item="dataMap" collection="parameterMap"
-			separator=",">
-			(#{userid} , #{dataMap.roomid}, #{dataMap.date1})
-		</foreach>
-	</insert>
-	<select id="selectReserve_order"
-		resultType="com.example.yanolja.main.post.ReserveResponse">
-		select
-		roomid,
-		(SELECT h.hotelname FROM hotel h WHERE
-		h.hotelid =
-		reserve.hotelid) AS
-		hotelname,
-		(SELECT r.roomname FROM room r
-		WHERE
-		r.roomid = reserve.roomid) AS roomname,
-		reservedate,user_name,user_phone
-		from
-		reserve
-		where order_number =
-		#{ordernumber}
-	</select>
-	<select id="selectBook">
-		select
-		b.bookid,
-		b.roomid,
-		(SELECT h.hotelname FROM
-		hotel h WHERE h.hotelid = r.hotelid) AS hotelname,
-		r.roomname,
-		rs.user_name,
-		rs.reservedate,
-		rs.reserveEndDate,
-		COALESCE(b.reviewYN, 0)
-		AS reviewYN
-		from book b
-		JOIN room
-		r ON b.roomid = r.roomid
-		JOIN reserve rs
-		ON r.roomid = rs.roomid
-		JOIN
-		review rv ON b.userid = rv.userid
-		where
-		b.userid = #{userid} AND
-		DATEDIFF(CURDATE(), reservedate) >= -#{period}
-		group by b.bookid ,
-		rs.user_name,rs.reservedate, rs.reserveEndDate
-		ORDER BY reservedate desc
-	</select>
 
 	<select id="selectForReview">
 		SELECT
@@ -783,24 +288,6 @@ AND roomnumber >= (
 		WHERE roomid = #{roomid};
 	</select>
 
-	<select id="select_p_Reserve">
-		select
-		(SELECT h.hotelname FROM hotel h WHERE
-		h.hotelid =
-		reserve.hotelid) AS
-		hotelname,
-		(SELECT r.roomname FROM room r
-		WHERE
-		r.roomid =
-		reserve.roomid) AS roomname,
-		reservedate,reserveEndDate,order_number
-		from
-		reserve
-		where
-		order_number =
-		#{order_number} and user_name = #{name} and user_phone= #{phone}
-	</select>
-
 	<insert id="insertReview">
 		INSERT INTO review (roomid, hotelid,
 		userid,
@@ -811,10 +298,12 @@ AND roomnumber >= (
 		(#{roomid} , #{hotelid}, #{userid} , #{textData} ,
 		#{rating1} , #{rating2} , #{rating3} , #{rating4} , Now())
 	</insert>
+
 	<update id="updateReivewYn">
 		update book set reviewYN = true where bookid =
 		#{bookid};
 	</update>
+
 	<insert id="saveImage">
 		INSERT INTO image (hotelid,
 		reviewid
@@ -825,11 +314,12 @@ AND roomnumber >= (
 	</insert>
 
 	<insert id="saveImageTest">
-		INSERT INTO image (hotelid,imgname,imgdata,Thumbnail,roomid)
-		VALUE((select hotelid from room where roomid = #{roomid}),#{originalFileName},#{imageBytes} ,0, #{roomid})
+		INSERT INTO image
+		(hotelid,imgname,imgdata,Thumbnail,roomid)
+		VALUE((select hotelid from
+		room where roomid = #{roomid}),#{originalFileName},#{imageBytes} ,0,
+		#{roomid})
 	</insert>
-
-
 
 	<update id="updateImage">
 		INSERT INTO image (hotelid,
@@ -839,16 +329,20 @@ AND roomnumber >= (
 		(#{hotelid},#{currentReviewid},#{originalFileName},#{imageBytes} ,0
 		,#{userid})
 	</update>
+
 	<delete id="DeleteReviewById">
 		delete from review where reviewid = #{reviewid}
 	</delete>
+
 	<delete id="DeletePhotoById">
 		delete from image where reviewid = #{reviewid}
 	</delete>
+
 	<select id="selectRsByreview">
 		select roomid from review where reviewid =
 		#{reviewid}
 	</select>
+
 	<select id="selectForReviewUpdate">
 		SELECT
 		h.hotelname,
@@ -876,12 +370,14 @@ AND roomnumber >= (
 		rv.reviewid =
 		#{roomIdbyReview}
 	</select>
+
 	<select id="ReviewInseredPhoto">
 		select imgID ,imgname, imgdata from image
 		where
 		reviewid =
 		#{reviewid}
 	</select>
+
 	<delete id="DelPhotoByimgid">
 		delete from image where imgid= #{imgid}
 	</delete>
@@ -893,16 +389,5 @@ AND roomnumber >= (
 		Kindness=#{rating1} ,cleanliness= #{rating2} , convenience=#{rating3}
 		, Loc_satisfy=#{rating4} where reviewid = #{reviewid}
 	</update>
-	<select id="selectLike">
-		select count(*) from Like_hotel where userid =
-		#{userid} and hotelid = #{hotelid}
-	</select>
-	<delete id="deleteLike">
-		delete from Like_hotel where userid = #{userid} and
-		hotelid = #{hotelid}
-	</delete>
-	<insert id="insertLike">
-		insert into Like_hotel values(#{userid},#{hotelid})
-	</insert>
 
 </mapper>

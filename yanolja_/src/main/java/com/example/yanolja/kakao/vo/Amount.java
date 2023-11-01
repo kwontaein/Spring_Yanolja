@@ -1,4 +1,4 @@
-package com.example.yanolja.kakaoPay.vo;
+package com.example.yanolja.kakao.vo;
 
 public class Amount {
 	private int total; // 총 결제 금액

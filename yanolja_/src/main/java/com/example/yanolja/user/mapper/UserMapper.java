@@ -3,10 +3,10 @@ package com.example.yanolja.user.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.security.core.userdetails.User;
 
-import com.example.yanolja.main.post.ImageResponse;
-import com.example.yanolja.main.post.ReviewResponse;
+import com.example.yanolja.grobal.ImageResponse;
+import com.example.yanolja.grobal.MainResponse;
+import com.example.yanolja.grobal.ReviewResponse;
 import com.example.yanolja.user.CustomUserDetails;
 import com.example.yanolja.user.vo.UserVo;
 
@@ -26,5 +26,12 @@ public interface UserMapper {
 	public int UserByCnt(int userid);
 
 	public List<ImageResponse> reviewUserPhotos(int userid);
+	
+	void insertLike(int hotelid, int userid);
 
+	int selectLike(int hotelid, int userid);
+
+	void deleteLike(int hotelid, int userid);
+
+	List<MainResponse> Likehotels(int userid);
 }

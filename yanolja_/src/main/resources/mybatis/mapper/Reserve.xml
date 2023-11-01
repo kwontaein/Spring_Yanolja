@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yanolja.reserve.mapper.ReserveMapper">
+	<select id="findUPhone" resultType="String">
+		Select phone
+		from
+		user
+		where
+		name=#{uname}
+	</select>
+
+	<select id="cartlist">
+		<foreach collection="list" item="roomid"
+			open="select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS hotelname,hotelid,rentalType,
+(select roadloc from location where location.hotelid = room.hotelid) as loc, roomid, MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout from room where roomid in ("
+			separator="," close=")">
+			#{roomid}
+		</foreach>
+	</select>
+	<select id="cartlist2">
+		select (SELECT hotelname FROM hotel WHERE hotel.hotelid =
+		room.hotelid) AS
+		hotelname,hotelid,rentalType,
+		(select roadloc from
+		location where location.hotelid = room.hotelid) as loc,
+		roomid,
+		MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout
+		from room
+		where roomid = #{roomid}
+	</select>
+
+	<select id="findHRids" resultType="Map">
+		select hotelid, roomid from
+		room where roomname = #{roomname}
+		and hotelid = (select hotelid from
+		hotel where hotel.hotelname = #{hotelname});
+	</select>
+	<insert id="insertReserve">
+		INSERT INTO Reserve (hotelid,roomid, reservedate, reserveEndDate,
+		user_name,
+		user_phone,order_number)
+		VALUES
+		<foreach item="dataMap" collection="parameterMap"
+			separator=",">
+			(#{dataMap.hotelId}, #{dataMap.roomid}, #{dataMap.date1},
+			#{dataMap.date2}, #{user_name}, #{user_phone}, #{order_number})
+		</foreach>
+	</insert>
+
+	<insert id="insertReserveOne">
+		INSERT INTO Reserve (hotelid,roomid, reservedate,
+		reserveEndDate,
+		user_name,
+		user_phone,order_number)
+		VALUES
+		(#{hotelid},#{roomid},
+		#{date1List},
+		#{date2List},
+		#{user_name},
+		#{user_phone},#{order_number})
+	</insert>
+
+	<insert id="insertBook">
+		INSERT INTO book (userid , roomid , bookdate)
+		VALUE
+		(#{userid} , #{roomid}, #{bookdate})
+	</insert>
+	<insert id="insertBookList">
+		INSERT INTO book (userid , roomid , bookdate)
+		VALUE
+		<foreach item="dataMap" collection="parameterMap"
+			separator=",">
+			(#{userid} , #{dataMap.roomid}, #{dataMap.date1})
+		</foreach>
+	</insert>
+	<select id="selectReserve_order">
+		select
+		roomid,
+		(SELECT h.hotelname FROM hotel h WHERE
+		h.hotelid =
+		reserve.hotelid) AS
+		hotelname,
+		(SELECT r.roomname FROM room r
+		WHERE
+		r.roomid = reserve.roomid) AS roomname,
+		reservedate,user_name,user_phone
+		from
+		reserve
+		where order_number =
+		#{ordernumber}
+	</select>
+	<select id="selectBook">
+		select
+		b.bookid,
+		b.roomid,
+		(SELECT h.hotelname FROM
+		hotel h WHERE h.hotelid = r.hotelid) AS hotelname,
+		r.roomname,
+		rs.user_name,
+		rs.reservedate,
+		rs.reserveEndDate,
+		COALESCE(b.reviewYN, 0)
+		AS reviewYN
+		from book b
+		JOIN room
+		r ON b.roomid = r.roomid
+		JOIN reserve rs
+		ON r.roomid = rs.roomid
+		JOIN
+		review rv ON b.userid = rv.userid
+		where
+		b.userid = #{userid} AND
+		DATEDIFF(CURDATE(), reservedate) >= -#{period}
+		group by b.bookid ,
+		rs.user_name,rs.reservedate, rs.reserveEndDate
+		ORDER BY reservedate desc
+	</select>
+
+	<select id="select_p_Reserve">
+		select
+		(SELECT h.hotelname FROM hotel h WHERE
+		h.hotelid =
+		reserve.hotelid) AS
+		hotelname,
+		(SELECT r.roomname FROM room r
+		WHERE
+		r.roomid =
+		reserve.roomid) AS roomname,
+		reservedate,reserveEndDate,order_number
+		from
+		reserve
+		where
+		order_number =
+		#{order_number} and user_name = #{name} and user_phone= #{phone}
+	</select>
+
+	<select id="selectcoupon">
+		SELECT
+		counponid,
+		userid,
+		DATE_FORMAT(createdate, '%Y.
+		%m. %d'),
+		DATE_FORMAT(deletedate, '%Y. %m. %d'),
+		reduceprice,
+		content,
+		status
+		FROM
+		coupon;
+	</select>
+</mapper>

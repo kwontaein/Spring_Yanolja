@@ -1,4 +1,4 @@
-package com.example.yanolja.kakaoPay.vo;
+package com.example.yanolja.kakao.vo;
 
 public class KakaoApproveResponse {
 	private String aid; // 요청 고유 번호

@@ -44,7 +44,6 @@
 
 					// 폼을 자동으로 제출
 					form.submit();
-			
 				});
 	</script>
 	<form method="post" action="/kakaoPay"></form>

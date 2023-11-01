@@ -1,4 +1,4 @@
-package com.example.yanolja.main.post;
+package com.example.yanolja.reserve.post;
 
 public class CouponResponse {
 	private int couponid;

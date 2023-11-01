@@ -3,6 +3,92 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.yanolja.user.mapper.UserMapper">
+
+	<sql id="postColumns">
+		hotel.hotelid,
+		hotel.hotelname,
+		hotel.hotelcall,
+		hotel.notification,
+		COALESCE((SELECT FORMAT((AVG(Kindness) +
+		AVG(cleanliness) + AVG(convenience) +
+		AVG(Loc_satisfy)) / 4, 1)
+		FROM
+		review
+		WHERE review.hotelid = hotel.hotelid), 0) as rating,
+		(SELECT
+		COUNT(*)
+		FROM review
+		WHERE review.hotelid = hotel.hotelid) AS
+		reviewcount,
+		hotel.kindhotel,
+		hotel.hotelcreate,
+		hotel.hotelmodifed,
+		hotel.status,
+		(SELECT MIN(room.price)
+		FROM room
+		WHERE room.hotelid =
+		hotel.hotelid) AS price,
+		(select regionid
+		from region_detail
+		where
+		region_detail_id =
+		(SELECT location.region_detail_id
+		FROM location
+		WHERE
+		location.hotelid =
+		hotel.hotelid)) as regionid,
+		(SELECT
+		location.region_detail_id
+		FROM location
+		WHERE location.hotelid =
+		hotel.hotelid) AS regiondetail,
+		(SELECT location.roadloc
+		FROM location
+		WHERE location.hotelid =
+		hotel.hotelid) AS roadloc,
+		(select imgdata from
+		image where image.hotelid = hotel.hotelid and Thumbnail = 1) as
+		imgdata
+	</sql>
+	
+	<sql id="GenerateDateRange">
+		DELIMITER $$
+		CREATE FUNCTION GenerateDateRange(startDate
+		DATE, endDate DATE)
+		RETURNS TEXT
+		DETERMINISTIC
+		NO SQL
+		BEGIN
+		DECLARE
+		currentDate DATE;
+		DECLARE dateRange TEXT DEFAULT '';
+		SET currentDate =
+		startDate;
+
+		WHILE currentDate &lt;= endDate DO
+		SET dateRange =
+		CONCAT(dateRange, "'", currentDate, "',");
+		SET currentDate =
+		DATE_ADD(currentDate, INTERVAL 1 DAY);
+		END WHILE;
+
+		RETURN TRIM(TRAILING
+		',' FROM dateRange);
+		END$$
+
+		DELIMITER ;
+	</sql>
+	<sql id="reviewColums">
+		FORMAT((AVG(Kindness) + AVG(cleanliness) + AVG(convenience) +
+		AVG(Loc_satisfy)) / 4, 1) AS rating,
+		(select name from user where
+		user.userid = review.userid) as username,
+		(select roomname from room
+		where room.roomid = review.roomid) as
+		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 
+			사진 들어가야 함 -->
+	</sql>
+
 	<select id="getUserAccount"
 		parameterType="com.example.yanolja.user.vo.UserVo">
 		SELECT * FROM user
@@ -61,4 +147,25 @@
 		where userid = #{userid}
 	</select>
 
+	<select id="Likehotels">
+		SELECT
+		<include refid="postColumns" />
+		FROM
+		hotel
+		WHERE
+		hotelid in (select hotelid from Like_hotel where userid
+		= #{userid})
+	</select>
+		<select id="selectLike">
+		select count(*) from Like_hotel where userid =
+		#{userid} and hotelid = #{hotelid}
+	</select>
+	<delete id="deleteLike">
+		delete from Like_hotel where userid = #{userid} and
+		hotelid = #{hotelid}
+	</delete>
+	<insert id="insertLike">
+		insert into Like_hotel values(#{userid},#{hotelid})
+	</insert>
+	
 </mapper>

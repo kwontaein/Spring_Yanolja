@@ -13,8 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.yanolja.main.post.ImageResponse;
-import com.example.yanolja.main.post.ReviewResponse;
+import com.example.yanolja.grobal.ImageResponse;
+import com.example.yanolja.grobal.MainResponse;
+import com.example.yanolja.grobal.ReviewResponse;
 import com.example.yanolja.user.mapper.UserMapper;
 import com.example.yanolja.user.vo.UserVo;
 
@@ -23,9 +24,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-
 	@Autowired
-	UserMapper userMapper;
+	private final UserMapper userMapper = null;
+	
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
@@ -97,6 +98,30 @@ public class UserService implements UserDetailsService {
 	public List<ImageResponse> reviewUserPhotos(int userid) {
 		// TODO Auto-generated method stub
 		return userMapper.reviewUserPhotos(userid);
+	}
+
+	// 좋아요 여부 확인
+	public int selectLike(int hotelid, int userid) {
+
+		return userMapper.selectLike(hotelid, userid);
+	}
+
+	// 좋아요 삭제
+	public void deleteLike(int hotelid, int userid) {
+
+		userMapper.deleteLike(hotelid, userid);
+	}
+
+	// 좋아요 추가
+	public void insertLike(int hotelid, int userid) {
+
+		userMapper.insertLike(hotelid, userid);
+	}
+
+	// 좋아요 한 호텔 목록 조회
+	public List<MainResponse> Likehotels(int userid) {
+
+		return userMapper.Likehotels(userid);
 	}
 
 }
