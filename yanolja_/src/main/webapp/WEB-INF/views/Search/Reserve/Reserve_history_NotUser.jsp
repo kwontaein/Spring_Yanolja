@@ -5,9 +5,17 @@
 <head>
 <link rel="stylesheet" href="${path}/css/Reserve/Reserve_history.css" />
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>비회원 예약 성공 조회</title>
 </head>
 <body>
+	<script type="text/javascript">
+function delete_pr(index){
+	var order_number=index;
+}
+function SeeReserve(){
+	console.log(index);
+}
+</script>
 	<div class="rh_container">
 		<div class="rh_wrapper">
 			<div class="NoMember">
@@ -15,7 +23,10 @@
 					<h3>예약정보</h3>
 					<hr>
 					<c:forEach items="${pesonal_reserve}" var="pr">
-						<div class="Nus">호텔명 : ${pr.hotelname}</div>
+						<div class="Nus" style="display: flex; justify-content: space-between;">
+							<span>호텔명 : ${pr.hotelname}</span>
+							<span onclick="delete_pr(${pr.order_number})">•••</span>
+						</div>
 						<div class="Nus">객실명 : ${pr.roomname}</div>
 						<div class="Nus">예약 기간: ${pr.reserveDate2} ~ ${pr.reserveEndDate2}</div>
 						<div class="Nus">주문번호 : ${pr.order_number}</div>
@@ -23,6 +34,12 @@
 					</c:forEach>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<div class="cancel" onclick="share()">예약내역 공유</div>
+			<div class="red" onclick="SeeReserve()">결제확인/예약취소</div>
 		</div>
 	</div>
 </body>

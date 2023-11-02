@@ -31,7 +31,6 @@
 				</span>
 				<div id="warningMessage" class="alert alert-danger"></div>
 				<button type="submit" class="button_login" onclick="validateForm()">로그인</button>
-
 			</form>
 			<div class="login_to_find">
 				<a href="/findpassword">비밀번호 찾기</a>

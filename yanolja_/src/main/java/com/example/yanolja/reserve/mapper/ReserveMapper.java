@@ -9,6 +9,7 @@ import com.example.yanolja.grobal.ReserveResponse;
 import com.example.yanolja.grobal.RoomResponse;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.CouponResponse;
+
 @Mapper
 public interface ReserveMapper {
 
@@ -20,17 +21,16 @@ public interface ReserveMapper {
 
 	Map<String, Integer> findHRids(String roomname, String hotelname);
 
-	void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone,
-			String order_number);
+	void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone);
 
 	void insertReserveOne(int hotelid, int roomid, String date1List, String date2List, String user_name,
-			String user_phone, String order_number);
+			String user_phone, String order_number, String price);
 
 	void insertBook(int userid, int roomid, String bookdate);
 
 	void insertBookList(int userid, List<Map<String, Object>> parameterMap, String order_number);
 
-	List<ReserveResponse> selectReserve_order(String ordernumber);
+	List<ReserveResponse> selectReserve_order(List<String> ordernumber);
 
 	List<BookResponse> selectBook(int userid, int period);
 

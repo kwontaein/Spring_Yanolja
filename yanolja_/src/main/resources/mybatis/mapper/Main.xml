@@ -389,5 +389,8 @@
 		Kindness=#{rating1} ,cleanliness= #{rating2} , convenience=#{rating3}
 		, Loc_satisfy=#{rating4} where reviewid = #{reviewid}
 	</update>
-
+	<select id="isBooked">
+		Select reviewYN from book where roomid=#{roomid} and
+		bookid = #{bookid}
+	</select>
 </mapper>

@@ -4,14 +4,30 @@
 <html>
 <head>
 <link rel="stylesheet" href="${path}/css/Reserve/Reserve_history.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>예약번호로 예약 조회</title>
+<script>
+	$(document).ready(function() {
+		var previousURL = document.referrer; // 이전 URL 주소 가져오기
+
+		$("#customBackButton").click(function() {
+			// "/Reserve"와 파라미터를 포함한 URL 패턴을 정의
+			if (previousURL.includes('/Reserve') && previousURL.includes('?')) {
+				// 이전 URL이 "/Reserve"와 파라미터를 포함하면 뒤로가기를 막음
+				window.close();
+			} else {
+				window.history.back(); // 그렇지 않으면 일반적인 뒤로가기 동작 수행
+			}
+		});
+	});
+</script>
 </head>
 <body>
 	<header style="height: 48px;">
 		<div class="head">
 			<div class="top">
-				<span onclick="window.history.back();">&lt;</span>
+				<span id="customBackButton">&times;</span>
 				<span>예약내역</span>
 				<span></span>
 			</div>

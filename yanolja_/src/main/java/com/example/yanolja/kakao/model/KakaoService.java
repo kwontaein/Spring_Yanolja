@@ -69,7 +69,6 @@ public class KakaoService {
 		// 카카오 인증 URL을 생성하여 반환합니다.
 		return KAKAO_AUTH_URI + "/oauth/authorize" + "?client_id=" + KAKAO_CLIENT_ID + "&redirect_uri="
 				+ KAKAO_REDIRECT_URL + "&response_type=code";
-
 	}
 
 	// 카카오로부터 받은 코드로부터 사용자 정보를 가져오는 메서드

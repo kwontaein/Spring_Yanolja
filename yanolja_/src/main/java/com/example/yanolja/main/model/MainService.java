@@ -107,8 +107,8 @@ public class MainService {
 	}
 
 	// 호텔 이미지 저장
-	public void saveImageTest(String originalFileName, byte[] imageBytes,int roomid) {
-		mainMapper.saveImageTest(originalFileName, imageBytes,roomid);
+	public void saveImageTest(String originalFileName, byte[] imageBytes, int roomid) {
+		mainMapper.saveImageTest(originalFileName, imageBytes, roomid);
 	}
 
 	// 이미지 삭제
@@ -167,5 +167,8 @@ public class MainService {
 		return mainMapper.findRegionName();
 	}
 
+	public Integer isBooked(Integer roomid, Integer bookid) {
+		return mainMapper.isBooked(roomid, bookid);
+	}
 
 }

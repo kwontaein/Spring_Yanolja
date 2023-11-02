@@ -10,11 +10,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="${path}/js/places/Reserve.js"></script>
 <script>
+	var userid = null;
+	var priceArray = []; //가격 목록을 저장할 변수
 	var totalPrice = 0; // 전체 가격을 저장할 변수
 	var roomPrice = 0;
 	var date1Array = []; // 배열 생성
 	var date2Array = []; // 배열 생성
-
+	<c:if test="${not empty userid}">
+		userid = ${userid};
+	</c:if>
 </script>
 </head>
 <body>
@@ -72,7 +76,9 @@
 										    var price = '${room.price}';
 										    var date1Str = '${room.date1}';
 										    var date2Str = '${room.date2}';
-
+										    
+										    priceArray.push(price);
+											console.log(priceArray);
 										    var dateParts1 = date1Str.split('.'); // 날짜를 구성하는 부분 분리
 										    var dateParts2 = date2Str.split('.'); // 날짜를 구성하는 부분 분리
 
@@ -432,7 +438,7 @@
 
 									<c:choose>
 								    <c:when test="${room2 == null}">
-							        var roomDataPrice =(reducedPrice == 0 ? totalPrice : reducedPrice);
+							        var roomDataPrice =(reducedPrice == 0 ? price : reducedPrice);
 							        var roomData = {
 								            hotelname : '${room.hotelname}',
 								            roomname : '${room.roomname}',
@@ -468,7 +474,7 @@
 			</div>
 		</div>
 	</div>
-	<%@include file="./couponModal.jsp" %>
+	<%@include file="./couponModal.jsp"%>
 	<div id="myModal" class="modal">
 		<div class="modal-content">
 			<div class="modalinfo">

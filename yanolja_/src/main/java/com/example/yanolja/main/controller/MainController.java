@@ -20,7 +20,6 @@ import com.example.yanolja.grobal.ImageResponse;
 import com.example.yanolja.grobal.MainResponse;
 import com.example.yanolja.grobal.ReserveResponse;
 import com.example.yanolja.grobal.ReviewResponse;
-
 import com.example.yanolja.main.model.MainService;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,6 +32,7 @@ public class MainController {
 
 	@Autowired
 	MainService mainService;
+
 // 테스트 호출--------------------------------------------------------------------------------
 	@PostMapping("/test")
 	@ResponseBody
@@ -82,8 +82,8 @@ public class MainController {
 //Main메인페이지 호출--------------------------------------------------------------------------------
 	@GetMapping("/")
 	public String openMain(HttpSession session) {
-		String sessionDate1 = (String)session.getAttribute("sessionDate1");
-		String sessionDate2 = (String)session.getAttribute("sessionDate2");
+		String sessionDate1 = (String) session.getAttribute("sessionDate1");
+		String sessionDate2 = (String) session.getAttribute("sessionDate2");
 		if (sessionDate1 == null && sessionDate2 == null) {
 
 			LocalDate nowDate = LocalDate.now();
@@ -192,28 +192,42 @@ public class MainController {
 	@GetMapping("/writeReview")
 	public String writeReview(@RequestParam(value = "roomid", required = false) Integer roomid,
 			@RequestParam(value = "bookid", required = false) Integer bookid,
-			@RequestParam(value = "reviewid", required = false) Integer reviewid, Model model) {
+			@RequestParam(value = "reviewid", required = false) Integer reviewid, Model model, HttpSession session) {
 
 		// 유저아이디, 해당 아이디와 룸아이디로 이루어진 예약정보가 없거나, 후기 갯수 < 해당 정보 라면 잘못된 접근입니다. 라는 문구 작성
 
-		// 호텔, 객실이름 및 사용자 이름 가져오기
-		if (reviewid != null && roomid == null && bookid == null) {
-			// rating 정보랑 이미지 정보 불러와서 출력.
-			int roomIdbyReview = mainService.selectRsByreview(reviewid);
-			ReviewResponse loadRs = mainService.selectForReviewUpdate(reviewid);
-			List<ImageResponse> imgs = mainService.ReviewInseredPhoto(reviewid);
-			model.addAttribute("loadRs", loadRs);
-			model.addAttribute("roomid", roomIdbyReview);
-			model.addAttribute("imgs", imgs);
-			return "User/UpdateReview";
+		// 유저정보 확인
+		Integer userid = (Integer) session.getAttribute("userid");
+
+		if (userid != null) {
+			// 호텔, 객실이름 및 사용자 이름 가져오기
+			if (reviewid != null && roomid == null && bookid == null) {
+				// rating 정보랑 이미지 정보 불러와서 출력.
+				int roomIdbyReview = mainService.selectRsByreview(reviewid);
+				ReviewResponse loadRs = mainService.selectForReviewUpdate(reviewid);
+				List<ImageResponse> imgs = mainService.ReviewInseredPhoto(reviewid);
+				model.addAttribute("loadRs", loadRs);
+				model.addAttribute("roomid", roomIdbyReview);
+				model.addAttribute("imgs", imgs);
+				return "User/UpdateReview";
+			} else {
+				// 에약정보가 이미 있는지 확인
+				Integer isBooked = mainService.isBooked(roomid, bookid);
+				if (isBooked != null && isBooked == 0) {
+					// 여긴 그냥 기본 정보만
+					ReserveResponse loadRs = mainService.selectForReview(roomid);
+					model.addAttribute("loadRs", loadRs);
+					model.addAttribute("roomid", roomid);
+					model.addAttribute("bookid", bookid);
+					return "User/writeReview";
+				} else {
+					return "Main/Invalid/Invalid_approach";
+				}
+			}
 		} else {
-			// 여긴 그냥 기본 정보만
-			ReserveResponse loadRs = mainService.selectForReview(roomid);
-			model.addAttribute("loadRs", loadRs);
-			model.addAttribute("roomid", roomid);
-			model.addAttribute("bookid", bookid);
-			return "User/writeReview";
+			return "Main/Invalid/Invalid_approach";
 		}
+
 	}
 
 	// 후기 저장

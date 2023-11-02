@@ -64,6 +64,7 @@ public class HotelController {
 		session.setAttribute("resentViewHotelid", hotelid);
 		session.setAttribute("resentViewKindHotel", kindhotel);// 최근 본 호텔아이디 세션에 저장해서 이 값이 있을 경우 보여줄 자료 출력
 		session.setAttribute("rskindbykor", kind);
+		
 		model.addAttribute("post", post);
 		return "places/Viewplace";
 	}

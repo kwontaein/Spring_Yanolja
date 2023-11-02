@@ -39,15 +39,15 @@ public class ReserveService {
 	}
 
 	// 예약 정보 삽입
-	public void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone,
-			String order_number) {
-		reserveMapper.insertReserve(parameterMap, user_name, user_phone, order_number);
+	public void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone) {
+		reserveMapper.insertReserve(parameterMap, user_name, user_phone);
 	}
 
 	// 예약 정보 하나만 삽입
 	public void insertReserveOne(int hotelid, int roomid, String date1List, String date2List, String user_name,
-			String user_phone, String order_number) {
-		reserveMapper.insertReserveOne(hotelid, roomid, date1List, date2List, user_name, user_phone, order_number);
+			String user_phone, String order_number, String price) {
+		reserveMapper.insertReserveOne(hotelid, roomid, date1List, date2List, user_name, user_phone, order_number,
+				price);
 	}
 
 	// 로그인한 경우, 예약 내역 삽입
@@ -61,7 +61,7 @@ public class ReserveService {
 	}
 
 	// 예약 직후 예약 정보 출력
-	public List<ReserveResponse> selectReserve_order(String ordernumber) {
+	public List<ReserveResponse> selectReserve_order(List<String> ordernumber) {
 		return reserveMapper.selectReserve_order(ordernumber);
 	}
 

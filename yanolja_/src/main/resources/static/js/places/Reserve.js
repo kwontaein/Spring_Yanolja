@@ -123,14 +123,23 @@ function payCancel() {
 }
 // 결제 성공 메시지 표시 및 모달 열기
 function payAgree() {
+	console.log("priceArray",priceArray);
 	$.ajax({
 		url: '/Reserve_Agree', // 서버의 엔드포인트 URL
 		method: 'post',     // HTTP GET 요청
+		traditional : true,
+		data: {
+			priceArray: priceArray
+		},
 		success: function(data) {
 			// 서버로부터 받은 데이터를 화면에 표시
 			alert("결제 성공");
 			closeModal(); // 모달 닫기
-			window.location.href = '/Reserve_history?ordernumber=' + data;
+			if (userid === null) {
+				window.location.href = '/Reserve_history?ordernumber=' + data;
+			} else {
+				window.location.href = '/Reserve_history';
+			}
 		},
 		error: function() {
 			// 에러 처리
@@ -191,7 +200,10 @@ $(document).ready(
 			.toLocaleDateString("ko-KR", options2);
 		const formattedEndDate2 = selectedEndDate
 			.toLocaleDateString("ko-KR", options2);
-
+			
+		var intime = $("#intime");
+		var outtime = $("#outtime");
+		
 		if (intime != null && outtime != null & roomPrice != 0) {
 			const timeDifference = selectedEndDate.getTime()
 				- selectedStartDate.getTime();
@@ -199,6 +211,7 @@ $(document).ready(
 				/ (1000 * 60 * 60 * 24));
 			price = roomPrice * daysDifference;
 			console.log(price);
+
 			$("#intime").text(formattedStartDate2);
 			$("#outtime").text(formattedEndDate2);
 
@@ -215,7 +228,7 @@ $(document).ready(
 			$("#discount2").text(price / 200);
 			$("#discount3").text(price / 200);
 
-			$("#paymentprice").text(reducedPrice + '원');
+			$("#paymentprice").text(price + '원');
 		}
 
 		var seemore = document.getElementById("seemore");

@@ -2,7 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.yanolja.reserve.mapper.ReserveMapper">
+<mapper
+	namespace="com.example.yanolja.reserve.mapper.ReserveMapper">
 	<select id="findUPhone" resultType="String">
 		Select phone
 		from
@@ -20,10 +21,12 @@
 		</foreach>
 	</select>
 	<select id="cartlist2">
-		select (SELECT hotelname FROM hotel WHERE hotel.hotelid =
+		select (SELECT hotelname FROM hotel WHERE
+		hotel.hotelid =
 		room.hotelid) AS
 		hotelname,hotelid,rentalType,
-		(select roadloc from
+		(select
+		roadloc from
 		location where location.hotelid = room.hotelid) as loc,
 		roomid,
 		MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout
@@ -40,12 +43,13 @@
 	<insert id="insertReserve">
 		INSERT INTO Reserve (hotelid,roomid, reservedate, reserveEndDate,
 		user_name,
-		user_phone,order_number)
+		user_phone,order_number,reserve_price)
 		VALUES
 		<foreach item="dataMap" collection="parameterMap"
 			separator=",">
 			(#{dataMap.hotelId}, #{dataMap.roomid}, #{dataMap.date1},
-			#{dataMap.date2}, #{user_name}, #{user_phone}, #{order_number})
+			#{dataMap.date2}, #{user_name}, #{user_phone},
+			#{dataMap.order_number},#{dataMap.price})
 		</foreach>
 	</insert>
 
@@ -53,13 +57,13 @@
 		INSERT INTO Reserve (hotelid,roomid, reservedate,
 		reserveEndDate,
 		user_name,
-		user_phone,order_number)
+		user_phone,order_number,reserve_price)
 		VALUES
 		(#{hotelid},#{roomid},
 		#{date1List},
 		#{date2List},
 		#{user_name},
-		#{user_phone},#{order_number})
+		#{user_phone},#{order_number},#{price})
 	</insert>
 
 	<insert id="insertBook">
@@ -88,8 +92,11 @@
 		reservedate,user_name,user_phone
 		from
 		reserve
-		where order_number =
-		#{ordernumber}
+		where order_number IN
+		<foreach item="item" collection="list" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
 	</select>
 	<select id="selectBook">
 		select
