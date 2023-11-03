@@ -75,6 +75,7 @@ public class KakaoController {
 	public String kakaologin() {
 		return "User/Kakao";
 	}
+
 //카카오페이 ----------------------------------------------------------------------------------------------------
 	/**
 	 * 결제요청
@@ -96,7 +97,7 @@ public class KakaoController {
 			String username = jsonNode.get("username").asText();
 			String userPhone = jsonNode.get("userPhone").asText();
 
-			//DB 저장하는 코드 추가해야함
+			// DB 저장하는 코드 추가해야함
 			int point = Integer.parseInt(price) / 200;
 
 			System.out.println("point : " + point);
@@ -160,7 +161,8 @@ public class KakaoController {
 	 * 환불
 	 */
 	@PostMapping("/refund")
-	public ResponseEntity refund() {
+	public ResponseEntity refund(@RequestParam(value = "reserveid", required = false) int reserveid) {
+		System.out.println("환불 실행");
 		KakaoCancelResponse kakaoCancelResponse = kakaoService.kakaoCancel();
 		return new ResponseEntity<>(kakaoCancelResponse, HttpStatus.OK);
 	}

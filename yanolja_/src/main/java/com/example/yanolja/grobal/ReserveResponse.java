@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ReserveResponse {
-
+	
+	
+	private int reserveid;
 	private int roomid;
 	private int user_phone;
 	private String hotelname;
@@ -35,24 +37,26 @@ public class ReserveResponse {
 
 	// select_p_Reserve
 	public ReserveResponse(String hotelname, String roomname, LocalDateTime reserveDate, LocalDateTime reserveEndDate,
-			String order_number) {
+			String order_number,int reserveid) {
 		super();
 		this.hotelname = hotelname;
 		this.roomname = roomname;
 		this.reserveDate = reserveDate;
 		this.reserveEndDate = reserveEndDate;
 		this.order_number = order_number;
+		this.reserveid = reserveid;
 	}
 
 	// selectReserve_order
 	public ReserveResponse(int roomid, String hotelname, String roomname, LocalDateTime reserveDate, String user_name,
-			int user_phone) {
+			int user_phone,int reserveid) {
 		super();
 		this.roomid = roomid;
 		this.hotelname = hotelname;
 		this.roomname = roomname;
 		this.user_name = user_name;
 		this.reserveDate = reserveDate;
+		this.reserveid = reserveid;
 	}
 
 	// selectForReview
@@ -62,6 +66,10 @@ public class ReserveResponse {
 		this.rentalType = rentalType;
 		this.roomname = roomname;
 		this.reserveDate = reserveDate;
+	}
+
+	public int getReserveid() {
+		return reserveid;
 	}
 
 	public int getRoomid() {

@@ -479,7 +479,9 @@
 		<div class="modal-content">
 			<div class="modalinfo">
 				<span>
-					${partner_user_id}님 체크인 날짜는 <br>
+					<c:if test="${not empty username}">${username}</c:if>
+					<c:if test="${empty username}">고객</c:if>
+					님의 체크인 날짜는 <br>
 					<span class="red"></span>
 					입니다.
 				</span>

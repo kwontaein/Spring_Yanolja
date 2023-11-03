@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.yanolja.grobal.ReserveResponse;
 import com.example.yanolja.grobal.RoomResponse;
+import com.example.yanolja.kakao.vo.KakaoResponse;
 import com.example.yanolja.reserve.model.ReserveService;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.Cartinfo;
@@ -35,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class ReserveController {
 	@Autowired
 	ReserveService reserveService;
+	private KakaoResponse kakaoReady;
 
 	// reserveController예약 기능
 	// --------------------------------------------------------------------------------------
@@ -90,36 +92,35 @@ public class ReserveController {
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
 
-		
-		System.out.println(priceArray);
-		
+		String kakaoTid = (String) session.getAttribute("kakaoTid");
+
 		List<RoomResponse> combinedList = (List<RoomResponse>) session.getAttribute("combinedList");
 		List<String> on_list = new ArrayList<>();
 		if (combinedList != null) {
 			List<Map<String, Object>> parameterList = new ArrayList<>();
-			
+
 			int i = 1;
 			int priceIndex = 0; // priceArray 요소의 인덱스
-			
+
 			for (RoomResponse roomResponse : combinedList) {
 
 				Map<String, Object> dataMap = new HashMap<>();
 				dataMap.put("hotelId", roomResponse.getHotelid());
 				dataMap.put("roomid", roomResponse.getRoomid());
-				
-				//주문번호 넣기
+
+				// 주문번호 넣기
 				dataMap.put("order_number", order_number);
 				on_list.add(order_number);
-				
+
 				order_number = order_number + Integer.toString(i);
 				i++;
-				
-				//가격 추가 부분
-			      // 가격 할당
-	            if (priceIndex < priceArray.length) {
-	                dataMap.put("price", priceArray[priceIndex]);
-	                priceIndex++;
-	            }
+
+				// 가격 추가 부분
+				// 가격 할당
+				if (priceIndex < priceArray.length) {
+					dataMap.put("price", priceArray[priceIndex]);
+					priceIndex++;
+				}
 				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
 				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -132,21 +133,22 @@ public class ReserveController {
 
 					dataMap.put("date1", formattedDate1);
 					dataMap.put("date2", formattedDate2);
-				
-					//리스트 추가
+
+					// 리스트 추가
 					parameterList.add(dataMap);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-			
+
 			}
 
-			reserveService.insertReserve(parameterList, user_name, user_phone);
+			reserveService.insertReserve(parameterList, user_name, user_phone, kakaoTid);
 
 			if (userid != null) {
 				reserveService.insertBookList(userid, parameterList, order_number);
 			}
 
+			DeleteSession(session);
 			return on_list;
 		} else {
 			RoomResponse roomdetail = (RoomResponse) session.getAttribute("roomdetail");
@@ -162,14 +164,16 @@ public class ReserveController {
 			String bookdate = formattedDate1;
 
 			reserveService.insertReserveOne(hotelid, roomid, formattedDate1, formattedDate2, user_name, user_phone,
-					order_number, price);
+					order_number, price, kakaoTid);
 
 			if (userid != null) {
 				reserveService.insertBook(userid, roomid, bookdate);
 			}
 			on_list.add(order_number);
+			DeleteSession(session);
 			return on_list;
 		}
+
 	}
 
 	// 회원 예약 내역 조회 페이지
@@ -219,9 +223,27 @@ public class ReserveController {
 
 	// 예약 취소 기능
 	// 환불 및 /book 테이블에서 삭제(user)인 경우에만/ ordernumber = 0 으로 변경
-	@PostMapping("/Reserve_cancel")
-	public String ReserveCancel(@RequestParam(value = "order_number", required = true) String order_number) {
-		System.out.println("삭제할 내역의 주문번호 : " + order_number);
+	@PostMapping("/Reserve_Info")
+	@ResponseBody
+	public int ReserveCancel(@RequestParam(value = "bookid", required = false) String bookid,
+			@RequestParam(value = "order_number", required = false) String order_number) {
+
+		System.out.println("삭제할 내역 : " + bookid);
+		System.out.println("삭제할 내역 : " + order_number);
+		int reserve_price = 0;
+		if (bookid != null) {
+			reserve_price = reserveService.SelectReserveByBookid(bookid);
+		} else {
+			reserve_price = reserveService.SelectReserveByOrder_number(order_number);
+		}
+
+		System.out.println(reserve_price);
+		// 해당 정보에 대한 reserve 정보들 가져와서 반환 -> modal창으로 띄움? 아니면 데이터 전달
+		return reserve_price;
+	}
+
+	@GetMapping("/Reserve_cancel")
+	public String ReserveCandelPage() {
 		return "";
 	}
 
@@ -354,4 +376,11 @@ public class ReserveController {
 		return combinedList;
 	}
 
+	public void DeleteSession(HttpSession session) {
+		session.removeAttribute("partner_user_id");
+		session.removeAttribute("userPhone");
+		session.removeAttribute("price");
+		session.removeAttribute("partner_order_id");
+		session.removeAttribute("vat");
+	}
 }

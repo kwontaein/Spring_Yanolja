@@ -5,6 +5,16 @@
 <head>
 <meta charset="UTF-8">
 <title>회원 예약 목록 불러오기</title>
+<script type="text/javascript">
+
+// 모달 열기
+function OpenModal(index) {
+	console.log("모달보기" + index);
+	bookid=index;
+	$("#SeeModal").css("display", "flex");
+};
+
+</script>
 <style type="text/css">
 .book_container {
 	width: 768px;
@@ -64,9 +74,14 @@ h3 {
 								</a>
 							</div>
 						</c:when>
+						<c:when test="${book.canreview eq '결제 정보 보기' && book.review_cnt == 0}">
+							<div style="width: 100%; height: 40px; background-color: deeppink; display: flex; align-items: center; justify-content: center;">
+								<span style="color: white; text-decoration: none;" onclick="OpenModal(${book.bookid})"> ${book.canreview} </span>
+							</div>
+						</c:when>
 						<c:otherwise>
 							<div style="width: 100%; height: 40px; background-color: gray; display: flex; align-items: center; justify-content: center;">
-								<a style="color: white; text-decoration: none; cursor:not-allowed;">
+								<a style="color: white; text-decoration: none; cursor: not-allowed;">
 									<span>${book.canreview}</span>
 								</a>
 							</div>

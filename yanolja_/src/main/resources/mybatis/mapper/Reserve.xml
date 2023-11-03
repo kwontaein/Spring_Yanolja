@@ -43,40 +43,42 @@
 	<insert id="insertReserve">
 		INSERT INTO Reserve (hotelid,roomid, reservedate, reserveEndDate,
 		user_name,
-		user_phone,order_number,reserve_price)
+		user_phone,order_number,reserve_price,kakaoTid)
 		VALUES
 		<foreach item="dataMap" collection="parameterMap"
 			separator=",">
 			(#{dataMap.hotelId}, #{dataMap.roomid}, #{dataMap.date1},
 			#{dataMap.date2}, #{user_name}, #{user_phone},
-			#{dataMap.order_number},#{dataMap.price})
+			#{dataMap.order_number},#{dataMap.price},#{kakaoTid})
 		</foreach>
 	</insert>
-
 	<insert id="insertReserveOne">
 		INSERT INTO Reserve (hotelid,roomid, reservedate,
 		reserveEndDate,
 		user_name,
-		user_phone,order_number,reserve_price)
+		user_phone,order_number,reserve_price,kakaoTid)
 		VALUES
 		(#{hotelid},#{roomid},
 		#{date1List},
 		#{date2List},
 		#{user_name},
-		#{user_phone},#{order_number},#{price})
+		#{user_phone},#{order_number},#{price},#{kakaoTid})
 	</insert>
 
 	<insert id="insertBook">
-		INSERT INTO book (userid , roomid , bookdate)
+		INSERT INTO book (userid , roomid , bookdate
+		,reserveid)
 		VALUE
-		(#{userid} , #{roomid}, #{bookdate})
+		(#{userid} , #{roomid}, #{bookdate} ,(select
+		Max(reserveid) from reserve))
 	</insert>
 	<insert id="insertBookList">
 		INSERT INTO book (userid , roomid , bookdate)
 		VALUE
 		<foreach item="dataMap" collection="parameterMap"
 			separator=",">
-			(#{userid} , #{dataMap.roomid}, #{dataMap.date1})
+			(#{userid} , #{dataMap.roomid}, #{dataMap.date1}, (select
+			Max(reserveid) from reserve))
 		</foreach>
 	</insert>
 	<select id="selectReserve_order">
@@ -89,40 +91,45 @@
 		(SELECT r.roomname FROM room r
 		WHERE
 		r.roomid = reserve.roomid) AS roomname,
-		reservedate,user_name,user_phone
+		reservedate,user_name,user_phone,reserveid
 		from
 		reserve
-		where order_number IN
+		where
+		order_number IN
 		<foreach item="item" collection="list" open="(" separator=","
 			close=")">
 			#{item}
 		</foreach>
 	</select>
 	<select id="selectBook">
-		select
+		SELECT
 		b.bookid,
 		b.roomid,
-		(SELECT h.hotelname FROM
-		hotel h WHERE h.hotelid = r.hotelid) AS hotelname,
+		h.hotelname,
 		r.roomname,
 		rs.user_name,
 		rs.reservedate,
 		rs.reserveEndDate,
 		COALESCE(b.reviewYN, 0)
-		AS reviewYN
-		from book b
-		JOIN room
-		r ON b.roomid = r.roomid
-		JOIN reserve rs
-		ON r.roomid = rs.roomid
+		AS reviewYN,
+		b.userid
+		FROM book b
+		JOIN room r ON b.roomid = r.roomid
 		JOIN
-		review rv ON b.userid = rv.userid
+		reserve rs ON b.reserveid = rs.reserveid
+		LEFT JOIN review rv ON
+		b.roomid = rv.roomid AND b.userid = rv.userid
+		JOIN hotel h ON r.hotelid
+		= h.hotelid
 		where
 		b.userid = #{userid} AND
-		DATEDIFF(CURDATE(), reservedate) >= -#{period}
-		group by b.bookid ,
-		rs.user_name,rs.reservedate, rs.reserveEndDate
-		ORDER BY reservedate desc
+		DATEDIFF(CURDATE(),
+		reservedate) >= -#{period}
+		GROUP BY b.bookid, b.roomid, h.hotelname,
+		r.roomname, rs.user_name,
+		rs.reservedate, rs.reserveEndDate, reviewYN,
+		b.userid
+		ORDER BY reservedate DESC
 	</select>
 
 	<select id="select_p_Reserve">
@@ -135,12 +142,13 @@
 		WHERE
 		r.roomid =
 		reserve.roomid) AS roomname,
-		reservedate,reserveEndDate,order_number
+		reservedate,reserveEndDate,order_number,reserveid
 		from
 		reserve
 		where
 		order_number =
-		#{order_number} and user_name = #{name} and user_phone= #{phone}
+		#{order_number} and user_name = #{name} and user_phone=
+		#{phone}
 	</select>
 
 	<select id="selectcoupon">
@@ -156,4 +164,14 @@
 		FROM
 		coupon;
 	</select>
+	<select id="SelectReserveByBookid">
+		select reserve_price from reserve
+		where reserveid = (select reserveid from
+		book where bookid = #{bookid})
+	</select>
+	<select id="SelectReserveByOrder_number">
+		select reserve_price from reserve
+		where order_number = #{order_number}
+	</select>
+
 </mapper>

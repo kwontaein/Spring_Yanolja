@@ -10,10 +10,7 @@
 <body>
 	<script type="text/javascript">
 function delete_pr(index){
-	var order_number=index;
-}
-function SeeReserve(){
-	console.log(index);
+	order_number=index;
 }
 </script>
 	<div class="rh_container">
@@ -34,12 +31,6 @@ function SeeReserve(){
 					</c:forEach>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div id="myModal" class="modal">
-		<div class="modal-content">
-			<div class="cancel" onclick="share()">예약내역 공유</div>
-			<div class="red" onclick="SeeReserve()">결제확인/예약취소</div>
 		</div>
 	</div>
 </body>

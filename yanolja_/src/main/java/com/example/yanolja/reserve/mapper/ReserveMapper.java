@@ -21,10 +21,10 @@ public interface ReserveMapper {
 
 	Map<String, Integer> findHRids(String roomname, String hotelname);
 
-	void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone);
+	void insertReserve(List<Map<String, Object>> parameterMap, String user_name, String user_phone, String kakaoTid);
 
 	void insertReserveOne(int hotelid, int roomid, String date1List, String date2List, String user_name,
-			String user_phone, String order_number, String price);
+			String user_phone, String order_number, String price, String kakaoTid);
 
 	void insertBook(int userid, int roomid, String bookdate);
 
@@ -37,4 +37,8 @@ public interface ReserveMapper {
 	List<ReserveResponse> select_p_Reserve(String name, String phone, String order_number);
 
 	List<CouponResponse> selectcoupon(int userid);
+
+	int SelectReserveByBookid(String bookid);
+
+	int SelectReserveByOrder_number(String order_number);
 }

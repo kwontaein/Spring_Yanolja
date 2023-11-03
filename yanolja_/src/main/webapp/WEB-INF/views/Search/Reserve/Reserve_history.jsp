@@ -11,11 +11,31 @@
 
 </head>
 <script type="text/javascript">
-/* 	function oninputPhone(target) {
-		target.value = target.value.replace(/[^0-9]/g, '').replace(
-				/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g,
-				"$1-$2-$3");
-	} */
+	var order_number = null;
+	var bookid = null;
+	$(document).ready(function() {
+		// 초기 데이터 로딩
+		loadReservationData(90); // 초기 선택 값 (3개월)
+		// 모달 열기
+		$("#openPeriodModal").click(function() {
+			$("#periodModal").css("display", "flex");
+		});
+
+		// 모달 닫기
+		$("#closemodal>button").click(function() {
+			$("#periodModal").css("display", "none");
+			$("#SeeModal").css("display", "none");
+		});
+
+		// 선택한 기간을 AJAX로 서버로 보내기
+		$(".periodOption").click(function() {
+			var selectedPeriod = $(this).data('value');
+			loadReservationData(selectedPeriod);
+			console.log(selectedPeriod);
+			$("#periodModal").css("display", "none");
+		});
+
+	});
 	function loadReservationData(selectedPeriod) {
 		$.ajax({
 			url : '/Reserve_List',
@@ -39,7 +59,7 @@
 		var phone = document.getElementById("phone").value;
 
 		$.ajax({
-			type : "Get", 
+			type : "Get",
 			url : "/Reserve_history_NotUser",
 			data : {
 				name : name,
@@ -54,27 +74,28 @@
 			}
 		});
 	}
-	$(document).ready(function() {
-		// 초기 데이터 로딩
-		loadReservationData(90); // 초기 선택 값 (3개월)
 
-		// 모달 열기
-		$("#openPeriodModal").click(function() {
-			$("#periodModal").css("display", "block");
-		});
+	function share() {
+		alert("공유하기");
+	};
 
-		// 모달 닫기
-		$("#closemodal button").click(function() {
-			$("#periodModal").css("display", "none");
+	function SeeReserve() {
+		$.ajax({
+			type : "Post",
+			url : "/Reserve_Info",
+			data : {
+				order_number:order_number,
+				bookid:bookid
+			},
+			success : function(data) {
+				$("#SeeModal").css("display", "none");
+				console.log(data);
+			},
+			error : function(error) {
+				console.error("오류 발생: " + error);
+			}
 		});
-
-		// 선택한 기간을 AJAX로 서버로 보내기
-		$(".periodOption").click(function() {
-			var selectedPeriod = $(this).data('value');
-			loadReservationData(selectedPeriod);
-			$("#periodModal").css("display", "none");
-		});
-	});
+	};
 </script>
 <body>
 	<header>
@@ -150,14 +171,25 @@
 		</div>
 	</div>
 	<div id="periodModal" class="modal">
-		<div id="closemodal" class="modal-content">
-			<button>X</button>
+		<div class="modal-content">
+			<div id="closemodal">
+				<button>X</button>
+			</div>
 			<h4>최근 기간 선택</h4>
 			<div class="periodOption" data-value="90">최근 3개월</div>
 			<div class="periodOption" data-value="180">최근 6개월</div>
 			<div class="periodOption" data-value="365">최근 12개월</div>
 			<div class="periodOption" data-value="720">최근 24개월</div>
 			<button id="submitPeriod">확인</button>
+		</div>
+	</div>
+	<div id="SeeModal" class="Seemodal">
+		<div class="seemodal-content">
+			<div id="closemodal">
+				<button>X</button>
+			</div>
+			<div class="cancel" onclick="share()">예약내역 공유</div>
+			<div class="red" onclick="SeeReserve()">결제확인/예약취소</div>
 		</div>
 	</div>
 </body>

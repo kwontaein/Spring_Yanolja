@@ -56,10 +56,10 @@ public class KakaoService {
 	static final String admin_Key = "f0dc4984df09287545cbdbc9478a53ee"; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
 	private KakaoResponse kakaoReady;
 	private KakaoApproveResponse kakaoApproveResponse;
-	
+
 	@Autowired
 	HttpSession httpSession;
-	
+
 	// 카카오 API의 인증 및 사용할 URL
 	private final static String KAKAO_AUTH_URI = "https://kauth.kakao.com";
 	private final static String KAKAO_API_URI = "https://kapi.kakao.com";
@@ -209,6 +209,7 @@ public class KakaoService {
 		int randomIndex = random.nextInt(array.length);
 		return array[randomIndex];
 	}
+
 //카카오 페이 관련 ---------------------------------------------------------------------------------------------------
 	public String kakaoPayReady(String hotelname, String roomname, String roomid, String price, String username,
 			String userPhone) {
@@ -272,7 +273,8 @@ public class KakaoService {
 	 * 결제 완료 승인
 	 */
 	public KakaoApproveResponse ApproveResponse(String pgToken) {
-
+		
+		httpSession.setAttribute("kakaoTid", kakaoReady.getTid());
 		// 카카오 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
@@ -302,28 +304,41 @@ public class KakaoService {
 			return null;
 		}
 	}
-
 	/**
 	 * 결제 환불
 	 */
 	public KakaoCancelResponse kakaoCancel() {
+		
+		//결제 최종 단계에서 취소인지, 그냥 취소인지 구분 
+		
+		//-> 세션값 여부로 구분?
+		System.out.println("환불중");
+		String priceStr = (String) httpSession.getAttribute("price");
+		
+		int price = Integer.parseInt(priceStr);
+		int p1 = (price * 10) / 110;
+		int p2 = price - ((price * 10) / 110);
+		String vat = Integer.toString(p1);
+		String novat = Integer.toString(p2);
+		
 		// 카카오페이 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
 		parameters.add("tid", kakaoReady.getTid());
-		parameters.add("cancel_amount", "");
-		parameters.add("cancel_tax_free_amount", "환불 비과세 금액");
-		parameters.add("cancel_vat_amount", "환불 부가세");
+		parameters.add("cancel_amount", (String) httpSession.getAttribute("price"));
+		parameters.add("cancel_tax_free_amount", novat);
+		parameters.add("cancel_vat_amount", vat);
 
 		// 파라미터, 헤더
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
-
+		System.out.println(parameters);
 		// 외부에 보낼 url
 		RestTemplate restTemplate = new RestTemplate();
 
 		KakaoCancelResponse cancelResponse = restTemplate.postForObject("https://kapi.kakao.com/v1/payment/cancel",
 				requestEntity, KakaoCancelResponse.class);
 
+		System.out.println("환불완");
 		return cancelResponse;
 	}
 
