@@ -273,7 +273,7 @@ public class KakaoService {
 	 * 결제 완료 승인
 	 */
 	public KakaoApproveResponse ApproveResponse(String pgToken) {
-		
+
 		httpSession.setAttribute("kakaoTid", kakaoReady.getTid());
 		// 카카오 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
@@ -304,23 +304,24 @@ public class KakaoService {
 			return null;
 		}
 	}
+
 	/**
 	 * 결제 환불
 	 */
 	public KakaoCancelResponse kakaoCancel() {
-		
-		//결제 최종 단계에서 취소인지, 그냥 취소인지 구분 
-		
-		//-> 세션값 여부로 구분?
+
+		// 결제 최종 단계에서 취소인지, 그냥 취소인지 구분
+
+		// -> 세션값 여부로 구분?
 		System.out.println("환불중");
 		String priceStr = (String) httpSession.getAttribute("price");
-		
+
 		int price = Integer.parseInt(priceStr);
 		int p1 = (price * 10) / 110;
 		int p2 = price - ((price * 10) / 110);
 		String vat = Integer.toString(p1);
 		String novat = Integer.toString(p2);
-		
+
 		// 카카오페이 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
@@ -342,6 +343,33 @@ public class KakaoService {
 		return cancelResponse;
 	}
 
+	public KakaoCancelResponse kakaoCancel2(String price2, String kakaoTid) {
+
+		int price = Integer.parseInt(price2);
+		int p1 = (price * 10) / 110;
+		int p2 = price - ((price * 10) / 110);
+		String vat = Integer.toString(p1);
+		String novat = Integer.toString(p2);
+
+		// 카카오페이 요청
+		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+		parameters.add("cid", cid);
+		parameters.add("tid", kakaoTid);
+		parameters.add("cancel_amount", price2);
+		parameters.add("cancel_tax_free_amount", novat);
+		parameters.add("cancel_vat_amount", vat);
+
+		// 파라미터, 헤더
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+		// 외부에 보낼 url
+		RestTemplate restTemplate = new RestTemplate();
+
+		KakaoCancelResponse cancelResponse = restTemplate.postForObject("https://kapi.kakao.com/v1/payment/cancel",
+				requestEntity, KakaoCancelResponse.class);
+
+		return cancelResponse;
+	}
+
 	/**
 	 * 카카오 요구 헤더값
 	 */
@@ -353,4 +381,9 @@ public class KakaoService {
 		httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 		return httpHeaders;
 	}
+
+	public void updateReserve(String price, String kakaoTid, String ordernumber) {
+		kakaoMapper.updateReserve(price, kakaoTid, ordernumber);
+	}
+
 }

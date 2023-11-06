@@ -124,7 +124,7 @@
 		where
 		b.userid = #{userid} AND
 		DATEDIFF(CURDATE(),
-		reservedate) >= -#{period}
+		reservedate) >= -#{period} and rs.reserve_price != 0
 		GROUP BY b.bookid, b.roomid, h.hotelname,
 		r.roomname, rs.user_name,
 		rs.reservedate, rs.reserveEndDate, reviewYN,
@@ -162,15 +162,18 @@
 		content,
 		status
 		FROM
-		coupon;
+		coupon
 	</select>
 	<select id="SelectReserveByBookid">
-		select reserve_price from reserve
+		select reserve_price,order_number, kakaoTid from
+		reserve
 		where reserveid = (select reserveid from
-		book where bookid = #{bookid})
+		book where bookid =
+		#{bookid})
 	</select>
 	<select id="SelectReserveByOrder_number">
-		select reserve_price from reserve
+		select reserve_price,order_number, kakaoTid from
+		reserve
 		where order_number = #{order_number}
 	</select>
 

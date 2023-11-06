@@ -87,7 +87,7 @@ public class BookResponse {
 		LocalDateTime twoWeeksLater = reserveenddate.plusWeeks(2);
 		if (now.isAfter(twoWeeksLater)) {
 			return canreview = "후기 작성 가능 기간이 지났습니다";
-		} else if (now.isBefore(reserveenddate)) {
+		} else if (now.isBefore(reservedate)) {
 			return canreview = "결제 정보 보기";
 		} else if (reviewYN) {
 			return canreview = "작성완료";

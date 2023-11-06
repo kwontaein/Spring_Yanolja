@@ -1,9 +1,12 @@
 package com.example.yanolja.hotel.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +43,7 @@ public class HotelController {
 
 	@Autowired
 	private final HotelService hotelService = null;
-	
+
 	@Autowired
 	HttpSession session;
 
@@ -64,7 +67,7 @@ public class HotelController {
 		session.setAttribute("resentViewHotelid", hotelid);
 		session.setAttribute("resentViewKindHotel", kindhotel);// 최근 본 호텔아이디 세션에 저장해서 이 값이 있을 경우 보여줄 자료 출력
 		session.setAttribute("rskindbykor", kind);
-		
+
 		model.addAttribute("post", post);
 		return "places/Viewplace";
 	}
@@ -207,10 +210,27 @@ public class HotelController {
 			sessionDate2 = tomorrowDate.toString();
 			session.setAttribute("sessionDate1", sessionDate1);
 			session.setAttribute("sessionDate2", sessionDate2);
+
+		} else {
+			// SimpleDateFormat을 사용하여 파싱 및 포맷
+			SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
+			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+			try {
+				// 주어진 문자열을 Date 객체로 파싱
+				Date date = inputFormat.parse(sessionDate1);
+				// Date 객체를 원하는 형식으로 포맷
+				sessionDate1 = outputFormat.format(date);
+				// 결과 출력
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
+
 		RoomResponse roomdetail = hotelService.findRoomDetail(roomid, sessionDate1);
 		FacilityResponse Fc = hotelService.facility(roomid);
 		LocalDate currentDate = LocalDate.now();
+
 		// 원하는 형식의 날짜로 포맷
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN);
 
@@ -235,16 +255,7 @@ public class HotelController {
 			@RequestParam(value = "roomid", required = false) Integer roomid) {
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
-		if (sessionDate1 == null && sessionDate2 == null) {
 
-			LocalDate nowDate = LocalDate.now();
-			LocalDate tomorrowDate = nowDate.plusDays(1);
-
-			sessionDate1 = nowDate.toString();
-			sessionDate2 = tomorrowDate.toString();
-			session.setAttribute("sessionDate1", sessionDate1);
-			session.setAttribute("sessionDate2", sessionDate2);
-		}
 		LocalDate currentDate = LocalDate.now();
 		LocalDate tomorrowDate = currentDate.plusDays(1);
 		LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
@@ -282,9 +293,8 @@ public class HotelController {
 			currentDatePointer = currentDatePointer.plusDays(1);
 		}
 
-		sessionDate1 = updateSessionAttribute("selectedStartDate", sessionDate1, selectedStartDate,
-				currentDate);
-		sessionDate2 = updateSessionAttribute("selectedEndDate", sessionDate2, selectedEndDate, tomorrowDate);
+		sessionDate1 = updateSessionAttribute("sessionDate1", sessionDate1, selectedStartDate, currentDate);
+		sessionDate2 = updateSessionAttribute("sessionDate2", sessionDate2, selectedEndDate, tomorrowDate);
 
 		model.addAttribute("datesInRange", datesInRange);
 		model.addAttribute("currentDate", currentDate);

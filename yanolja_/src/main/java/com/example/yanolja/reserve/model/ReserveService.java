@@ -11,6 +11,7 @@ import com.example.yanolja.grobal.RoomResponse;
 import com.example.yanolja.reserve.mapper.ReserveMapper;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.CouponResponse;
+import com.example.yanolja.reserve.post.ReservedInfo;
 
 @Service
 public class ReserveService {
@@ -82,11 +83,11 @@ public class ReserveService {
 		return reserveMapper.selectcoupon(userid);
 	}
 
-	public int SelectReserveByBookid(String bookid) {
+	public ReservedInfo SelectReserveByBookid(String bookid) {
 		return reserveMapper.SelectReserveByBookid(bookid);
 	}
 
-	public int SelectReserveByOrder_number(String order_number) {
+	public ReservedInfo SelectReserveByOrder_number(String order_number) {
 		return reserveMapper.SelectReserveByOrder_number(order_number);
 	}
 }

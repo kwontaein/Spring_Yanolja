@@ -26,6 +26,7 @@ import com.example.yanolja.reserve.model.ReserveService;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.Cartinfo;
 import com.example.yanolja.reserve.post.CouponResponse;
+import com.example.yanolja.reserve.post.ReservedInfo;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -133,7 +134,7 @@ public class ReserveController {
 
 					dataMap.put("date1", formattedDate1);
 					dataMap.put("date2", formattedDate2);
-
+					
 					// 리스트 추가
 					parameterList.add(dataMap);
 				} catch (ParseException e) {
@@ -225,26 +226,23 @@ public class ReserveController {
 	// 환불 및 /book 테이블에서 삭제(user)인 경우에만/ ordernumber = 0 으로 변경
 	@PostMapping("/Reserve_Info")
 	@ResponseBody
-	public int ReserveCancel(@RequestParam(value = "bookid", required = false) String bookid,
+	public ReservedInfo ReserveCancel(@RequestParam(value = "bookid", required = false) String bookid,
 			@RequestParam(value = "order_number", required = false) String order_number) {
 
 		System.out.println("삭제할 내역 : " + bookid);
 		System.out.println("삭제할 내역 : " + order_number);
-		int reserve_price = 0;
+		ReservedInfo reserve_info;
 		if (bookid != null) {
-			reserve_price = reserveService.SelectReserveByBookid(bookid);
+			reserve_info = reserveService.SelectReserveByBookid(bookid);
+			System.out.println(reserve_info);
 		} else {
-			reserve_price = reserveService.SelectReserveByOrder_number(order_number);
+			reserve_info = reserveService.SelectReserveByOrder_number(order_number);
+			System.out.println(reserve_info);
 		}
 
-		System.out.println(reserve_price);
-		// 해당 정보에 대한 reserve 정보들 가져와서 반환 -> modal창으로 띄움? 아니면 데이터 전달
-		return reserve_price;
-	}
-
-	@GetMapping("/Reserve_cancel")
-	public String ReserveCandelPage() {
-		return "";
+		System.out.println(reserve_info);
+		// 해당 정보에 대한 reserve 정보들 가져와서 반환 -> modal창으로 띄움? 아니면 데이터 전달 //받아온 정보와 일치하는 정보 modal에 넘겨주기
+		return reserve_info;
 	}
 
 	// reserveController장바구니 기능
@@ -345,7 +343,7 @@ public class ReserveController {
 		return (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
 	}
 
-	// Cartinfo를 RoomResponse와 결합하는 공통 메소드 cart
+	// Cartinfo를 RoomResponse와 결합하는 공통 메소드
 	private List<RoomResponse> combineCartInfoWithRoomResponse(List<Cartinfo> cartRoomInfoList) {
 		List<Integer> roomIds = cartRoomInfoList.stream().map(Cartinfo::getRoomid).collect(Collectors.toList());
 		List<RoomResponse> Cartroom = reserveService.cartlist(roomIds);

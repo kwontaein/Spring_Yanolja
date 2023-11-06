@@ -13,6 +13,8 @@
 <script type="text/javascript">
 	var order_number = null;
 	var bookid = null;
+	var kakaoTid = null;
+	var sendprice = 0;
 	$(document).ready(function() {
 		// 초기 데이터 로딩
 		loadReservationData(90); // 초기 선택 값 (3개월)
@@ -25,6 +27,7 @@
 		$("#closemodal>button").click(function() {
 			$("#periodModal").css("display", "none");
 			$("#SeeModal").css("display", "none");
+			$("#DetailModal").css("display", "none");
 		});
 
 		// 선택한 기간을 AJAX로 서버로 보내기
@@ -84,12 +87,39 @@
 			type : "Post",
 			url : "/Reserve_Info",
 			data : {
-				order_number:order_number,
-				bookid:bookid
+				order_number : order_number,
+				bookid : bookid
 			},
 			success : function(data) {
 				$("#SeeModal").css("display", "none");
-				console.log(data);
+				$("#DetailModal").css("display", "flex");
+				$("#TotalReservePrice").text(data.reservePrice);
+				$("#ReservePrice").text(data.reservePrice);
+				$("#UsedPoint").text(0);
+				$("#StoredPoint").text(0);
+				$("#UsedCoupon").text(0);
+				sendprice = data.reservePrice;
+				kakaoTid = data.kakaoTid;
+				order_number = data.orderNumber
+			},
+			error : function(error) {
+				console.error("오류 발생: " + error);
+			}
+		});
+	};
+
+	function CancelReserve() {
+		$.ajax({
+			type : "Post",
+			url : "/refund_by_on",
+			data : {
+				price : sendprice,
+				ordernumber : order_number,
+				kakaoTid : kakaoTid
+			},
+			success : function(data) {
+				alert("주문이 취소되었습니다.");
+				location.reload();
 			},
 			error : function(error) {
 				console.error("오류 발생: " + error);
@@ -190,6 +220,39 @@
 			</div>
 			<div class="cancel" onclick="share()">예약내역 공유</div>
 			<div class="red" onclick="SeeReserve()">결제확인/예약취소</div>
+		</div>
+	</div>
+	<div id="DetailModal" class="DetailModal">
+		<div class="DetailModal-content">
+			<div id="closemodal">
+				<button>X</button>
+			</div>
+			<div class="DMtop">
+				<div class="Detail_info">
+					<span>총 예약가</span>
+					<span id="TotalReservePrice">1</span>
+				</div>
+				<div class="Detail_info">
+					<span>예약가(카카오페이)</span>
+					<span id="ReservePrice">1</span>
+				</div>
+				<div class="Detail_info">
+					<span>포인트 사용</span>
+					<span id="UsedPoint">1</span>
+				</div>
+			</div>
+			<hr>
+			<div class="DMmid">
+				<div class="Detail_info">
+					<span>포인트 적립</span>
+					<span id="StoredPoint">1</span>
+				</div>
+				<div class="Detail_info">
+					<span>쿠폰 추가제공</span>
+					<span id="UsedCoupon">1</span>
+				</div>
+			</div>
+			<div class="reserve_cancel_btn" onclick="CancelReserve()">예약취소</div>
 		</div>
 	</div>
 </body>

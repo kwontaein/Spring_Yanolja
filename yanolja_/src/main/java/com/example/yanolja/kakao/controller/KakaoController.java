@@ -161,10 +161,19 @@ public class KakaoController {
 	 * 환불
 	 */
 	@PostMapping("/refund")
-	public ResponseEntity refund(@RequestParam(value = "reserveid", required = false) int reserveid) {
-		System.out.println("환불 실행");
+	public ResponseEntity refund() {
 		KakaoCancelResponse kakaoCancelResponse = kakaoService.kakaoCancel();
 		return new ResponseEntity<>(kakaoCancelResponse, HttpStatus.OK);
 	}
 
+	@PostMapping("/refund_by_on")
+	public ResponseEntity refundon(@RequestParam(value = "price") String price,
+			@RequestParam(value = "kakaoTid") String kakaoTid,
+			@RequestParam(value = "ordernumber") String ordernumber) {
+		System.out.println(price + "/" + kakaoTid + "/" + ordernumber);
+		KakaoCancelResponse kakaoCancelResponse = kakaoService.kakaoCancel2(price, kakaoTid);
+		// 예약 삭제 하는 코드 추가
+		kakaoService.updateReserve(price, kakaoTid, ordernumber);
+		return new ResponseEntity<>(kakaoCancelResponse, HttpStatus.OK);
+	}
 }

@@ -26,26 +26,20 @@ $(document).ready(function() {
 		$('body').css('overflow', 'auto');
 	}
 
-	const savedStartDate = sessionStorage.getItem('selectedStartDate');
-	const savedEndDate = sessionStorage.getItem('selectedEndDate');
+	const savedStartDate = sessionStorage.getItem('sessionDate1');
+	const savedEndDate = sessionStorage.getItem('sessionDate2');
+	let sessionDate1 = savedStartDate ? new Date(savedStartDate) : new Date();
+	let sessionDate2 = savedEndDate ? new Date(savedEndDate) : new Date();
 
-	let selectedStartDate = savedStartDate ? new Date(savedStartDate) : new Date();
-	let selectedEndDate = savedEndDate ? new Date(savedEndDate) : new Date();
-
-	if (selectedStartDate.getTime() === selectedEndDate.getTime()) {
-		selectedEndDate.setDate(selectedEndDate.getDate() + 1);
+	if (sessionDate1.getTime() === sessionDate2.getTime()) {
+		sessionDate2.setDate(sessionDate2.getDate() + 1);
 	}
 
 	const options = { year: 'numeric', weekday: 'short', month: '2-digit', day: '2-digit' };
-	const formattedStartDate = selectedStartDate.toLocaleDateString("ko-KR", options);
-	const formattedEndDate = selectedEndDate.toLocaleDateString("ko-KR", options);
+	const formattedStartDate = sessionDate1.toLocaleDateString("ko-KR", options);
+	const formattedEndDate = sessionDate2.toLocaleDateString("ko-KR", options);
 
-	const options2 = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' };
-	const formattedStartDate2 = selectedStartDate.toLocaleDateString("ko-KR", options2);
-	const formattedEndDate2 = selectedEndDate.toLocaleDateString("ko-KR", options2);
-
-
-	const datechoice = document.getElementById("datechoice2");
+	const datechoice = document.getElementById("datechoice");
 
 	const rentalday = document.getElementById("rentalday");
 	const totalprice = document.getElementById("totalprice");
@@ -56,11 +50,11 @@ $(document).ready(function() {
 	const modaldata2 = document.getElementById("endDate");
 
 	if (modaldata1 != null && modaldata2 != null) {
-		const timeDifference = selectedEndDate.getTime() - selectedStartDate.getTime();
+		const timeDifference = sessionDate2.getTime() - sessionDate1.getTime();
 		const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-		modaldata1.textContent = `${formattedStartDate2}`;
-		modaldata2.textContent = ` ${formattedEndDate2} `;
+		modaldata1.textContent = `${formattedStartDate}`;
+		modaldata2.textContent = ` ${formattedEndDate} `;
 		night.textContent = ` ${daysDifference}박`;
 		rentalday.textContent = `(${daysDifference}박)`;
 
@@ -75,8 +69,8 @@ $(document).ready(function() {
 		}
 	}
 	if (datechoice) {
-		if (selectedStartDate != null && formattedEndDate != null) {
-			const timeDifference = selectedEndDate.getTime() - selectedStartDate.getTime();
+		if (formattedStartDate != null && formattedEndDate != null) {
+			const timeDifference = sessionDate2.getTime() - sessionDate1.getTime();
 			const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 			datechoice.textContent = `${formattedStartDate} ~ ${formattedEndDate} · ${daysDifference}박`;
 		}

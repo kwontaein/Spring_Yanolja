@@ -430,6 +430,6 @@ AND roomnumber >= (
 		reserveinfo FROM hotel WHERE hotel.hotelid = room.hotelid) AS
 		reserveinfo
 		FROM room
-		WHERE roomid = #{roomid};
+		WHERE roomid = #{roomid}
 	</select>
 </mapper>

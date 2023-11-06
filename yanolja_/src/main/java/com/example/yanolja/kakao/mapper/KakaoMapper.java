@@ -13,4 +13,6 @@ public interface KakaoMapper {
 	int findUserid(String email);
 
 	void insertUser(User user);
+
+	void updateReserve(String price, String kakaoTid , String ordernumber);
 }

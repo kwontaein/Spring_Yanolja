@@ -1,4 +1,7 @@
 @charset "UTF-8";
+html::-webkit-scrollbar{
+	display: none;
+}
 html{
 	height: 100%;
 }
@@ -16,6 +19,7 @@ header{
 	justify-content: center;
 	align-items: center;
 	height: 104px;
+	position: fixed;
 }
 .head{
 	width: 768px;
@@ -77,6 +81,7 @@ header{
 	justify-content: center;
 }
 .rh_list{
+	margin-top: 104px;
 	min-height: 500px;
 	display: 88%;
 	align-items: center;
@@ -137,6 +142,30 @@ header{
 	color: gray;
 	padding: 20px 0;
 }
+
+.DetailModal {
+    display: none; /* 모달을 기본적으로 숨김 */
+    position: fixed;
+   	bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경에 어둡게 처리 */
+    z-index: 999; /* 다른 요소 위에 놓기 위한 높은 z-index */
+    justify-content: center;
+}
+/* 모달 컨테이너 내용 */
+.DetailModal-content {
+    background-color: #fff;
+    min-width: 728px; 
+    margin: 0 auto; /* 수평 가운데 정렬 */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+ 	position: fixed;
+ 	bottom: 0;
+}
+
 
 .Seemodal {
     display: none; /* 모달을 기본적으로 숨김 */
@@ -203,3 +232,19 @@ header{
 	padding: 50px;
 	
 }
+
+.Detail_info{
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 20px;
+}
+.DMtop{
+	margin-top:20px;
+}
+.reserve_cancel_btn{
+	background-color:deeppink;
+	padding: 20px;
+	text-align: center;
+	color: white;
+	margin-top: 10px;
+	}

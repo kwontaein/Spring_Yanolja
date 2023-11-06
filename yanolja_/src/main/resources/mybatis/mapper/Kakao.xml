@@ -7,9 +7,9 @@
 		resultType="com.example.yanolja.kakao.oauth2.User">
 		SELECT * FROM user WHERE email = #{email}
 	</select>
-	<select id="findUserid"
-		resultType="int">
-		SELECT userid FROM user WHERE email = #{email}
+	<select id="findUserid" resultType="int">
+		SELECT userid FROM user WHERE
+		email = #{email}
 	</select>
 	<insert id="insertUser">
 		INSERT INTO User
@@ -22,7 +22,18 @@
 		VALUES
 		<foreach item="hotelName" collection="hotelNames"
 			separator=",">
-			(#{hotelName}, #{date1List[${item_index}], #{date2List[${item_index}]})
+			(#{hotelName}, #{date1List[${item_index}],
+			#{date2List[${item_index}]})
 		</foreach>
 	</insert>
+	<update id="updateReserve">
+		update reserve
+		set
+		reserve_price = reserve_price - #{price},
+		reservedate = '1971-01-01 00:00:00',
+		reserveEndDate = '1971-01-01 00:00:00'
+		where kakaoTid =
+		#{kakaoTid} and order_number =
+		#{ordernumber}
+	</update>
 </mapper>

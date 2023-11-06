@@ -164,18 +164,18 @@ $(document).ready(
 
 
 		const savedStartDate = sessionStorage
-			.getItem('selectedStartDate');
+			.getItem('sessionDate1');
 		const savedEndDate = sessionStorage
-			.getItem('selectedEndDate');
+			.getItem('sessionDate2');
 
-		let selectedStartDate = savedStartDate ? new Date(
+		let sessionDate1 = savedStartDate ? new Date(
 			savedStartDate) : new Date();
-		let selectedEndDate = savedEndDate ? new Date(savedEndDate)
+		let sessionDate2 = savedEndDate ? new Date(savedEndDate)
 			: new Date();
 
-		if (selectedStartDate.getTime() === selectedEndDate
+		if (sessionDate1.getTime() === sessionDate2
 			.getTime()) {
-			selectedEndDate.setDate(selectedEndDate.getDate() + 1);
+			sessionDate2.setDate(sessionDate2.getDate() + 1);
 		}
 		const options = {
 			month: '2-digit',
@@ -183,10 +183,10 @@ $(document).ready(
 			weekday: 'short'
 		};
 
-		const formattedStartDate = selectedStartDate
+		const formattedStartDate = sessionDate1
 			.toLocaleDateString("ko-KR", options);
 
-		const formattedEndDate = selectedEndDate
+		const formattedEndDate = sessionDate2
 			.toLocaleDateString("ko-KR", options);
 
 		const options2 = {
@@ -196,17 +196,17 @@ $(document).ready(
 			weekday: 'short'
 		};
 
-		const formattedStartDate2 = selectedStartDate
+		const formattedStartDate2 = sessionDate1
 			.toLocaleDateString("ko-KR", options2);
-		const formattedEndDate2 = selectedEndDate
+		const formattedEndDate2 = sessionDate2
 			.toLocaleDateString("ko-KR", options2);
 			
 		var intime = $("#intime");
 		var outtime = $("#outtime");
 		
 		if (intime != null && outtime != null & roomPrice != 0) {
-			const timeDifference = selectedEndDate.getTime()
-				- selectedStartDate.getTime();
+			const timeDifference = sessionDate2.getTime()
+				- sessionDate1.getTime();
 			const daysDifference = Math.floor(timeDifference
 				/ (1000 * 60 * 60 * 24));
 			price = roomPrice * daysDifference;
@@ -220,7 +220,7 @@ $(document).ready(
 
 			$("#date").text(daysDifference + '박');
 
-			$("#totalpricea").text(daysDifference * price);
+			$("#totalpricea").text(price);
 			$("#totalprice").text(price + '원');
 			$("#totalprice3").text(price + '원');
 

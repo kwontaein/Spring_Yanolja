@@ -9,6 +9,7 @@ import com.example.yanolja.grobal.ReserveResponse;
 import com.example.yanolja.grobal.RoomResponse;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.CouponResponse;
+import com.example.yanolja.reserve.post.ReservedInfo;
 
 @Mapper
 public interface ReserveMapper {
@@ -38,7 +39,7 @@ public interface ReserveMapper {
 
 	List<CouponResponse> selectcoupon(int userid);
 
-	int SelectReserveByBookid(String bookid);
+	ReservedInfo SelectReserveByBookid(String bookid);
 
-	int SelectReserveByOrder_number(String order_number);
+	ReservedInfo SelectReserveByOrder_number(String order_number);
 }
