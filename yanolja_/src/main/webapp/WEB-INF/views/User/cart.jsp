@@ -158,7 +158,7 @@
 								<div style="color: red;">10% 적립</div>
 								<div style="color: red;">&nbsp;⊛</div>
 							</div>
-							<div><%@include file="../ads/ad4.jsp"%></div>
+							<%@include file="../ads/ad4.jsp"%>
 							<div>
 								<ul style="color: gray; font-size: 12px; padding: 0; list-style: none;">
 									<li>• 장바구니에 담긴 상품은 최대 30일간 보관되며 최대 20개의 상품을 담을 수 있습니다.</li>

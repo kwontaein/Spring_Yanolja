@@ -32,6 +32,7 @@ import com.example.yanolja.hotel.post.FacilityResponse;
 import com.example.yanolja.hotel.post.InfoResponse;
 import com.example.yanolja.hotel.post.PolicyResponse;
 import com.example.yanolja.hotel.post.TrafficResponse;
+import com.example.yanolja.reserve.model.ReserveService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,10 @@ public class HotelController {
 
 	@Autowired
 	private final HotelService hotelService = null;
-
+	
+	@Autowired
+	ReserveService reserveService;
+	
 	@Autowired
 	HttpSession session;
 
@@ -78,7 +82,9 @@ public class HotelController {
 		// MainResponse에 찾아오려는 값이 null이면 오류남
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
-
+		
+		String formatDate = reserveService.formatDates(sessionDate1);
+		
 		if (sessionDate1 == null && sessionDate2 == null) {
 
 			LocalDate nowDate = LocalDate.now();
@@ -105,7 +111,7 @@ public class HotelController {
 
 		if (sessionDate1 != null && sessionDate2 != null) { // 선택된 날짜 값이 있다면
 			// 호텔아이디를 통해 해당 호텔이 가진 객실을 전부 불러옴 -> 가격순으로 보여주기 + 예약 가능 여부 따져서 스타일 변경
-			List<RoomResponse> post = hotelService.findRoomByDate(hotelid, sessionDate1);
+			List<RoomResponse> post = hotelService.findRoomByDate(hotelid, formatDate);
 			model.addAttribute("post", post);
 		} else if (sessionDate1 == null && sessionDate2 == null) {
 			System.out.println("날짜 값이 없습니다!");
@@ -201,6 +207,7 @@ public class HotelController {
 
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
+	
 		if (sessionDate1 == null && sessionDate2 == null) {
 
 			LocalDate nowDate = LocalDate.now();
@@ -211,23 +218,11 @@ public class HotelController {
 			session.setAttribute("sessionDate1", sessionDate1);
 			session.setAttribute("sessionDate2", sessionDate2);
 
-		} else {
-			// SimpleDateFormat을 사용하여 파싱 및 포맷
-			SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
-			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-			try {
-				// 주어진 문자열을 Date 객체로 파싱
-				Date date = inputFormat.parse(sessionDate1);
-				// Date 객체를 원하는 형식으로 포맷
-				sessionDate1 = outputFormat.format(date);
-				// 결과 출력
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
 		}
-
-		RoomResponse roomdetail = hotelService.findRoomDetail(roomid, sessionDate1);
+		String formatDate1 = reserveService.formatDates(sessionDate1);
+		String formatDate2 = reserveService.formatDates(sessionDate2);
+	
+		RoomResponse roomdetail = hotelService.findRoomDetail(roomid, formatDate1);
 		FacilityResponse Fc = hotelService.facility(roomid);
 		LocalDate currentDate = LocalDate.now();
 
@@ -253,14 +248,15 @@ public class HotelController {
 			@RequestParam(value = "selectedEndDate", required = false) String selectedEndDate,
 			@RequestParam(value = "hotelid", required = false) Integer hotelid,
 			@RequestParam(value = "roomid", required = false) Integer roomid) {
+		
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
-
 		LocalDate currentDate = LocalDate.now();
 		LocalDate tomorrowDate = currentDate.plusDays(1);
 		LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
 		LocalDate lastDayOfOneYearLater = currentDate.plusYears(1).withDayOfMonth(currentDate.lengthOfMonth());
 
+		//달력에 날짜별 예약 가능 여부를 추가하는 부분
 		if (hotelid != null) {
 			List<ReserveResponse> rspossible = hotelService.reserve_possible(hotelid);
 
@@ -278,11 +274,7 @@ public class HotelController {
 				model.addAttribute("comparisonList", comparisonList);
 			}
 
-		} else {
-			// hotelid와 roomid 모두 전달되지 않은 경우
-			// 처리할 코드 작성
-		}
-
+		} 
 		// hotelid로 예약 날짜와 예약된 방 정보를 가져옴
 
 		List<LocalDate> datesInRange = new ArrayList<>();
@@ -299,6 +291,7 @@ public class HotelController {
 		model.addAttribute("datesInRange", datesInRange);
 		model.addAttribute("currentDate", currentDate);
 		model.addAttribute("tomorrowDate", tomorrowDate);
+		
 		return "calendar/calendar";
 	}
 

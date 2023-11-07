@@ -1,5 +1,10 @@
 package com.example.yanolja.reserve.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +17,8 @@ import com.example.yanolja.reserve.mapper.ReserveMapper;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.CouponResponse;
 import com.example.yanolja.reserve.post.ReservedInfo;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class ReserveService {
@@ -90,4 +97,71 @@ public class ReserveService {
 	public ReservedInfo SelectReserveByOrder_number(String order_number) {
 		return reserveMapper.SelectReserveByOrder_number(order_number);
 	}
+
+	public void insertDatebyReservation(Map<String, Object> parameterList, String date) {
+		reserveMapper.insertinsertDatebyReservation(parameterList,date);
+	}
+
+	public void insertDatebyReservationOne(int roomid, String sessionDate1) {
+		reserveMapper.insertDatebyReservationOne(roomid, sessionDate1);
+	}
+
+	// 날짜 형식 지정 메소드 ReserveAgree
+	public String formatDates(String sessionDate) {
+		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date date1 = inputFormat.parse(sessionDate);
+			String formattedDate = outputFormat.format(date1);
+			return formattedDate;
+		} catch (ParseException e) {
+			return sessionDate;
+		}
+	}
+
+	public List<String> DateList(String sessionDate1, String sessionDate2) {
+		// 날짜 문자열을 파싱할 형식 지정
+		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
+		// 목록에 저장할 날짜 형식을 지정
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		// 생성된 날짜를 저장할 리스트
+		List<String> dateList = new ArrayList<>();
+		try {
+			Date startDate = inputFormat.parse(sessionDate1);
+			Date endDate = inputFormat.parse(sessionDate2);
+			generateDateList(startDate, endDate, outputFormat, dateList);
+		} catch (ParseException e) {
+			// 형식에 맞지 않는 경우 처리
+			try {
+				Date startDate = outputFormat.parse(sessionDate1);
+				Date endDate = outputFormat.parse(sessionDate2);
+				generateDateList(startDate, endDate, outputFormat, dateList);
+			} catch (ParseException er) {
+				// 두 가지 형식 모두 형식에 맞지 않는 경우 처리
+				er.printStackTrace();
+			}
+		}
+		System.out.println(dateList);
+		return dateList;
+	}
+
+	private void generateDateList(Date startDate, Date endDate, SimpleDateFormat outputFormat, List<String> dateList) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(startDate);
+		while (calendar.getTime().before(endDate)) {
+			String formattedDate = outputFormat.format(calendar.getTime());
+			dateList.add(formattedDate);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+	}
+
+	public void DeleteSession(HttpSession session) {
+		session.removeAttribute("partner_user_id");
+		session.removeAttribute("userPhone");
+		session.removeAttribute("price");
+		session.removeAttribute("partner_order_id");
+		session.removeAttribute("vat");
+	}
+
+
 }

@@ -129,7 +129,9 @@ function payAgree() {
 		method: 'post',     // HTTP GET 요청
 		traditional : true,
 		data: {
-			priceArray: priceArray
+			priceArray: priceArray,
+			StartDateArray : StartDateArray,
+			EndDateArray : EndDateArray
 		},
 		success: function(data) {
 			// 서버로부터 받은 데이터를 화면에 표시

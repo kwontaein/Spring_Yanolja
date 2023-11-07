@@ -39,7 +39,7 @@ $(document).ready(function() {
 	const formattedStartDate = sessionDate1.toLocaleDateString("ko-KR", options);
 	const formattedEndDate = sessionDate2.toLocaleDateString("ko-KR", options);
 
-	const datechoice = document.getElementById("datechoice");
+	const datechoice = document.getElementById("datechoice2");
 
 	const rentalday = document.getElementById("rentalday");
 	const totalprice = document.getElementById("totalprice");
@@ -49,6 +49,7 @@ $(document).ready(function() {
 	const night = document.getElementById("night");
 	const modaldata2 = document.getElementById("endDate");
 
+	console.log(formattedStartDate, formattedEndDate);
 	if (modaldata1 != null && modaldata2 != null) {
 		const timeDifference = sessionDate2.getTime() - sessionDate1.getTime();
 		const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));

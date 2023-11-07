@@ -72,7 +72,7 @@
 				<div class="coupon">
 					<div class="couponinfo">쿠폰정보</div>
 				</div>
-				<%@ include file="../ads/ad4.jsp"%>
+					<%@ include file="../ads/ad4.jsp"%>
 				<div class="facil">
 					<div>인기시설 및 서비스</div>
 					<div>

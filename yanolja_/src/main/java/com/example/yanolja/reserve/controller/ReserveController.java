@@ -47,13 +47,17 @@ public class ReserveController {
 			@RequestParam(value = "roomids", required = false) List<Integer> roomids, Model model,
 			HttpSession session) {
 		List<Cartinfo> cartRoomInfoList = getCartRoomInfoList(session);
-
+		System.out.println(roomids);
 		if (cartRoomInfoList != null && cartRoomInfoList.size() != 0 && roomid == null) {
-			// 받아온 roomids 이외의 값들을 삭제합니다
+
+			// RequestParam으로 받아온 roomids 이외의 값들을 삭제합니다
 			List<Cartinfo> updatedCartRoomInfos = cartRoomInfoList.stream()
 					.filter(cartInfo -> roomids.contains(cartInfo.getRoomid())).collect(Collectors.toList());
 
+			System.out.println(updatedCartRoomInfos);
+
 			List<RoomResponse> combinedList = combineCartInfoWithRoomResponse(updatedCartRoomInfos);
+
 			// 카카오 결제에서 사용하기 위한 세션
 			session.setAttribute("combinedList", combinedList);
 			// combinedList를 hotelname으로 정렬
@@ -84,7 +88,9 @@ public class ReserveController {
 	@PostMapping("/Reserve_Agree")
 	@ResponseBody
 	public List<String> ReserveAgree(HttpSession session,
-			@RequestParam(value = "priceArray", required = false) String[] priceArray) {
+			@RequestParam(value = "priceArray", required = false) String[] priceArray,
+			@RequestParam(value = "StartDateArray", required = false) String[] StartDateArray,
+			@RequestParam(value = "EndDateArray", required = false) String[] EndDateArray) {
 		Integer userid = (Integer) session.getAttribute("userid");
 		String user_name = (String) session.getAttribute("partner_user_id");
 		String user_phone = (String) session.getAttribute("userPhone");
@@ -92,8 +98,10 @@ public class ReserveController {
 		String order_number = (String) session.getAttribute("partner_order_id");
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
-
 		String kakaoTid = (String) session.getAttribute("kakaoTid");
+
+		String formattedDate1 = reserveService.formatDates(sessionDate1);
+		String formattedDate2 = reserveService.formatDates(sessionDate2);
 
 		List<RoomResponse> combinedList = (List<RoomResponse>) session.getAttribute("combinedList");
 		List<String> on_list = new ArrayList<>();
@@ -116,32 +124,18 @@ public class ReserveController {
 				order_number = order_number + Integer.toString(i);
 				i++;
 
-				// 가격 추가 부분
 				// 가격 할당
 				if (priceIndex < priceArray.length) {
 					dataMap.put("price", priceArray[priceIndex]);
+					dataMap.put("date1", StartDateArray[priceIndex].replaceAll(" ", ""));
+					dataMap.put("date2", EndDateArray[priceIndex].replaceAll(" ", ""));
 					priceIndex++;
 				}
-				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
-				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-				try {
-					Date date1 = inputFormat.parse(roomResponse.getDate1());
-					Date date2 = inputFormat.parse(roomResponse.getDate2());
-
-					String formattedDate1 = outputFormat.format(date1);
-					String formattedDate2 = outputFormat.format(date2);
-
-					dataMap.put("date1", formattedDate1);
-					dataMap.put("date2", formattedDate2);
-					
-					// 리스트 추가
-					parameterList.add(dataMap);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-
+				parameterList.add(dataMap);
 			}
+
+			System.out.println(parameterList);
 
 			reserveService.insertReserve(parameterList, user_name, user_phone, kakaoTid);
 
@@ -149,9 +143,24 @@ public class ReserveController {
 				reserveService.insertBookList(userid, parameterList, order_number);
 			}
 
-			DeleteSession(session);
+			for (int a = 0; a < StartDateArray.length; a++) {
+				List<String> DList = reserveService.DateList(StartDateArray[a], EndDateArray[a]);
+				Map<String, Object> parameters = parameterList.get(a); // 현재 맵을 가져옴
+				int roomid = (int) parameters.get("roomid"); // "roomid" 키에 해당하는 값을 가져옴
+
+				for (String date : DList) {
+					System.out.println("roomid: " + roomid); // roomid 값 출력
+					System.out.println(date);
+					reserveService.insertDatebyReservationOne(roomid, date);
+				}
+
+			}
+
+			reserveService.DeleteSession(session);
+
 			return on_list;
 		} else {
+			List<String> DList = reserveService.DateList(sessionDate1, sessionDate2);
 			RoomResponse roomdetail = (RoomResponse) session.getAttribute("roomdetail");
 			String hotelName = roomdetail.getHotelname();
 			String roomName = roomdetail.getRoomname();
@@ -160,18 +169,18 @@ public class ReserveController {
 			int hotelid = Ids.get("hotelid");
 			int roomid = Ids.get("roomid");
 
-			String formattedDate1 = formatDates(sessionDate1);
-			String formattedDate2 = formatDates(sessionDate2);
-			String bookdate = formattedDate1;
-
 			reserveService.insertReserveOne(hotelid, roomid, formattedDate1, formattedDate2, user_name, user_phone,
 					order_number, price, kakaoTid);
 
+			for (String date : DList) {
+				reserveService.insertDatebyReservationOne(roomid, date);
+			}
+
 			if (userid != null) {
-				reserveService.insertBook(userid, roomid, bookdate);
+				reserveService.insertBook(userid, roomid, formattedDate1);
 			}
 			on_list.add(order_number);
-			DeleteSession(session);
+			reserveService.DeleteSession(session);
 			return on_list;
 		}
 
@@ -229,8 +238,6 @@ public class ReserveController {
 	public ReservedInfo ReserveCancel(@RequestParam(value = "bookid", required = false) String bookid,
 			@RequestParam(value = "order_number", required = false) String order_number) {
 
-		System.out.println("삭제할 내역 : " + bookid);
-		System.out.println("삭제할 내역 : " + order_number);
 		ReservedInfo reserve_info;
 		if (bookid != null) {
 			reserve_info = reserveService.SelectReserveByBookid(bookid);
@@ -241,7 +248,8 @@ public class ReserveController {
 		}
 
 		System.out.println(reserve_info);
-		// 해당 정보에 대한 reserve 정보들 가져와서 반환 -> modal창으로 띄움? 아니면 데이터 전달 //받아온 정보와 일치하는 정보 modal에 넘겨주기
+		// 해당 정보에 대한 reserve 정보들 가져와서 반환 -> modal창으로 띄움? 아니면 데이터 전달 //받아온 정보와 일치하는 정보
+		// modal에 넘겨주기
 		return reserve_info;
 	}
 
@@ -325,18 +333,6 @@ public class ReserveController {
 
 	// 메소드
 	// ---------------------------------------------------------------------------------------------------
-	// 날짜 형식 지정 메소드 ReserveAgree
-	private String formatDates(String sessionDate) {
-		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
-		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			Date date1 = inputFormat.parse(sessionDate);
-			String formattedDate = outputFormat.format(date1);
-			return formattedDate;
-		} catch (ParseException e) {
-			return sessionDate;
-		}
-	}
 
 	// 카트 룸 정보를 검색하는 공통 메소드 cart
 	private List<Cartinfo> getCartRoomInfoList(HttpSession session) {
@@ -346,39 +342,21 @@ public class ReserveController {
 	// Cartinfo를 RoomResponse와 결합하는 공통 메소드
 	private List<RoomResponse> combineCartInfoWithRoomResponse(List<Cartinfo> cartRoomInfoList) {
 		List<Integer> roomIds = cartRoomInfoList.stream().map(Cartinfo::getRoomid).collect(Collectors.toList());
-		List<RoomResponse> Cartroom = reserveService.cartlist(roomIds);
+		List<RoomResponse> roomResponses = reserveService.cartlist(roomIds);
+		Map<Integer, RoomResponse> roomResponseMap = roomResponses.stream()
+				.collect(Collectors.toMap(RoomResponse::getRoomid, roomResponse -> roomResponse));
+
 		List<RoomResponse> combinedList = new ArrayList<>();
 
-		for (RoomResponse roomResponse : Cartroom) {
-			for (Cartinfo cartInfo : cartRoomInfoList) {
-				if (roomResponse.getRoomid() == cartInfo.getRoomid()) {
-					RoomResponse combinedInfo = new RoomResponse();
-					combinedInfo.setHotelname(roomResponse.getHotelname());
-					combinedInfo.setHotelid(roomResponse.getHotelid());
-					combinedInfo.setLoc(roomResponse.getLoc());
-					combinedInfo.setRoomid(roomResponse.getRoomid());
-					combinedInfo.setMaxManCnt(roomResponse.getMaxManCnt());
-					combinedInfo.setRoomname(roomResponse.getRoomname());
-					combinedInfo.setPrice(roomResponse.getPrice());
-					combinedInfo.setDefaultmancnt(roomResponse.getDefaultmancnt());
-					combinedInfo.setCheckIn(roomResponse.getCheckIn());
-					combinedInfo.setCheckout(roomResponse.getCheckout());
-					combinedInfo.setDate1(cartInfo.getDate1());
-					combinedInfo.setDate2(cartInfo.getDate2());
-					combinedInfo.setRentalType(roomResponse.getRentalType());
-					combinedList.add(combinedInfo);
-					break;
-				}
+		for (Cartinfo cartInfo : cartRoomInfoList) {
+			RoomResponse roomResponse = roomResponseMap.get(cartInfo.getRoomid());
+			if (roomResponse != null) {
+				roomResponse.setDate1(cartInfo.getDate1());
+				roomResponse.setDate2(cartInfo.getDate2());
+				combinedList.add(roomResponse);
 			}
 		}
 		return combinedList;
 	}
 
-	public void DeleteSession(HttpSession session) {
-		session.removeAttribute("partner_user_id");
-		session.removeAttribute("userPhone");
-		session.removeAttribute("price");
-		session.removeAttribute("partner_order_id");
-		session.removeAttribute("vat");
-	}
 }

@@ -2,8 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.example.yanolja.reserve.mapper.ReserveMapper">
+<mapper namespace="com.example.yanolja.reserve.mapper.ReserveMapper">
 	<select id="findUPhone" resultType="String">
 		Select phone
 		from
@@ -13,10 +12,8 @@
 	</select>
 
 	<select id="cartlist">
-		<foreach collection="list" item="roomid"
-			open="select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS hotelname,hotelid,rentalType,
-(select roadloc from location where location.hotelid = room.hotelid) as loc, roomid, MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout from room where roomid in ("
-			separator="," close=")">
+		<foreach collection="list" item="roomid" open="select (SELECT hotelname FROM hotel WHERE hotel.hotelid = room.hotelid) AS hotelname,hotelid,rentalType,
+(select roadloc from location where location.hotelid = room.hotelid) as loc, roomid, MaxManCnt, roomname, price, defaultmancnt, Checkin, Checkout from room where roomid in (" separator="," close=")">
 			#{roomid}
 		</foreach>
 	</select>
@@ -45,8 +42,7 @@
 		user_name,
 		user_phone,order_number,reserve_price,kakaoTid)
 		VALUES
-		<foreach item="dataMap" collection="parameterMap"
-			separator=",">
+		<foreach item="dataMap" collection="parameterMap" separator=",">
 			(#{dataMap.hotelId}, #{dataMap.roomid}, #{dataMap.date1},
 			#{dataMap.date2}, #{user_name}, #{user_phone},
 			#{dataMap.order_number},#{dataMap.price},#{kakaoTid})
@@ -75,8 +71,7 @@
 	<insert id="insertBookList">
 		INSERT INTO book (userid , roomid , bookdate)
 		VALUE
-		<foreach item="dataMap" collection="parameterMap"
-			separator=",">
+		<foreach item="dataMap" collection="parameterMap" separator=",">
 			(#{userid} , #{dataMap.roomid}, #{dataMap.date1}, (select
 			Max(reserveid) from reserve))
 		</foreach>
@@ -96,8 +91,7 @@
 		reserve
 		where
 		order_number IN
-		<foreach item="item" collection="list" open="(" separator=","
-			close=")">
+		<foreach item="item" collection="list" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</select>
@@ -125,9 +119,11 @@
 		b.userid = #{userid} AND
 		DATEDIFF(CURDATE(),
 		reservedate) >= -#{period} and rs.reserve_price != 0
-		GROUP BY b.bookid, b.roomid, h.hotelname,
+		GROUP BY b.bookid,
+		b.roomid, h.hotelname,
 		r.roomname, rs.user_name,
-		rs.reservedate, rs.reserveEndDate, reviewYN,
+		rs.reservedate,
+		rs.reserveEndDate, reviewYN,
 		b.userid
 		ORDER BY reservedate DESC
 	</select>
@@ -177,4 +173,20 @@
 		where order_number = #{order_number}
 	</select>
 
+	<insert id="insertDatebyReservation">
+		INSERT INTO DatebyReservation (DatebyReserveId, roomid, reservedate, count)
+	
+	</insert>
+	<insert id="insertDatebyReservationOne">
+		INSERT INTO DatebyReservation (DatebyReserveId, roomid, reservedate, count)
+		SELECT
+		COALESCE((SELECT DatebyReserveId FROM DatebyReservation WHERE roomid = #{roomid} AND reservedate = #{sessionDate1}), (SELECT Max(DatebyReserveId) FROM DatebyReservation) + 1),
+		#{roomid},
+		#{sessionDate1},
+		(SELECT roomnumber FROM room WHERE roomid = #{roomid}) -
+		(SELECT COUNT(reserveid) FROM reserve WHERE #{sessionDate1} >= reservedate AND #{sessionDate1} &lt; reserveEndDate)
+		ON DUPLICATE KEY UPDATE count =
+		((SELECT roomnumber FROM room WHERE roomid = #{roomid}) -
+		(SELECT COUNT(reserveid) FROM reserve WHERE #{sessionDate1} >= reservedate AND #{sessionDate1} &lt; reserveEndDate))
+	</insert>
 </mapper>

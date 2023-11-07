@@ -1,7 +1,7 @@
 $(document).ready(function() {  // 세션 값을 JavaScript 변수에 할당
 
-	const savedStartDate = sessionStorage.getItem('selectedStartDate');
-	const savedEndDate = sessionStorage.getItem('selectedEndDate');
+	const savedStartDate = sessionStorage.getItem('sessionDate1');
+	const savedEndDate = sessionStorage.getItem('sessionDate2');
 
 	let selectedStartDate = savedStartDate ? new Date(savedStartDate) : new Date();
 	let selectedEndDate = savedEndDate ? new Date(savedEndDate) : new Date();
@@ -10,7 +10,7 @@ $(document).ready(function() {  // 세션 값을 JavaScript 변수에 할당
 	}
 
 	// 선택한 시작 날짜를 원하는 형식으로 포맷
-	const options = { weekday: 'short', month: '2-digit', day: '2-digit' };
+	const options = { year: 'numeric',weekday: 'short', month: '2-digit', day: '2-digit' };
 	const formattedStartDate = selectedStartDate.toLocaleDateString("ko-KR", options);
 	const formattedEndDate = selectedEndDate.toLocaleDateString("ko-KR", options);
 

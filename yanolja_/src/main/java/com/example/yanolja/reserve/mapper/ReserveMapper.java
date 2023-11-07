@@ -42,4 +42,8 @@ public interface ReserveMapper {
 	ReservedInfo SelectReserveByBookid(String bookid);
 
 	ReservedInfo SelectReserveByOrder_number(String order_number);
+
+	void insertinsertDatebyReservation(Map<String, Object> parameterList, String date);
+
+	void insertDatebyReservationOne(int roomid, String sessionDate1);
 }

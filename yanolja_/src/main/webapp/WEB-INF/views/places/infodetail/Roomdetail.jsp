@@ -56,7 +56,7 @@
 					<div class="roomset">
 						<div class="roomserWrapper">
 							<c:choose>
-								<c:when test="${sessionScope.selectedStartDate != null}">
+								<c:when test="${not empty sessionDate1}">
 									<button class="datechoice" id="datechoice2"></button>
 								</c:when>
 								<c:otherwise>

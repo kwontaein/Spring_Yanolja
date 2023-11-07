@@ -16,6 +16,8 @@
 	var roomPrice = 0;
 	var date1Array = []; // 배열 생성
 	var date2Array = []; // 배열 생성
+	var StartDateArray = []; // 배열 생성
+	var EndDateArray = []; // 배열 생성
 	<c:if test="${not empty userid}">
 		userid = ${userid};
 	</c:if>
@@ -86,17 +88,30 @@
 										    var date1Formatted = dateParts1[0] + '-' + dateParts1[1] + '-' + dateParts1[2];
 										    var date2Formatted = dateParts2[0] + '-' + dateParts2[1] + '-' + dateParts2[2];
 
+											console.log(date1Str,date2Str);
+
+											console.log(date1Formatted,date2Formatted);
+											
 										    var date1 = new Date(date1Formatted);
 										    var date2 = new Date(date2Formatted);
-
+										    
+										    //전송을 위한 배열
+											StartDateArray.push(date1Formatted); 
+											EndDateArray.push(date2Formatted);
+											
+											//출력을 위한 배열
 										    date1Array.push(date1);
 										    date2Array.push(date2);
-
+										    
+											console.log(date1Array,date2Array);
+											
 										    var smallestDate1 = new Date(Math.min.apply(null, date1Array));
 										    var lastestDate2 = new Date(Math.max.apply(null, date2Array));
 
+											console.log(smallestDate1,lastestDate2);
 										    // 옵션 설정
 										    const options = {
+										    	year:'2-digit',
 										        month: '2-digit',
 										        day: '2-digit',
 										        weekday: 'short'
@@ -459,7 +474,7 @@
 								            userphone : userPhone
 								        };
 								    </c:otherwise>
-								</c:choose>
+									</c:choose>
 									var roomDataJson = JSON.stringify(roomData);
 									var roomDataUrlEncoded = encodeURIComponent(roomDataJson);
 									var paymentPageUrl = 'KakaoPayPage?roomData='
