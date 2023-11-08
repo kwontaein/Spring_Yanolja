@@ -1,12 +1,9 @@
 package com.example.yanolja.hotel.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -22,11 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.yanolja.grobal.ImageResponse;
-import com.example.yanolja.grobal.MainResponse;
-import com.example.yanolja.grobal.ReserveResponse;
-import com.example.yanolja.grobal.ReviewResponse;
-import com.example.yanolja.grobal.RoomResponse;
+import com.example.yanolja.grobal.Response.ImageResponse;
+import com.example.yanolja.grobal.Response.MainResponse;
+import com.example.yanolja.grobal.Response.ReserveResponse;
+import com.example.yanolja.grobal.Response.ReviewResponse;
+import com.example.yanolja.grobal.Response.RoomResponse;
+import com.example.yanolja.grobal.model.grobalService;
 import com.example.yanolja.hotel.model.HotelService;
 import com.example.yanolja.hotel.post.FacilityResponse;
 import com.example.yanolja.hotel.post.InfoResponse;
@@ -35,19 +33,20 @@ import com.example.yanolja.hotel.post.TrafficResponse;
 import com.example.yanolja.reserve.model.ReserveService;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:8080") // 허용할 도메인을 지정
 public class HotelController {
 
 	@Autowired
 	private final HotelService hotelService = null;
-	
+
 	@Autowired
 	ReserveService reserveService;
-	
+
+	@Autowired
+	grobalService grobalService;
+
 	@Autowired
 	HttpSession session;
 
@@ -79,24 +78,13 @@ public class HotelController {
 	// 객실 목록 불러오기
 	@GetMapping("/roomlist")
 	public String roomlist(@RequestParam final int hotelid, Model model, HttpSession session) {
+		
+		List<String> sessionDates = grobalService.SetSessionDate(session);
 		// MainResponse에 찾아오려는 값이 null이면 오류남
-		String sessionDate1 = (String) session.getAttribute("sessionDate1");
-		String sessionDate2 = (String) session.getAttribute("sessionDate2");
-		
-		String formatDate = reserveService.formatDates(sessionDate1);
-		
-		if (sessionDate1 == null && sessionDate2 == null) {
+		String sessionDate1 = sessionDates.get(0);
+		String sessionDate2 = sessionDates.get(1);
 
-			LocalDate nowDate = LocalDate.now();
-			LocalDate tomorrowDate = nowDate.plusDays(1);
-
-			sessionDate1 = nowDate.toString();
-			sessionDate2 = tomorrowDate.toString();
-
-			session.setAttribute("sessionDate1", sessionDate1);
-			session.setAttribute("sessionDate2", sessionDate2);
-		}
-
+		String formatDate = grobalService.formatDates(sessionDate1);
 		// 현재 날짜를 가져옵니다
 		LocalDate currentDate = LocalDate.now();
 		// 원하는 형식의 날짜로 포맷
@@ -205,23 +193,12 @@ public class HotelController {
 	@GetMapping("/places/roomView")
 	public String roomView(@RequestParam int roomid, Model model) {
 
-		String sessionDate1 = (String) session.getAttribute("sessionDate1");
-		String sessionDate2 = (String) session.getAttribute("sessionDate2");
-	
-		if (sessionDate1 == null && sessionDate2 == null) {
+		List<String> sessionDates = grobalService.SetSessionDate(session);
+		// MainResponse에 찾아오려는 값이 null이면 오류남
+		String sessionDate1 = sessionDates.get(0);
+		
+		String formatDate1 = grobalService.formatDates(sessionDate1);
 
-			LocalDate nowDate = LocalDate.now();
-			LocalDate tomorrowDate = nowDate.plusDays(1);
-
-			sessionDate1 = nowDate.toString();
-			sessionDate2 = tomorrowDate.toString();
-			session.setAttribute("sessionDate1", sessionDate1);
-			session.setAttribute("sessionDate2", sessionDate2);
-
-		}
-		String formatDate1 = reserveService.formatDates(sessionDate1);
-		String formatDate2 = reserveService.formatDates(sessionDate2);
-	
 		RoomResponse roomdetail = hotelService.findRoomDetail(roomid, formatDate1);
 		FacilityResponse Fc = hotelService.facility(roomid);
 		LocalDate currentDate = LocalDate.now();
@@ -248,7 +225,7 @@ public class HotelController {
 			@RequestParam(value = "selectedEndDate", required = false) String selectedEndDate,
 			@RequestParam(value = "hotelid", required = false) Integer hotelid,
 			@RequestParam(value = "roomid", required = false) Integer roomid) {
-		
+
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
 		LocalDate currentDate = LocalDate.now();
@@ -256,7 +233,7 @@ public class HotelController {
 		LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
 		LocalDate lastDayOfOneYearLater = currentDate.plusYears(1).withDayOfMonth(currentDate.lengthOfMonth());
 
-		//달력에 날짜별 예약 가능 여부를 추가하는 부분
+		// 달력에 날짜별 예약 가능 여부를 추가하는 부분
 		if (hotelid != null) {
 			List<ReserveResponse> rspossible = hotelService.reserve_possible(hotelid);
 
@@ -274,7 +251,7 @@ public class HotelController {
 				model.addAttribute("comparisonList", comparisonList);
 			}
 
-		} 
+		}
 		// hotelid로 예약 날짜와 예약된 방 정보를 가져옴
 
 		List<LocalDate> datesInRange = new ArrayList<>();
@@ -291,7 +268,7 @@ public class HotelController {
 		model.addAttribute("datesInRange", datesInRange);
 		model.addAttribute("currentDate", currentDate);
 		model.addAttribute("tomorrowDate", tomorrowDate);
-		
+
 		return "calendar/calendar";
 	}
 

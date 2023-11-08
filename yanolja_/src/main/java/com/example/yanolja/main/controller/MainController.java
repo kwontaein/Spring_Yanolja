@@ -1,30 +1,24 @@
 package com.example.yanolja.main.controller;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.yanolja.grobal.ImageResponse;
-import com.example.yanolja.grobal.MainResponse;
-import com.example.yanolja.grobal.ReserveResponse;
-import com.example.yanolja.grobal.ReviewResponse;
+import com.example.yanolja.grobal.Response.ImageResponse;
+import com.example.yanolja.grobal.Response.MainResponse;
+import com.example.yanolja.grobal.Response.ReserveResponse;
+import com.example.yanolja.grobal.Response.ReviewResponse;
+import com.example.yanolja.grobal.model.grobalService;
 import com.example.yanolja.main.model.MainService;
 
 import jakarta.servlet.http.HttpSession;
@@ -37,14 +31,9 @@ public class MainController {
 
 	@Autowired
 	MainService mainService;
-
+	@Autowired
+	grobalService grobalService;
 // 테스트 호출--------------------------------------------------------------------------------
-	@PostMapping("/test")
-	@ResponseBody
-	public boolean test() {
-		Integer a = 0;
-		return a != null;
-	}
 
 	@GetMapping("/test2")
 	public String test2() {
@@ -79,27 +68,11 @@ public class MainController {
 		return strResult;
 	}
 
-//kakao카카오 페이 결제 페이지--------------------------------------------------------------------------------
-	@GetMapping("/KakaoPayPage")
-	public String kakaopay() {
-		return "KakaoPay/KaKaoPay";
-	}
-
 //Main메인페이지 호출--------------------------------------------------------------------------------
 	@GetMapping("/")
 	public String openMain(HttpSession session) {
-		String sessionDate1 = (String) session.getAttribute("sessionDate1");
-		String sessionDate2 = (String) session.getAttribute("sessionDate2");
-		if (sessionDate1 == null && sessionDate2 == null) {
-
-			LocalDate nowDate = LocalDate.now();
-			LocalDate tomorrowDate = nowDate.plusDays(1);
-
-			sessionDate1 = nowDate.toString();
-			sessionDate2 = tomorrowDate.toString();
-			session.setAttribute("sessionDate1", sessionDate1);
-			session.setAttribute("sessionDate2", sessionDate2);
-		}
+		grobalService.SetSessionDate(session);
+		// MainResponse에 찾아오려는 값이 null이면 오류남
 		return "Main/Main"; // Main/Main 템플릿을 렌더링
 	}
 
@@ -120,42 +93,13 @@ public class MainController {
 		return "lists/ResentRelated";
 	}
 
-	@GetMapping("/Hotellist")
-	public String Hotellist(@RequestParam("regionname") String regionname, @RequestParam("kindhotel") String kindhotel,
-			Model model) {
-		// MainResponse에 찾아오려는 값이 null이면 오류남
-		List<MainResponse> post = posts(regionname, kindhotel);
-		model.addAttribute("post", post);
-		return "lists/Hotellist"; // Main/Hotellist 템플릿을 렌더링
-	}
-
-	@GetMapping("/Nonslidelist")
-	public String Nonslidelist(@RequestParam("regionname") String regionname,
+	@GetMapping("/{kindlist}")
+	public String ViewHotels(@PathVariable("kindlist") String kindlist, @RequestParam("regionname") String regionname,
 			@RequestParam("kindhotel") String kindhotel, Model model) {
 		// MainResponse에 찾아오려는 값이 null이면 오류남
-		List<MainResponse> post = posts(regionname, kindhotel);
+		List<MainResponse> post = mainService.posts(regionname, kindhotel);
 		model.addAttribute("post", post);
-		return "lists/Nonslidelist"; // Main/Hotellist 템플릿을 렌더링
-	}
-
-	@GetMapping("/ViewHotels")
-	public String ViewHotels(@RequestParam("regionname") String regionname, @RequestParam("kindhotel") String kindhotel,
-			Model model) {
-		// MainResponse에 찾아오려는 값이 null이면 오류남
-		List<MainResponse> post = posts(regionname, kindhotel);
-		model.addAttribute("post", post);
-		return "lists/ViewHotels"; // Main/Hotellist 템플릿을 렌더링
-	}
-
-	public List<MainResponse> posts(String regionname, String kindhotel) {
-		// region 테이블에서 지역 명 가져오기
-		List<MainResponse> post = mainService.findAllFromRegion(regionname, kindhotel);
-		if (post.isEmpty()) {
-			List<MainResponse> post2 = mainService.findAllFromRd(regionname, kindhotel);
-			return post2;
-		} else {
-			return post;
-		}
+		return "lists/" + kindlist; // Main/Hotellist 템플릿을 렌더링
 	}
 
 // 스와이퍼 --------------------------------------------------------------------------------
@@ -172,6 +116,7 @@ public class MainController {
 	}
 
 //Main검색 기능 --------------------------------------------------------------------------------------	
+	// 검색창
 	@GetMapping("/Search")
 	public String search() {
 		return "Search/search";
@@ -204,21 +149,25 @@ public class MainController {
 
 		// 유저정보 확인
 		Integer userid = (Integer) session.getAttribute("userid");
-
 		if (userid != null) {
 			// 호텔, 객실이름 및 사용자 이름 가져오기
 			if (reviewid != null && roomid == null && bookid == null) {
+
 				// rating 정보랑 이미지 정보 불러와서 출력.
 				int roomIdbyReview = mainService.selectRsByreview(reviewid);
 				ReviewResponse loadRs = mainService.selectForReviewUpdate(reviewid);
 				List<ImageResponse> imgs = mainService.ReviewInseredPhoto(reviewid);
+
 				model.addAttribute("loadRs", loadRs);
 				model.addAttribute("roomid", roomIdbyReview);
 				model.addAttribute("imgs", imgs);
+
 				return "User/UpdateReview";
+
 			} else {
 				// 에약정보가 이미 있는지 확인
 				Integer isBooked = mainService.isBooked(roomid, bookid);
+
 				if (isBooked != null && isBooked == 0) {
 					// 여긴 그냥 기본 정보만
 					ReserveResponse loadRs = mainService.selectForReview(roomid);
@@ -248,26 +197,11 @@ public class MainController {
 			HttpSession session) {
 
 		// 호텔아이디 받아서 insert
-
 		int userid = (int) session.getAttribute("userid");
 		int hotelid = mainService.findHotelId(roomid);
+		// 후기정보 삽입
+		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData, multipartFiles);
 
-		mainService.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);// 후기 정보 넣기
-
-		int CurrentReviewid = mainService.lastReviewid();
-		if (multipartFiles != null) {
-			for (MultipartFile file : multipartFiles) {
-				try {
-					byte[] imageBytes = file.getBytes();
-					String originalFileName = file.getOriginalFilename();
-					// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
-					mainService.saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes, userid);// 이미지 파일 넣기
-				} catch (IOException e) {
-					e.printStackTrace();
-					break;
-				}
-			}
-		}
 		if (bookid != null)
 			mainService.updateReivewYn(bookid);
 
@@ -288,46 +222,7 @@ public class MainController {
 		// 배열 두개 생성 -> 반복문 돌면서 두 배열 비교 -> 바뀌지 않은 게 있으면 그대로 배열에 저장 후 나머지는 두번째 목록의 배열 값을
 		// 저장
 		int userid = (int) session.getAttribute("userid");
-		int hotelid = mainService.findHotelId(roomid);
-
-		List<ImageResponse> imgs = mainService.ReviewInseredPhoto(reviewid);
-
-		// 이미 불러온 이미지의 imgid 값을 저장하는 Set
-		Set<String> loadedImgIds = new HashSet<>();
-		// 이미지 아이디 목록 저장
-		for (ImageResponse img : imgs) {
-			loadedImgIds.add(img.getImgname());
-		}
-
-		// 받아온 파일의 이름 목록 저장
-		Set<String> uploadedFileNames = new HashSet<>();
-		for (MultipartFile file : multipartFiles) {
-			uploadedFileNames.add(file.getOriginalFilename());
-		}
-		// loadedImgIds에 있는 id 값과 uploadedFileNames의 id 값 비교 후 없을 시 삭제
-
-		for (ImageResponse img : imgs) {
-			String imgName = img.getImgname();
-			int imgId = img.getImgid();
-			if (!uploadedFileNames.contains(imgName)) { // 이미 불러온 이미지이지만 현재 업로드한 파일과 관련이 없는이미지 처리
-				mainService.DelPhotoByimgid(imgId); // 이미지 삭제
-			}
-		}
-		if (multipartFiles != null) {
-			for (MultipartFile file : multipartFiles) {
-				try {
-					byte[] imageBytes = file.getBytes();
-					String originalFileName = file.getOriginalFilename();
-					if (loadedImgIds.contains(originalFileName)) { // 이미 불러온 이미지의 처리
-					} else { // 새이미지의 처리
-						mainService.saveImage(hotelid, reviewid, originalFileName, imageBytes, userid); // 이미지 파일 넣기
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-					break;
-				}
-			}
-		}
+		mainService.UpdateReviewImg(userid, roomid, reviewid, multipartFiles);
 		mainService.updateReview(rating1, rating2, rating3, rating4, textData, reviewid);// 후기 정보 넣기
 		return "success";
 	}

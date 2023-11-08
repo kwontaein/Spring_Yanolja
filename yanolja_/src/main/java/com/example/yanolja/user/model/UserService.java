@@ -13,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.yanolja.grobal.ImageResponse;
-import com.example.yanolja.grobal.MainResponse;
-import com.example.yanolja.grobal.ReviewResponse;
+import com.example.yanolja.grobal.Response.ImageResponse;
+import com.example.yanolja.grobal.Response.MainResponse;
+import com.example.yanolja.grobal.Response.ReviewResponse;
 import com.example.yanolja.user.mapper.UserMapper;
 import com.example.yanolja.user.vo.UserVo;
 

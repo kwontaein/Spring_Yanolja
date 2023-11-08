@@ -15,4 +15,6 @@ public interface KakaoMapper {
 	void insertUser(User user);
 
 	void updateReserve(String price, String kakaoTid , String ordernumber);
+
+	void UpdateToCancel(String ordernumber);
 }

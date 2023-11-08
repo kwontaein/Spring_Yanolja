@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.yanolja.grobal.ImageResponse;
-import com.example.yanolja.grobal.MainResponse;
-import com.example.yanolja.grobal.ReviewResponse;
+import com.example.yanolja.grobal.Response.ImageResponse;
+import com.example.yanolja.grobal.Response.MainResponse;
+import com.example.yanolja.grobal.Response.ReviewResponse;
 import com.example.yanolja.kakao.model.KakaoService;
 import com.example.yanolja.user.CustomUserDetails;
 import com.example.yanolja.user.model.EmailService;

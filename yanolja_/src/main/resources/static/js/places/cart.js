@@ -44,10 +44,11 @@ function toggleCheckboxes(checkbox) {
 // deleteCartItem 함수 정의
 function deleteCartItem(selectedIds) {
 	$.ajax({
-		type: "GET",
+		type: "Post",
 		url: "/removeFromCart",
 		data: { roomid: selectedIds }, // 'roomid'를 쿼리 매개변수로 추가
 		success: function(data) {
+			alert(data);
 			// 성공적으로 삭제되었을 때, 페이지 새로고침 또는 업데이트 등을 수행할 수 있습니다.
 			location.reload(); // 예시로 페이지를 새로고침합니다.
 		},

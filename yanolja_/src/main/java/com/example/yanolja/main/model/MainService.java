@@ -1,26 +1,19 @@
 package com.example.yanolja.main.model;
 
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.example.yanolja.grobal.ImageResponse;
-import com.example.yanolja.grobal.MainResponse;
-import com.example.yanolja.grobal.ReserveResponse;
-import com.example.yanolja.grobal.ReviewResponse;
-import com.example.yanolja.grobal.RoomResponse;
-import com.example.yanolja.hotel.post.FacilityResponse;
-import com.example.yanolja.hotel.post.InfoResponse;
-import com.example.yanolja.hotel.post.PolicyResponse;
-import com.example.yanolja.hotel.post.TrafficResponse;
+import com.example.yanolja.grobal.Response.ImageResponse;
+import com.example.yanolja.grobal.Response.MainResponse;
+import com.example.yanolja.grobal.Response.ReserveResponse;
+import com.example.yanolja.grobal.Response.ReviewResponse;
 import com.example.yanolja.main.mapper.MainMapper;
-import com.example.yanolja.main.post.MainRequest;
-import com.example.yanolja.reserve.post.BookResponse;
-import com.example.yanolja.reserve.post.CouponResponse;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class MainService {
@@ -43,13 +36,11 @@ public class MainService {
 
 	// 큰 지역 명으로 찾기
 	public List<MainResponse> findAllFromRegion(String regionname, String kindhotel) {
-		String kind = kind_name(kindhotel);
 		return mainMapper.findAllFromRegion(regionname, kindhotel);
 	}
 
 	// 세부 지역 명으로 찾기
 	public List<MainResponse> findAllFromRd(String regionname, String kindhotel) {
-		String kind = kind_name(kindhotel);
 		return mainMapper.findAllFromRd(regionname, kindhotel);
 	}
 
@@ -65,21 +56,6 @@ public class MainService {
 		return mainMapper.TofindByKindDesc(kind);
 	}
 
-	// 호텔 이름 검색을 위해 영어로 바꾸는 메소드
-	public String kind_name(String kindhotel) {
-		String kind = "호텔";
-		if (kindhotel.equals("hotel")) {
-			kind = "호텔";
-		} else if (kindhotel.equals("motel")) {
-			kind = "모텔";
-		} else if (kindhotel.equals("pension")) {
-			kind = "펜션";
-		} else if (kindhotel.equals("familly")) {
-			kind = "게스트하우스";
-		}
-		return kind;
-	}
-
 	// 후기 작성시 불러오는 정보
 	public ReserveResponse selectForReview(int roomid) {
 		return mainMapper.selectForReview(roomid);
@@ -92,7 +68,23 @@ public class MainService {
 
 	// 후기 삽입
 	public void insertReview(int hotelid, int roomid, int userid, double rating1, double rating2, double rating3,
-			double rating4, String textData) {
+			double rating4, String textData, MultipartFile[] multipartFiles) {
+		int CurrentReviewid = lastReviewid();
+
+		if (multipartFiles != null) {
+			for (MultipartFile file : multipartFiles) {
+				try {
+					byte[] imageBytes = file.getBytes();
+					String originalFileName = file.getOriginalFilename();
+					// 이제 이미지 데이터를 데이터베이스에 저장하는 서비스 메서드를 호출
+					saveImage(hotelid, CurrentReviewid, originalFileName, imageBytes, userid);// 이미지 파일 넣기
+				} catch (IOException e) {
+					e.printStackTrace();
+					break;
+				}
+			}
+		}
+
 		mainMapper.insertReview(hotelid, roomid, userid, rating1, rating2, rating3, rating4, textData);
 	}
 
@@ -171,4 +163,76 @@ public class MainService {
 		return mainMapper.isBooked(roomid, bookid);
 	}
 
+	public List<MainResponse> posts(String regionname, String kindhotel) {
+		// region 테이블에서 지역 명 가져오기
+		List<MainResponse> post = findAllFromRegion(regionname, kindhotel);
+		if (post.isEmpty()) {
+			List<MainResponse> post2 = findAllFromRd(regionname, kindhotel);
+			return post2;
+		} else {
+			return post;
+		}
+	}
+
+	// 호텔 이름 검색을 위해 영어로 바꾸는 메소드
+	public String kind_name(String kindhotel) {
+		String kind = "호텔";
+		if (kindhotel.equals("hotel")) {
+			kind = "호텔";
+		} else if (kindhotel.equals("motel")) {
+			kind = "모텔";
+		} else if (kindhotel.equals("pension")) {
+			kind = "펜션";
+		} else if (kindhotel.equals("familly")) {
+			kind = "게스트하우스";
+		}
+		return kind;
+	}
+	
+	//리뷰 사진 업데이트 메소드
+	public void UpdateReviewImg(int userid, int roomid, int reviewid, MultipartFile[] multipartFiles) {
+
+		int hotelid = findHotelId(roomid);
+
+		List<ImageResponse> imgs = ReviewInseredPhoto(reviewid);
+
+		// 이미 불러온 이미지의 imgid 값을 저장하는 Set
+		Set<String> loadedImgIds = new HashSet<>();
+		// 이미지 아이디 목록 저장
+		for (ImageResponse img : imgs) {
+			loadedImgIds.add(img.getImgname());
+		}
+
+		// 받아온 파일의 이름 목록 저장
+		Set<String> uploadedFileNames = new HashSet<>();
+
+		for (MultipartFile file : multipartFiles) {
+			uploadedFileNames.add(file.getOriginalFilename());
+		}
+
+		// loadedImgIds에 있는 id 값과 uploadedFileNames의 id 값 비교 후 없을 시 삭제
+		for (ImageResponse img : imgs) {
+			String imgName = img.getImgname();
+			int imgId = img.getImgid();
+			if (!uploadedFileNames.contains(imgName)) { // 이미 불러온 이미지이지만 현재 업로드한 파일과 관련이 없는이미지 처리
+				DelPhotoByimgid(imgId); // 이미지 삭제
+			}
+		}
+
+		if (multipartFiles != null) {
+			for (MultipartFile file : multipartFiles) {
+				try {
+					byte[] imageBytes = file.getBytes();
+					String originalFileName = file.getOriginalFilename();
+					if (loadedImgIds.contains(originalFileName)) { // 이미 불러온 이미지의 처리
+					} else { // 새이미지의 처리
+						saveImage(hotelid, reviewid, originalFileName, imageBytes, userid); // 이미지 파일 넣기
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					break;
+				}
+			}
+		}
+	}
 }

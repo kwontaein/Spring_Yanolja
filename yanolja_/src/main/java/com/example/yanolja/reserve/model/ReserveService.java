@@ -11,8 +11,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.yanolja.grobal.ReserveResponse;
-import com.example.yanolja.grobal.RoomResponse;
+import com.example.yanolja.grobal.Response.ReserveResponse;
+import com.example.yanolja.grobal.Response.RoomResponse;
 import com.example.yanolja.reserve.mapper.ReserveMapper;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.CouponResponse;
@@ -106,19 +106,8 @@ public class ReserveService {
 		reserveMapper.insertDatebyReservationOne(roomid, sessionDate1);
 	}
 
-	// 날짜 형식 지정 메소드 ReserveAgree
-	public String formatDates(String sessionDate) {
-		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
-		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			Date date1 = inputFormat.parse(sessionDate);
-			String formattedDate = outputFormat.format(date1);
-			return formattedDate;
-		} catch (ParseException e) {
-			return sessionDate;
-		}
-	}
 
+	//두 날짜 사이 값들 리스트를 생성하기 위한 메소드
 	public List<String> DateList(String sessionDate1, String sessionDate2) {
 		// 날짜 문자열을 파싱할 형식 지정
 		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
@@ -144,7 +133,8 @@ public class ReserveService {
 		System.out.println(dateList);
 		return dateList;
 	}
-
+	
+	//날짜 목록 생성
 	private void generateDateList(Date startDate, Date endDate, SimpleDateFormat outputFormat, List<String> dateList) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);
@@ -154,7 +144,8 @@ public class ReserveService {
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 	}
-
+	
+	//결제 후 카카오 정보 세션 삭제 메소드
 	public void DeleteSession(HttpSession session) {
 		session.removeAttribute("partner_user_id");
 		session.removeAttribute("userPhone");

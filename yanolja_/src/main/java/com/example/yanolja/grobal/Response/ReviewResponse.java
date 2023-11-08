@@ -1,4 +1,4 @@
-package com.example.yanolja.grobal;
+package com.example.yanolja.grobal.Response;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

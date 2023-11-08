@@ -150,7 +150,8 @@ public class KakaoService {
 	public void joinUser(User user) {
 		kakaoMapper.insertUser(user);
 	}
-
+	
+	//이메일 중복체크
 	public int emaildupcheck(String email) {
 		// MyBatis를 사용하여 이메일 중복 확인
 		User user = kakaoMapper.findByEmail(email);
@@ -165,12 +166,13 @@ public class KakaoService {
 	public User findByEmail(String email) {
 		return kakaoMapper.findByEmail(email);
 	}
-
+	
 	// 사용자 이메일로 조회하여 Userid 반환
 	public int findUserid(String email) {
 		return kakaoMapper.findUserid(email);
 	}
-
+	
+//회원가입
 	public void insertUser(User user) {
 		// MyBatis를 사용하여 사용자 정보를 데이터베이스에 저장
 		System.out.println("insertUser 실행");
@@ -269,9 +271,7 @@ public class KakaoService {
 		return "/pay";
 	}
 
-	/**
-	 * 결제 완료 승인
-	 */
+	//결제 완료 승인
 	public KakaoApproveResponse ApproveResponse(String pgToken) {
 
 		httpSession.setAttribute("kakaoTid", kakaoReady.getTid());
@@ -305,9 +305,7 @@ public class KakaoService {
 		}
 	}
 
-	/**
-	 * 결제 환불
-	 */
+	//결제 환불
 	public KakaoCancelResponse kakaoCancel() {
 
 		// 결제 최종 단계에서 취소인지, 그냥 취소인지 구분
@@ -342,7 +340,8 @@ public class KakaoService {
 		System.out.println("환불완");
 		return cancelResponse;
 	}
-
+	
+	//최종 단계 결제 환불
 	public KakaoCancelResponse kakaoCancel2(String price2, String kakaoTid) {
 
 		int price = Integer.parseInt(price2);
@@ -370,9 +369,7 @@ public class KakaoService {
 		return cancelResponse;
 	}
 
-	/**
-	 * 카카오 요구 헤더값
-	 */
+	//카카오 헤더
 	private HttpHeaders getHeaders() {
 		HttpHeaders httpHeaders = new HttpHeaders();
 
@@ -384,6 +381,10 @@ public class KakaoService {
 
 	public void updateReserve(String price, String kakaoTid, String ordernumber) {
 		kakaoMapper.updateReserve(price, kakaoTid, ordernumber);
+	}
+
+	public void UpdateToCancel(String ordernumber) {
+		kakaoMapper.UpdateToCancel(ordernumber);
 	}
 
 }

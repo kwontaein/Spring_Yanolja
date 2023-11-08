@@ -87,8 +87,7 @@
 		user.userid = review.userid) as username,
 		(select roomname from room
 		where room.roomid = review.roomid) as
-		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 
-			사진 들어가야 함 -->
+		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 사진 들어가야 함 -->
 	</sql>
 	<!--상세정보 조회 -->
 	<select id="findById">
@@ -113,16 +112,11 @@
 		bed,
 		bedcnt,
 		Checkin,
-		(roomnumber -
-		(select count(reserveid) from reserve where #{StartDate} >= reservedate
-		and #{StartDate} &lt; reserveEndDate)) AS roomcnt,
+		coalesce((select count from DatebyReservation where reservedate = #{StartDate} AND DatebyReservation.roomid = room.roomid),roomnumber) as roomcnt,
 		rentalType, (Select imgdata from image where image.roomid = room.roomid) as image
 		FROM room
 		WHERE hotelid = #{hotelid}
-		AND roomnumber >=
-		((roomnumber -
-		(select count(reserveid) from reserve where #{StartDate} >= reservedate
-		and #{StartDate} &lt; reserveEndDate)))
+		AND roomnumber >= coalesce((select count from DatebyReservation where reservedate = #{StartDate}),0)
 	</select>
 	<select id="hotelinfo">
 		Select
@@ -282,7 +276,7 @@
 		roomid
 		=#{roomid}
 	</select>
-	
+
 	<!-- 방 조회 -->
 	<select id="findRoomDetail">
 		SELECT
@@ -304,11 +298,7 @@
 		rentalType,
 		Checkin,
 		Checkout,
-		((select roomnumber from room where roomid = #{roomid}) -
-		(select
-		count(reserveid) from reserve where #{StartDate} >= reservedate
-		and #{StartDate} &lt; reserveEndDate))
-		AS roomcnt,
+		coalesce((select count from DatebyReservation where reservedate = #{StartDate} AND DatebyReservation.roomid = room.roomid),roomnumber) as roomcnt,
 		defaultinfo,
 		(SELECT
 		reserveinfo FROM hotel WHERE hotel.hotelid

@@ -1,10 +1,7 @@
 package com.example.yanolja.reserve.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +10,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.yanolja.grobal.ReserveResponse;
-import com.example.yanolja.grobal.RoomResponse;
-import com.example.yanolja.kakao.vo.KakaoResponse;
+import com.example.yanolja.grobal.Response.ReserveResponse;
+import com.example.yanolja.grobal.Response.RoomResponse;
+import com.example.yanolja.grobal.model.grobalService;
 import com.example.yanolja.reserve.model.ReserveService;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.Cartinfo;
@@ -29,15 +25,14 @@ import com.example.yanolja.reserve.post.CouponResponse;
 import com.example.yanolja.reserve.post.ReservedInfo;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8080") // 허용할 도메인을 지정
 public class ReserveController {
 	@Autowired
 	ReserveService reserveService;
-	private KakaoResponse kakaoReady;
+
+	@Autowired
+	grobalService grobalService;
 
 	// reserveController예약 기능
 	// --------------------------------------------------------------------------------------
@@ -46,37 +41,53 @@ public class ReserveController {
 	public String reserve(@RequestParam(value = "roomid", required = false) Integer roomid,
 			@RequestParam(value = "roomids", required = false) List<Integer> roomids, Model model,
 			HttpSession session) {
-		List<Cartinfo> cartRoomInfoList = getCartRoomInfoList(session);
-		System.out.println(roomids);
-		if (cartRoomInfoList != null && cartRoomInfoList.size() != 0 && roomid == null) {
 
+		// 카트 룸 정보를 검색하는 공통 메소드
+		List<Cartinfo> cartRoomInfoList = getCartRoomInfoList(session);
+
+		if (roomids != null && cartRoomInfoList != null) {
+			deleteFromCart(roomids, cartRoomInfoList, session); // 카트에서 삭제
+		}
+
+		if (cartRoomInfoList != null && cartRoomInfoList.size() != 0 && roomid == null) {
 			// RequestParam으로 받아온 roomids 이외의 값들을 삭제합니다
 			List<Cartinfo> updatedCartRoomInfos = cartRoomInfoList.stream()
 					.filter(cartInfo -> roomids.contains(cartInfo.getRoomid())).collect(Collectors.toList());
-
-			System.out.println(updatedCartRoomInfos);
 
 			List<RoomResponse> combinedList = combineCartInfoWithRoomResponse(updatedCartRoomInfos);
 
 			// 카카오 결제에서 사용하기 위한 세션
 			session.setAttribute("combinedList", combinedList);
+
 			// combinedList를 hotelname으로 정렬
 			combinedList.sort(Comparator.comparing(RoomResponse::getHotelname));
+
 			model.addAttribute("room2", combinedList);
+
 		} else if (roomid != null) {
+			// 단일 예약
 			RoomResponse roomdetail = reserveService.cartlist2(roomid);
+
 			// 카카오 결제에서 사용하기 위한 세션
 			session.setAttribute("roomdetail", roomdetail);
+
 			model.addAttribute("room", roomdetail);
 		}
-
+		// 이름 정보 가져와서
 		Object uname = session.getAttribute("username");
+
 		if (uname != null) {
+			// 있다면 휴대폰 번호 찾기
 			String phone = reserveService.findUPhone(uname.toString());
+			// 유저아이디 값 세션에서 가져오기
 			int userid = (int) session.getAttribute("userid");
+			// 쿠폰 정보도 가져오기
 			List<CouponResponse> coupon = reserveService.selectcoupon(userid);
+
 			model.addAttribute("coupon", coupon);
+
 			if (phone != null) {
+
 				model.addAttribute("phone", phone);
 			}
 		}
@@ -91,6 +102,8 @@ public class ReserveController {
 			@RequestParam(value = "priceArray", required = false) String[] priceArray,
 			@RequestParam(value = "StartDateArray", required = false) String[] StartDateArray,
 			@RequestParam(value = "EndDateArray", required = false) String[] EndDateArray) {
+
+		// 결제 정보 가져오기
 		Integer userid = (Integer) session.getAttribute("userid");
 		String user_name = (String) session.getAttribute("partner_user_id");
 		String user_phone = (String) session.getAttribute("userPhone");
@@ -100,11 +113,14 @@ public class ReserveController {
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
 		String kakaoTid = (String) session.getAttribute("kakaoTid");
 
-		String formattedDate1 = reserveService.formatDates(sessionDate1);
-		String formattedDate2 = reserveService.formatDates(sessionDate2);
+		String formattedDate1 = grobalService.formatDates(sessionDate1);
+		String formattedDate2 = grobalService.formatDates(sessionDate2);
 
+		@SuppressWarnings("unchecked")
 		List<RoomResponse> combinedList = (List<RoomResponse>) session.getAttribute("combinedList");
+
 		List<String> on_list = new ArrayList<>();
+
 		if (combinedList != null) {
 			List<Map<String, Object>> parameterList = new ArrayList<>();
 
@@ -159,6 +175,7 @@ public class ReserveController {
 			reserveService.DeleteSession(session);
 
 			return on_list;
+
 		} else {
 			List<String> DList = reserveService.DateList(sessionDate1, sessionDate2);
 			RoomResponse roomdetail = (RoomResponse) session.getAttribute("roomdetail");
@@ -239,6 +256,7 @@ public class ReserveController {
 			@RequestParam(value = "order_number", required = false) String order_number) {
 
 		ReservedInfo reserve_info;
+
 		if (bookid != null) {
 			reserve_info = reserveService.SelectReserveByBookid(bookid);
 			System.out.println(reserve_info);
@@ -276,7 +294,7 @@ public class ReserveController {
 			@RequestParam("EndDate") String Date2, HttpSession session) {
 
 		// 세션에서 기존에 저장된 RoomInfo 리스트를 가져옴.
-		List<Cartinfo> cartRoomInfoList = (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+		List<Cartinfo> cartRoomInfoList = getCartRoomInfoList(session);
 
 		// 만약 세션에 저장된 리스트가 없다면 새로운 리스트를 생성.
 		if (cartRoomInfoList == null) {
@@ -308,33 +326,30 @@ public class ReserveController {
 	}
 
 	// 장바구니 삭제
-	@GetMapping("/removeFromCart")
+	@PostMapping("/removeFromCart")
+	@ResponseBody
 	public String removeFromCart(@RequestParam("roomid[]") List<Integer> roomids, HttpSession session) {
 		// 세션에서 기존에 저장된 roomid 리스트를 가져옵니다.
 
-		List<Cartinfo> cartRoomids = (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
+		List<Cartinfo> cartRoomids = getCartRoomInfoList(session);
 
 		// 만약 세션에 저장된 리스트가 없다면 아무 작업을 하지 않고 반환합니다.
 		if (cartRoomids == null) {
-			return "redirect:cart"; // 또는 다른 페이지나 뷰로 리다이렉트
+			return "카트에 담긴 상품이 없습니다!";
 		}
 
-		// roomids 리스트에 있는 각 roomid를 cartRoomids 리스트에서 검색하여 삭제합니다
-		List<Cartinfo> updatedCartRoomInfos = new ArrayList<>(cartRoomids);
-		for (int roomid : roomids) {
-			updatedCartRoomInfos.removeIf(cartInfo -> cartInfo.getRoomid() == roomid);
-		}
-		// 리스트를 다시 세션에 저장합니다.
-		session.setAttribute("cartRoomInfoList", updatedCartRoomInfos);
+		// 삭제를 실행하는 메소드
+		deleteFromCart(roomids, cartRoomids, session);
 
-		// 원하는 처리를 수행한 후, 다른 페이지로 리다이렉트하거나 뷰를 반환할 수 있습니다.
-		return "redirect:cart";
+		// 원하는 처리를 수행.
+		return "삭제가 완료되었습니다";
 	}
 
 	// 메소드
 	// ---------------------------------------------------------------------------------------------------
 
-	// 카트 룸 정보를 검색하는 공통 메소드 cart
+	// 카트 룸 정보를 검색하는 공통 메소드
+	@SuppressWarnings("unchecked")
 	private List<Cartinfo> getCartRoomInfoList(HttpSession session) {
 		return (List<Cartinfo>) session.getAttribute("cartRoomInfoList");
 	}
@@ -359,4 +374,16 @@ public class ReserveController {
 		return combinedList;
 	}
 
+	// 카트에서 특정 방 정보들을 삭제하는 메소드
+	private void deleteFromCart(List<Integer> roomids, List<Cartinfo> cartRoomids, HttpSession session) {
+
+		// roomids 리스트에 있는 각 roomid를 cartRoomids 리스트에서 검색하여 삭제합니다
+		List<Cartinfo> updatedCartRoomInfos = new ArrayList<>(cartRoomids);
+		// 아이디 값 검색해서 삭제
+		for (int roomid : roomids) {
+			updatedCartRoomInfos.removeIf(cartInfo -> cartInfo.getRoomid() == roomid);
+		}
+		// 리스트를 다시 세션에 저장합니다.
+		session.setAttribute("cartRoomInfoList", updatedCartRoomInfos);
+	}
 }

@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.yanolja.grobal.ImageResponse;
-import com.example.yanolja.grobal.MainResponse;
-import com.example.yanolja.grobal.ReserveResponse;
-import com.example.yanolja.grobal.ReviewResponse;
-import com.example.yanolja.grobal.RoomResponse;
+import com.example.yanolja.grobal.Response.ImageResponse;
+import com.example.yanolja.grobal.Response.MainResponse;
+import com.example.yanolja.grobal.Response.ReserveResponse;
+import com.example.yanolja.grobal.Response.ReviewResponse;
+import com.example.yanolja.grobal.Response.RoomResponse;
 import com.example.yanolja.hotel.mapper.HotelMapper;
 import com.example.yanolja.hotel.post.FacilityResponse;
 import com.example.yanolja.hotel.post.InfoResponse;

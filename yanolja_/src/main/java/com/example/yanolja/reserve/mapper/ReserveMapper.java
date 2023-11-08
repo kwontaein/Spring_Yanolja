@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.yanolja.grobal.ReserveResponse;
-import com.example.yanolja.grobal.RoomResponse;
+import com.example.yanolja.grobal.Response.ReserveResponse;
+import com.example.yanolja.grobal.Response.RoomResponse;
 import com.example.yanolja.reserve.post.BookResponse;
 import com.example.yanolja.reserve.post.CouponResponse;
 import com.example.yanolja.reserve.post.ReservedInfo;
