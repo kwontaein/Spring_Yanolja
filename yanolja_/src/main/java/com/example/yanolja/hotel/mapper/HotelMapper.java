@@ -13,8 +13,9 @@ import com.example.yanolja.hotel.post.FacilityResponse;
 import com.example.yanolja.hotel.post.InfoResponse;
 import com.example.yanolja.hotel.post.PolicyResponse;
 import com.example.yanolja.hotel.post.TrafficResponse;
+
 @Mapper
-public interface HotelMapper {
+public interface HotelMapper{
 	MainResponse findById(Long hotelid);
 
 	List<RoomResponse> findRoomByDate(int hotelid, String StartDate);

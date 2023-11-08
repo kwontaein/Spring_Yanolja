@@ -35,9 +35,9 @@ $(document).ready(function() {  // 세션 값을 JavaScript 변수에 할당
 var text = [];
 
 for (var i = 0; i < data.location.length; i++) {
-	text[i] = [data.location[i] + " " + data.kindhotels[i]]
+	text[i] = [data.location[i] + " " + data.kindhotels[0]]
 	// 초기 상태에서 슬라이드 내용 로드
-	includeFile('ViewHotels', data.location[i], data.kindhotels[i], i); // i를 넘겨줍니다.
+	includeFile('ViewHotels', data.location[i], data.kindhotels[0], i); // i를 넘겨줍니다.
 };
 
 var bottomSwiper = new Swiper('.swiper-bottom', {

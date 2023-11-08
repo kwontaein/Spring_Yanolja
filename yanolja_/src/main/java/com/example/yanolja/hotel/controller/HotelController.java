@@ -257,13 +257,14 @@ public class HotelController {
 		List<LocalDate> datesInRange = new ArrayList<>();
 
 		LocalDate currentDatePointer = firstDayOfMonth;
+		
 		while (!currentDatePointer.isAfter(lastDayOfOneYearLater)) {
 			datesInRange.add(currentDatePointer);
 			currentDatePointer = currentDatePointer.plusDays(1);
 		}
 
-		sessionDate1 = updateSessionAttribute("sessionDate1", sessionDate1, selectedStartDate, currentDate);
-		sessionDate2 = updateSessionAttribute("sessionDate2", sessionDate2, selectedEndDate, tomorrowDate);
+		sessionDate1 = hotelService.updateSessionAttribute("sessionDate1", sessionDate1, selectedStartDate, currentDate);
+		sessionDate2 = hotelService.updateSessionAttribute("sessionDate2", sessionDate2, selectedEndDate, tomorrowDate);
 
 		model.addAttribute("datesInRange", datesInRange);
 		model.addAttribute("currentDate", currentDate);
@@ -271,27 +272,4 @@ public class HotelController {
 
 		return "calendar/calendar";
 	}
-
-	// 날짜 세션 설정 calander
-	private String updateSessionAttribute(String attributeName, String sessionValue, String requestValue,
-			LocalDate Date) {
-
-		if (sessionValue != null && Objects.equals(sessionValue, requestValue) && requestValue != null) {
-			session.setAttribute(attributeName, sessionValue);
-		} else if (sessionValue != null && !Objects.equals(sessionValue, requestValue) && requestValue != null) {
-			sessionValue = requestValue;
-			session.setAttribute(attributeName, sessionValue);
-		} else if (sessionValue != null && requestValue == null) {
-			session.setAttribute(attributeName, sessionValue);
-		} else if (sessionValue == null && requestValue == null) {
-			requestValue = Date.toString(); // currentDate를 문자열로 변환해서 sessionDate1에 할당
-			sessionValue = Date.toString(); // tomorrowDate를 문자열로 변환해서 sessionDate2에 할당
-			session.setAttribute(attributeName, sessionValue);
-		} else {
-			sessionValue = requestValue;
-			session.setAttribute(attributeName, sessionValue);
-		}
-		return sessionValue;
-	}
-
 }

@@ -19,6 +19,9 @@ function includeFile(filePath, slideId) {
 	$.ajax({
 		url: filePath,
 		method: "GET",
+		data:{
+			kind : kind
+		},
 		success: function(response) {
 			var slideContainer = "#" + slideId;
 			$(slideContainer).append(response); // 해당 슬라이드 컨테이너에 추가

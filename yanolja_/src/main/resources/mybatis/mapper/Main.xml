@@ -87,8 +87,7 @@
 		user.userid = review.userid) as username,
 		(select roomname from room
 		where room.roomid = review.roomid) as
-		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 
-			사진 들어가야 함 -->
+		roomname,reviewcontent,ratingdate ,reviewid ,userid <!-- 원래 reviewid 대신 사진 들어가야 함 -->
 	</sql>
 
 	<select id="findRegionName">
@@ -266,7 +265,8 @@
 		) AS DateList
 		LEFT JOIN reserve AS Reservations
 		ON DateList.reservedate
-		BETWEEN Reservations.reservedate AND
+		BETWEEN
+		Reservations.reservedate AND
 		Reservations.reserveEndDate
 		WHERE
 		Reservations.reservedate IS NOT NULL AND Reservations.hotelid =
@@ -392,5 +392,9 @@
 	<select id="isBooked">
 		Select reviewYN from book where roomid=#{roomid} and
 		bookid = #{bookid}
+	</select>
+	<select id="findRegionDetail">
+		select region_detail_Name from region_detail
+		where regionid in (select regionid from region where regionName like CONCAT( #{selectedText}, '%'))
 	</select>
 </mapper>

@@ -70,4 +70,6 @@ public interface MainMapper {
 
 	Integer isBooked(Integer roomid, Integer bookid);
 
+	List<String> findRegionDetail(String selectedText);
+
 }

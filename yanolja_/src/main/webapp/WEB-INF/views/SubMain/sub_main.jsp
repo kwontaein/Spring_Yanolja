@@ -8,6 +8,9 @@
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="${path}/js/slide/selectlocation.js"></script>
+<script type="text/javascript">
+	var kind = '${kind}';
+</script>
 </head>
 <body>
 	<%@ include file="../../layout/header.jsp"%>

@@ -37,6 +37,7 @@ function changermContent(rmregionid) {
 		method: "GET",
 		data: {
 			regionid: rmregionid,
+			kind: kind
 			// 숫자로 된 regionid를 전달
 		},
 		success: function(response) {

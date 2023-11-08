@@ -9,6 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link rel="stylesheet" href="${path}/css/Viewlist/subslide.css" />
+<script type="text/javascript">
+	var kind = `${kind}`;
+</script>
 </head>
 <body>
 	<div class="swiper-container">

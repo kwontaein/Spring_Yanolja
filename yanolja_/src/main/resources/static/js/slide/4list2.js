@@ -29,6 +29,7 @@ function changefkContent(fkregionid) {
 		method: "GET",
 		data: {
 			regionid: fkregionid,
+			kind : kind
 			// 숫자로 된 regionid를 전달
 		},
 		success: function(response) {

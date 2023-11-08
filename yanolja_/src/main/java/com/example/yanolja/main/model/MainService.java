@@ -235,4 +235,9 @@ public class MainService {
 			}
 		}
 	}
+
+	public List<String> findRegionDetail(String selectedText) {
+		// TODO Auto-generated method stub
+		return mainMapper.findRegionDetail(selectedText);
+	}
 }

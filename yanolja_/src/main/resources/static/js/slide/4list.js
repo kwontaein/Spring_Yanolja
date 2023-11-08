@@ -31,6 +31,7 @@ function changeHokContent(hokregionid) {
 		method: "GET",
 		data: {
 			regionid: hokregionid,
+			kind : kind
 			// 숫자로 된 regionid를 전달
 		},
 		success: function(response) {

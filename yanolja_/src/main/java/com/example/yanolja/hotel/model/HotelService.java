@@ -1,6 +1,8 @@
 package com.example.yanolja.hotel.model;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +18,17 @@ import com.example.yanolja.hotel.post.InfoResponse;
 import com.example.yanolja.hotel.post.PolicyResponse;
 import com.example.yanolja.hotel.post.TrafficResponse;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class HotelService {
-	
+
 	@Autowired
 	private final HotelMapper hotelMapper = null;
-
 	
+	@Autowired
+	HttpSession session;
+
 	// hotelid 값을 통해 MainResponse 반환
 	public MainResponse findById(final Long hotelid) {
 		return hotelMapper.findById(hotelid);
@@ -42,6 +48,7 @@ public class HotelService {
 	public List<PolicyResponse> hotelpolicy(final int hotelid) {
 		return hotelMapper.hotelpolicy(hotelid);
 	}
+
 	// 호텔 소개 정보 (안내/정책 페이지)
 	public String hotelintro(final int hotelid) {
 		return hotelMapper.hotelintro(hotelid);
@@ -103,4 +110,25 @@ public class HotelService {
 		return hotelMapper.reviewAllPhotos(hotelid);
 	}
 
+	// 날짜 세션 설정 calander
+	public String updateSessionAttribute(String attributeName, String sessionValue, String requestValue,
+			LocalDate Date) {
+
+		if (sessionValue != null && Objects.equals(sessionValue, requestValue) && requestValue != null) {
+			session.setAttribute(attributeName, sessionValue);
+		} else if (sessionValue != null && !Objects.equals(sessionValue, requestValue) && requestValue != null) {
+			sessionValue = requestValue;
+			session.setAttribute(attributeName, sessionValue);
+		} else if (sessionValue != null && requestValue == null) {
+			session.setAttribute(attributeName, sessionValue);
+		} else if (sessionValue == null && requestValue == null) {
+			requestValue = Date.toString(); // currentDate를 문자열로 변환해서 sessionDate1에 할당
+			sessionValue = Date.toString(); // tomorrowDate를 문자열로 변환해서 sessionDate2에 할당
+			session.setAttribute(attributeName, sessionValue);
+		} else {
+			sessionValue = requestValue;
+			session.setAttribute(attributeName, sessionValue);
+		}
+		return sessionValue;
+	}
 }

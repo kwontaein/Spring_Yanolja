@@ -25,9 +25,9 @@ public class grobalService {
 			return sessionDate;
 		}
 	}
-
+	
+	//세션에 날짜 저장
 	public List<String> SetSessionDate(HttpSession session) {
-		
 		String sessionDate1 = (String) session.getAttribute("sessionDate1");
 		String sessionDate2 = (String) session.getAttribute("sessionDate2");
 
@@ -41,7 +41,6 @@ public class grobalService {
 
 			session.setAttribute("sessionDate1", sessionDate1);
 			session.setAttribute("sessionDate2", sessionDate2);
-
 		}
 		
 		List<String> sessionDates = Arrays.asList(sessionDate1, sessionDate2);
