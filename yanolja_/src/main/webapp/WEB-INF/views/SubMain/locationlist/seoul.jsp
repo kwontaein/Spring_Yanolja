@@ -51,13 +51,49 @@
 		window.location.href = '/ViewAll?data=' + encodedData;
 
 	});
+	$('#viewAllLink').click(function() {
+		// 클릭한 <li> 요소의 텍스트 값을 가져옵니다.
+		const selectedLocation = $('#all').text();
+
+		const kindhotel = '${kind}';
+
+		var kind;
+
+		if (kindhotel == 'hotel') {
+			kind = '호텔';
+		} else if (kindhotel == 'motel') {
+			kind = '모텔';
+		} else if (kindhotel == 'pension') {
+			kind = '펜션';
+		} else if (kindhotel == 'guest') {
+			kind = '게스트하우스';
+		}
+		// 선택한 지역을 서버로 전송하거나 다른 동작을 수행할 수 있습니다.
+		console.log('선택한 지역:', selectedLocation);
+		console.log('kindhotel:', kindhotel);
+		var data = {
+			location : [selectedLocation],
+			kindhotels : [ kind ]
+		};
+		// 여기에서 AJAX 요청을 보// JSON 문자열로 변환
+		var jsonData = JSON.stringify(data);
+
+		// encodeURIComponent를 사용하여 URL에 적합한 형태로 인코딩
+		var encodedData = encodeURIComponent(jsonData);
+
+		console.log('kindhotel:', encodedData);
+		// location.href로 전송
+		window.location.href = '/ViewAll?data=' + encodedData;
+
+	});
+	
 </script>
 </head>
 <body>
-	<a>
-		<span>${selectedText}</span>
+	<div id="viewAllLink">
+		<span id="all">${selectedText}</span>
 		<span>전체 &gt;</span>
-	</a>
+	</div>
 	<ul class="seoul">
 		<c:forEach items="${RDList}" var="region" varStatus="loop">
 			<c:if test="${loop.index % 3 == 0}">

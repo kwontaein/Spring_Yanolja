@@ -78,7 +78,7 @@ public class HotelController {
 	// 객실 목록 불러오기
 	@GetMapping("/roomlist")
 	public String roomlist(@RequestParam final int hotelid, Model model, HttpSession session) {
-		
+
 		List<String> sessionDates = grobalService.SetSessionDate(session);
 		// MainResponse에 찾아오려는 값이 null이면 오류남
 		String sessionDate1 = sessionDates.get(0);
@@ -196,7 +196,7 @@ public class HotelController {
 		List<String> sessionDates = grobalService.SetSessionDate(session);
 		// MainResponse에 찾아오려는 값이 null이면 오류남
 		String sessionDate1 = sessionDates.get(0);
-		
+
 		String formatDate1 = grobalService.formatDates(sessionDate1);
 
 		RoomResponse roomdetail = hotelService.findRoomDetail(roomid, formatDate1);
@@ -257,13 +257,14 @@ public class HotelController {
 		List<LocalDate> datesInRange = new ArrayList<>();
 
 		LocalDate currentDatePointer = firstDayOfMonth;
-		
+
 		while (!currentDatePointer.isAfter(lastDayOfOneYearLater)) {
 			datesInRange.add(currentDatePointer);
 			currentDatePointer = currentDatePointer.plusDays(1);
 		}
 
-		sessionDate1 = hotelService.updateSessionAttribute("sessionDate1", sessionDate1, selectedStartDate, currentDate);
+		sessionDate1 = hotelService.updateSessionAttribute("sessionDate1", sessionDate1, selectedStartDate,
+				currentDate);
 		sessionDate2 = hotelService.updateSessionAttribute("sessionDate2", sessionDate2, selectedEndDate, tomorrowDate);
 
 		model.addAttribute("datesInRange", datesInRange);

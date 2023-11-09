@@ -76,6 +76,7 @@ function includeFile(filePath, regionname, kindhotel, index) {
 		}
 	});
 }
+
 $('#datemodal').click(function() {
 	$('.calendar_modal').css({
 		'display': 'block',

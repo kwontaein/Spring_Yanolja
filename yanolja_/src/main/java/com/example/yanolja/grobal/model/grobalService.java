@@ -44,7 +44,6 @@ public class grobalService {
 		}
 		
 		List<String> sessionDates = Arrays.asList(sessionDate1, sessionDate2);
-		
 		return sessionDates;
 	}
 }

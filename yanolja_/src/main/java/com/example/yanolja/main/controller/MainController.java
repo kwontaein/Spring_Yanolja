@@ -94,8 +94,9 @@ public class MainController {
 	}
 
 	@GetMapping("/{kindlist}")
-	public String ViewHotels(@PathVariable("kindlist") String kindlist, @RequestParam("regionname") String regionname,
-			@RequestParam("kindhotel") String kindhotel, Model model) {
+	public String ViewHotels(@PathVariable("kindlist") String kindlist,
+			@RequestParam(value = "regionname", required = false) String regionname,
+			@RequestParam(value = "kindhotel", required = false) String kindhotel, Model model) {
 		// MainResponse에 찾아오려는 값이 null이면 오류남
 		List<MainResponse> post = mainService.posts(regionname, kindhotel);
 		model.addAttribute("post", post);

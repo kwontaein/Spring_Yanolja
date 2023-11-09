@@ -8,7 +8,6 @@ request.setCharacterEncoding("UTF-8");
 <html>
 <head>
 <title></title>
-<link rel="stylesheet" href="${path}/css/List/seasonlist.css" />
 </head>
 <body>
 	<div id="hotel_season">

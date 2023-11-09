@@ -5,6 +5,7 @@
 <head>
 <title>다놀자 ${resentViewHotelid}</title>
 <link rel="stylesheet" href="${path}/css/Main/Main.css" />
+<link rel="stylesheet" href="${path}/css/List/seasonlist.css" />
 </head>
 <body>
 	<c:set var="isMain" value="${pageName == 'Main'}" />
