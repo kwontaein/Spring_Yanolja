@@ -1,11 +1,11 @@
 $(document).ready(function() {
 	// 페이지 로드 시 기본 내용 표시 (예: 서울)
-	changeSeasonContent('서울','호텔'); // regionid를 숫자로 전달
-	// 동적으로 li 요소 생성
-	createDynamicLi('서울', '호텔');
-	createDynamicLi('제주', '호텔');
-	createDynamicLi('강원', '호텔');
-	createDynamicLi('전라', '호텔');
+	changeSeasonContent('대구','호텔'); // regionid를 숫자로 전달
+	// 동적으로 li 요소 생성 
+	createDynamicLi('대구', '호텔');
+	createDynamicLi('대전', '호텔');
+	createDynamicLi('부산', '호텔');
+	createDynamicLi('울산', '호텔');
 
 	// 처음 로드 시 서울 li를 활성화 상태로 표시
 	$("#dynamicList li:first-child").addClass("active");

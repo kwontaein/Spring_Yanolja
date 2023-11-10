@@ -22,7 +22,7 @@
 							<div class="htcontent">
 								<div class="info">
 									<li><h3>${hotel.hotelname}</h3></li>
-									<li>${hotel.rating}(${ hotel.reviewcount })</li>
+									<li><span style="color: orange;">★</span>${hotel.rating}(${ hotel.reviewcount })</li>
 								</div>
 								<div class="price">
 									<li><br> <b>${hotel.price}</b>원~</li>

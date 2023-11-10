@@ -24,7 +24,7 @@ request.setCharacterEncoding("UTF-8");
 									<li>
 										<h3>${hotel.hotelname}</h3>
 									</li>
-									<li>${hotel.rating}(${ hotel.reviewcount })</li>
+									<li><span style="color: orange;">★</span>${hotel.rating}(${ hotel.reviewcount })</li>
 								</div>
 								<div class="season_price">
 									<li><b>${hotel.price}</b>원</li>

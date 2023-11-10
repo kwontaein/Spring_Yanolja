@@ -183,6 +183,20 @@
 	</select>
 
 	<!-- 호텔 조회 -->
+	<select id="findAllFromRds">
+		SELECT
+		<include refid="postColumns" />
+		FROM hotel
+		WHERE
+		<foreach collection="regionname" item="region" separator=" OR ">
+			(SELECT region_detail_name FROM region_detail WHERE region_detail_id =
+			(SELECT region_detail_id FROM location WHERE location.hotelid = hotel.hotelid))
+			LIKE CONCAT(#{region}, '%')
+		</foreach>
+		AND kindhotel = #{kindhotel}
+	</select>
+
+	<!-- 호텔 조회 -->
 	<select id="TofindByKind">
 		SELECT
 		<include refid="postColumns" />
@@ -389,10 +403,12 @@
 		Kindness=#{rating1} ,cleanliness= #{rating2} , convenience=#{rating3}
 		, Loc_satisfy=#{rating4} where reviewid = #{reviewid}
 	</update>
+
 	<select id="isBooked">
 		Select reviewYN from book where roomid=#{roomid} and
 		bookid = #{bookid}
 	</select>
+
 	<select id="findRegionDetail">
 		select region_detail_Name from region_detail
 		where regionid in (select regionid from region where regionName like CONCAT( #{selectedText}, '%'))

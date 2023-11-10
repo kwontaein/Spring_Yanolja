@@ -2,10 +2,10 @@ $(document).ready(function() {
 	 // 페이지 로드 시 기본 내용 표시 (예: 서울)
 	 changeHokContent(1, '서울'); // regionid를 숫자로 전달
 	 // 동적으로 li 요소 생성
-	 createhokLi(1, '휴가에딱', '');
-	 createhokLi(2, '경인강원', '');
-	 createhokLi(3, '서울', '');
-	 createhokLi(4, '전국인기', '');
+	 createhokLi(1, '휴가에딱');
+	 createhokLi(2, '경인강원');
+	 createhokLi(3, '서울');
+	 createhokLi(4, '전국인기');
 
 	 // 처음 로드 시 서울 li를 활성화 상태로 표시
 	 $("#hokList li:first-child").addClass("active");

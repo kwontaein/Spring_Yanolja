@@ -43,7 +43,11 @@ public class MainService {
 	public List<MainResponse> findAllFromRd(String regionname, String kindhotel) {
 		return mainMapper.findAllFromRd(regionname, kindhotel);
 	}
-
+	
+	// 세부 지역 명'들'로 찾기
+	public List<MainResponse> findAllFromRds(List<String> regionname, String kindhotel) {
+		return mainMapper.findAllFromRds(regionname, kindhotel);
+	}
 	// Sub_main 페이지 들어갈 때 숙소 종류 구분
 	public List<MainResponse> TofindByKind(String kindhotel) {
 		String kind = kind_name(kindhotel);
@@ -188,8 +192,8 @@ public class MainService {
 		}
 		return kind;
 	}
-	
-	//리뷰 사진 업데이트 메소드
+
+	// 리뷰 사진 업데이트 메소드
 	public void UpdateReviewImg(int userid, int roomid, int reviewid, MultipartFile[] multipartFiles) {
 
 		int hotelid = findHotelId(roomid);
@@ -239,5 +243,16 @@ public class MainService {
 	public List<String> findRegionDetail(String selectedText) {
 		// TODO Auto-generated method stub
 		return mainMapper.findRegionDetail(selectedText);
+	}
+
+	public List<MainResponse> LocatePost(List<String> region, String kind) {
+		// region 테이블에서 지역 명 가져오기
+		List<MainResponse> post = findAllFromRegion(region.get(0), kind);
+		if (post.isEmpty()) {
+			List<MainResponse> post2 = findAllFromRds(region, kind);
+			return post2;
+		} else {
+			return post;
+		}
 	}
 }

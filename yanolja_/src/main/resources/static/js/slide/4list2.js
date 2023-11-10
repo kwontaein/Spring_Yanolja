@@ -2,10 +2,10 @@ $(document).ready(function() {
 	// 페이지 로드 시 기본 내용 표시 (예: 서울)
 	changefkContent(2, ''); // regionid를 숫자로 전달
 	// 동적으로 li 요소 생성
-	createfkLi(2, '도심힐링', '');
-	createfkLi(3, '바다낭만', '');
-	createfkLi(4, '남쪽여행', '');
-	createfkLi(1, '리조트', '');
+	createfkLi(2, '도심힐링');
+	createfkLi(3, '바다낭만');
+	createfkLi(4, '남쪽여행');
+	createfkLi(1, '리조트');
 
 	// 처음 로드 시 서울 li를 활성화 상태로 표시
 	$("#fkList li:first-child").addClass("active");

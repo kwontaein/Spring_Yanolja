@@ -32,12 +32,24 @@ public class SubMainController {
 	}
 
 	@GetMapping("/list")
-	public String list(@RequestParam("regionid") int regionid, @RequestParam("kind") String kind, Model model) {
+	public String list(@RequestParam("regionid") int regionid,
+			@RequestParam(value = "regionname", required = false) String regionname, @RequestParam("kind") String kind,
+			Model model) {
 
 		// 지역과 호텔 종류에 따라 호텔 목록을 조회하고 "post" 모델 속성에 추가
 		List<MainResponse> post = mainService.findAllFrom(regionid, kind);
 		model.addAttribute("post", post);
 		return "SubMain/list/list"; // Main/Hotellist 템플릿을 렌더링
+	}
+
+	// 전체보기 호출
+	@GetMapping("/ViewByLocation")
+	public String ViewByLocation(@RequestParam("region") List<String> region, @RequestParam("kind") String kind,
+			Model model) {
+		List<MainResponse> post = mainService.LocatePost(region, kind);
+		model.addAttribute("region", region);
+		model.addAttribute("post", post);
+		return "SubMain/list/SeeViewByLocation";
 	}
 
 	@GetMapping("/Tophotellist{number}")

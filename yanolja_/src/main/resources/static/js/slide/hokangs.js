@@ -1,10 +1,10 @@
 $(document).ready(function() {
 	 // 페이지 로드 시 기본 내용 표시 (예: 서울)
-	 changeHkContent('서울', '호텔'); // regionid를 숫자로 전달
+	 changeHkContent('인천', '호텔'); // regionid를 숫자로 전달
 	 // 동적으로 li 요소 생성
-	 createhkLi('서울', '호텔');
-	 createhkLi('제주', '호텔');
-	 createhkLi('강원', '호텔');
+	 createhkLi('인천', '호텔');
+	 createhkLi('부산', '호텔');
+	 createhkLi('경상', '호텔');
 	 createhkLi('전라', '호텔');
 
 	 // 처음 로드 시 서울 li를 활성화 상태로 표시

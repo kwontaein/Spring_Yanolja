@@ -68,6 +68,8 @@ public interface MainMapper {
 
 	List<MainResponse> findAllFromRd(String regionname, String kindhotel);
 
+	List<MainResponse> findAllFromRds(List<String> regionname, String kindhotel);
+
 	Integer isBooked(Integer roomid, Integer bookid);
 
 	List<String> findRegionDetail(String selectedText);

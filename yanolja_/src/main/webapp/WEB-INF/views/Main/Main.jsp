@@ -14,7 +14,6 @@
 		<%@ include file="./Linkto.jsp"%>
 		<%@ include file="../ads/Signevent.jsp"%>
 		<%@ include file="./hotelslide.jsp"%>
-		<%@ include file="./live.jsp"%>
 		<%@ include file="./saleEvent.jsp"%>
 		<%@ include file="./season.jsp"%>
 		<%@ include file="./Now_hot.jsp"%>
