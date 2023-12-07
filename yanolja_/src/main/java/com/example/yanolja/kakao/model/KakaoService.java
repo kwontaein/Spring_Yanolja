@@ -53,7 +53,7 @@ public class KakaoService {
 	private String KAKAO_REDIRECT_URL;
 
 	static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
-	static final String admin_Key = "f0dc4984df09287545cbdbc9478a53ee"; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
+	static final String admin_Key = "admin_code"; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
 	private KakaoResponse kakaoReady;
 	private KakaoApproveResponse kakaoApproveResponse;
 
